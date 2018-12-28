@@ -1,0 +1,535 @@
+<template>
+    <div class="w1200 clearfix">
+         <div class="bread">
+                <span>
+                    <router-link to="/home">首页 ></router-link>
+                    <router-link to="/money">找资金 ></router-link>
+                </span>
+                <span>{{$route.meta.title}}</span>
+            </div>
+        <div class="w840 fll">
+           
+            <div class="mes_list listbottom">
+                <p class="mes">资金详情</p>
+            </div>
+            <div class="act_list clearfix" v-for="(item, index) in actlist" :key="index">
+                <router-link to="moneyDetail" class="fll list">
+                    <div class="clearfix">
+                        <span class="list-title fll">{{item.title}}</span>
+                        <span class="title_time flr">{{item.userName}}</span>
+                    </div>
+                    <div class="clearfix">
+                        <div class="fll company">{{item.company}}</div>
+                        <div class="flr">
+                            <el-button class="sendBtn">投递项目</el-button>
+                            <el-button plain class="focus">关注</el-button>
+                        </div>
+                    </div>
+                    <div class="box_content">
+                        <span class="list-contentName">投资资金：</span>
+                        <span class="list-content current">{{item.investMoney}}</span>
+                    </div>
+                    <div class="clearfix">
+                        <div class="fll">
+                            <div class="box_content">
+                                <span class="list-contentName">投资方式：</span>
+                                <span class="list-content">{{actType[1]}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">投资地区：</span>
+                                <span class="list-content">{{investArea[0]}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">投资类型：</span>
+                                <span class="list-content">{{item.investType}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">支付方式：</span>
+                                <span class="list-content">{{item.payType}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">保障措施：</span>
+                                <span class="list-content">{{item.measure}}</span>
+                            </div>
+                        </div>
+                        <div class="fll">
+                            <div class="box_content">
+                                <span class="list-contentName">资金类型：</span>
+                                <span class="list-content">{{moneyType[1]}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">投资行业：</span>
+                                <span class="list-content">{{item.investIndustry}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">投资阶段：</span>
+                                <span class="list-content">{{item.investStage}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">有效期限：</span>
+                                <span class="list-content">{{item.investStage}}</span>
+                            </div>
+                        </div>
+                        <div class="fll">
+                            <div class="box_content">
+                                <span class="list-contentName">资金来源：</span>
+                                <span class="list-content">{{moneyType[1]}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">市场热点：</span>
+                                <span class="list-content">{{item.hot}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">区域热点：</span>
+                                <span class="list-content">{{item.hotArea}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </router-link>
+            </div>
+            <div class="w810">
+                <div class="require">
+                    <span>
+                        投资要求概述
+                    </span>
+
+                </div>
+                <div class="requireContent">
+                    本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知
+                </div>
+                <div class="require">
+                    <span>
+                        投资案例
+                    </span>
+                </div>
+                <div class="requireContent">
+                    客户要求保密
+                </div>
+                <div class="require">
+                    <span>
+                        其他说明
+                    </span>
+
+                </div>
+                <div class="requireContent">
+                    本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知
+                </div>
+            </div>
+        </div>
+        <div class="w360 flr mes_list clearfix">
+            <el-card class="box-card">
+                <div class="userImgBox">
+                    <img class="userImg" src="static/img/userImg.jpg" alt="">        
+                </div>
+                <p class="username">李先生</p>
+                <p><span>职位：</span><span>董事长</span></p>
+                <p><span>企业名称：</span><span>北京开拓明天股份有限公司</span></p>
+                <p><span>所属行业：</span><span>互联网</span></p>
+                <p><span>关注行业：</span><span>互联网、金融、节能环保</span></p>
+                <div class="lookBtnBox">
+                    <el-button class="lookBtn" @click="$router.push('/money/investors')">查看联系方式</el-button>          
+                </div>
+            </el-card>
+            <p class="mes">他的更多资金</p>
+            <ul class="mes_title">
+                <router-link to="/">
+                    <li v-for="(item,index) in mesData" :key="index" class="mes_content">
+                        <p class="mes_listTitle">{{item.title}}</p>
+                        <P>
+                            <span>投资金额：</span>
+                            <span>{{investMoney[2]}}</span>
+                        </P>
+                        <p>期权投资 | 成长期 | 扩张期 | 甘肃省 </p>
+                    </li>
+                </router-link>
+            </ul>
+        </div>
+    </div>
+</template>
+<script>
+    export default {
+        data() {
+            return {
+                actType: ["股权投资", "债权投资", "金融投资", "BT/BOT项目投资", "其他投资"],
+                moneyType: ["个人资金", "企业资金", "天使投资", "VC投资", "PE投资", "小额贷款", "典当公司"],
+                area: ["北京", "上海", "广州", "深圳", "农大"],
+                investArea: ["不限", "北京", "上海", "广州", "深圳", "农大"],
+                investMoney: ["不限", "1-10W", "10-20W", "20-30W", "30-50W", "50-100W", "100-200W", "200-500W", "500-1000W"],
+                actlist: [
+                    {
+                        title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
+                        investMoney: "1000万-9亿",
+                        investType: "参股合作 收购/并购",
+                        investIndustry: "互联网",
+                        investStage: "成长期、成熟期",
+                        beginTime: "2019-01-01",
+                        endTime: "2049-10-01",
+                        focus: "155人关注",
+                        userName: "李先生",
+                        company: "北京青创服务平台有限公司",
+                        payType: "现金支付、股权对价",
+                        whereMoney: "自由资金，募集资金",
+                        measure: "包括但不限于业绩承诺(对赌)、回购、上市承诺",
+                        hot: "人工智能、大数据、物联网",
+                        hotArea: "京津冀 长三角"
+                    },
+                ],
+                mesData: [
+                    {
+                        title: '北京某企资金1000万-9亿元寻求全国优质实体项目合作'
+                    },
+                    {
+                        title: '北京某企资金1000万-9亿元寻求全国优质实体项目合作'
+                    },
+                    {
+                        title: '北京某企资金1000万-9亿元寻求全国优质实体项目合作'
+                    },
+                    {
+                        title: '北京某企资金1000万-9亿元寻求全国优质实体项目合作'
+                    },
+                    {
+                        title: '北京某企资金1000万-9亿元寻求全国优质实体项目合作'
+                    },
+                ]
+            };
+        },
+        methods: {
+            getType(e) {
+                console.log(e);
+            },
+            getStatus(e) {
+                console.log(e);
+            },
+            apply() { },
+            over() {
+                this.$notify.error({
+                    title: "错误",
+                    message: "活动已结束"
+                });
+            }
+        }
+    };
+</script>
+
+<style scoped lang="scss">
+    .bread_search {
+        border-bottom: 1px solid #d9d9d9;
+        margin-bottom: 10px;
+    }
+
+    .search {
+        line-height: 50px;
+    } //选择类型
+    .act_type {
+        font-size: 14px;
+        font-family: "Microsoft YaHei";
+        color: rgb(51, 51, 51);
+        font-weight: bold;
+        line-height: 1.857;
+    }
+
+    .type_item {
+        font-size: 12px;
+        font-family: "Microsoft YaHei";
+        color: #444;
+        cursor: pointer;
+        padding-right: 45px;
+    }
+
+    .act_list {
+        width: 810px;
+        padding-bottom: 30px;
+    }
+
+    .more_desc {
+        border: none !important;
+        min-width: 70px;
+        max-width: 120px;
+    } // /deep/.el-select .el-input__inner {
+    //     border: 0;
+    //     min-width: 70px;
+    //     max-width: 120px;
+    // }
+    .title_time {
+        display: block;
+        margin-top: 10px;
+        color: #666
+    }
+
+    .company {
+        font-size: 14px;
+        font-family: "Microsoft YaHei";
+        color: rgb( 153, 153, 153);
+        line-height: 20px;
+        margin-top: 10px;
+    }
+
+    .focus {
+        color: #005982;
+        border-color: #005982;
+        width: 100px
+    }
+
+    .sendBtn {
+        background: #005982;
+        color: #fff;
+        width: 100px
+    }
+    .userImg{
+        border-radius: 100%;
+        text-align: center;
+    }
+    .username{
+        text-align: center;
+    }
+    .lookBtnBox{
+         text-align: center;
+    }
+    .userImgBox{
+        text-align: center;
+    }
+    .lookBtn{
+        background: #005982;
+        color: #fff;
+        width: 70%
+       
+    }
+
+    .current {
+        color: #005982 !important;
+        font-size: 24px !important;
+    }
+
+
+    .list {
+        width: 810px;
+    }
+
+    .listbottom {
+        border-bottom: 1px solid #d9d9d9;
+        width: 810px;
+        margin-bottom: 30px;
+    }
+
+    .list-title {
+        font-size: 20px;
+        font-family: "Microsoft YaHei";
+        color: rgb( 26, 26, 26);
+        line-height: 1.333;
+        margin: 10px 0;
+    }
+
+    .list-contentName {
+        // margin-left: 30px;
+        font-size: 14px;
+        font-family: "Microsoft YaHei";
+        color: rgb(153, 153, 153);
+
+    }
+
+    .box_content {
+        line-height: 2;
+        width: 250px
+    }
+
+    .require {
+        border-bottom: 2px solid #ccc
+    }
+
+    .require span {
+        font-size: 16px;
+        font-family: "Microsoft YaHei";
+        color: rgb( 51, 51, 51);
+        line-height: 1.5;
+        display: inline-block;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #005982
+    }
+
+    .requireContent {
+        padding: 15px 0;
+        line-height: 2
+    }
+
+    .list-content {
+        // margin-left: 30px;
+        font-size: 14px;
+        font-family: "Microsoft YaHei";
+        color: #333;
+    }
+
+    .list-content2 {
+        margin-left: 30px;
+        font-size: 14px;
+        font-family: "Microsoft YaHei";
+        color: rgb(153, 153, 153);
+        position: relative;
+        .num {
+            position: absolute;
+            display: inline-block;
+            top: -3px;
+            left: -30px;
+            width: 20px;
+            height: 20px;
+            background: url(/static/img/num.png) no-repeat center;
+            background-size: contain;
+        }
+        .time {
+            position: absolute;
+            display: inline-block;
+            top: -3px;
+            left: -30px;
+            width: 20px;
+            height: 20px;
+            background: url(/static/img/time.png) no-repeat center;
+            background-size: contain;
+        }
+    }
+
+    .apply {
+        display: block;
+        text-align: right;
+        font-size: 16px;
+        font-family: "Microsoft YaHei";
+        color: #ff9440;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .over {
+        display: block;
+        text-align: right;
+        font-size: 16px;
+        font-family: "Microsoft YaHei";
+        color: #999;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .applyBtn {
+        width: 110px;
+        height: 35px;
+        color: #fff;
+        line-height: 0.425;
+        display: inline-block;
+        white-space: nowrap;
+        cursor: pointer;
+        background: #005982;
+        border: 1px solid #dcdfe6;
+        border-color: #dcdfe6;
+        -webkit-appearance: none;
+        text-align: center;
+        box-sizing: border-box;
+        outline: none;
+        margin: 0;
+        margin-top: 100px;
+        transition: 0.1s;
+        font-weight: 500;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+    }
+
+    .overBtn {
+        width: 110px;
+        height: 35px;
+        color: #c4c4c4;
+        line-height: 0.425;
+        display: inline-block;
+        white-space: nowrap;
+        cursor: pointer;
+        background: #e6e6e6;
+        border: 1px solid #dcdfe6;
+        border-color: #dcdfe6;
+        -webkit-appearance: none;
+        text-align: center;
+        box-sizing: border-box;
+        outline: none;
+        margin: 0;
+        margin-top: 100px;
+        transition: 0.1s;
+        font-weight: 500;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+    } //加载更多
+    .load_more {
+        width: 810px;
+        text-align: center;
+        font-size: 18px;
+        font-family: "Microsoft YaHei";
+        color: rgb(153, 153, 153);
+        line-height: 1.333;
+        padding: 20px 0;
+        border: 1px solid #d9d9d9;
+        border-radius: 6px;
+        margin: 40px 0 75px;
+        cursor: pointer;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    .load_more:active {
+        background: #fff;
+        border-color: #409eff;
+        color: #409eff;
+    } //活动排表
+    .act_timelist {
+        margin: 20px 0;
+    }
+
+    .mes_list {
+        .mes {
+            font-size: 18px;
+            font-family: "Microsoft YaHei";
+            color: rgb(51, 51, 51);
+            line-height: 1.333;
+            text-align: left;
+            padding-left: 20px;
+            border-left: 3px solid #005982;
+            .mes_more {
+                font-size: 12px;
+                font-family: "SimSun";
+                color: #999;
+                line-height: 2;
+                cursor: pointer;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+            }
+        }
+    }
+
+    .mes_listTitle {
+        color: #444
+    }
+
+    .mes_title {
+        border-top: 1px solid #d9d9d9;
+        padding-left: 20px;
+        list-style: none;
+    }
+
+    .mes_content {
+        padding: 20px 0;
+        border-bottom: 1px dashed #d9d9d9;
+        color: #999;
+    }
+
+    .mes_content:hover {
+        color: #005982;
+    }
+
+    .cl-0 {
+        color: #000;
+    }
+
+    .cl-0:hover {
+        color: #005982;
+    }
+</style>

@@ -25,7 +25,7 @@
               </div>
               <div class="clearfix">
                 <el-checkbox v-model="login_checked" class="fll">两周内自动登录</el-checkbox>
-                <span class="flr forget">忘记密码？</span>
+                <span class="flr forget" style="display:none">忘记密码？</span>
               </div>
             </div>
             <div v-show="!login_show">

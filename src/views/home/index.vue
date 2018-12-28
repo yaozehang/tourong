@@ -37,11 +37,11 @@
         </div>
         <div class="invest-menu">
           <div v-for="(item , index) in investData" :key="index" class="invest-item fll clearfix">
-            <router-link to="">
+            <router-link to="/money/investors">
             <img src="/static/img/touzi-1.png" alt width="140px" height="180px" class="fll">
             </router-link>
             <div class="invest-text fll">
-              <router-link to=""><p class="invest-item-title">{{item.title}}</p></router-link>
+              <router-link to="/money/investors"><p class="invest-item-title">{{item.title}}</p></router-link>
               <p class="invest-item-list">
                 投资资金：
                 <span class="invest-money">{{item.money}}</span>
@@ -494,4 +494,16 @@ export default {
   color: rgb( 0, 89, 130 );
 }
 
+//轮播图样式
+/deep/ {
+  .swiper-pagination{
+    width:190px !important;
+    height:55px !important;
+    line-height:3.5;
+    position:absolute;
+    color:#fff;
+    bottom:0;
+    left:1200px;
+  }
+}
 </style>

@@ -66,6 +66,7 @@
         <li v-for="(item , index) in mesData" :key="index" class="mes_content"><span class="cl-0">{{item.content}}</span></li>
         </router-link>
       </ul>
+      <img src="/static/img/bg-3.jpg" alt="" width="360px" height="350px" style="margin-bottom:75px">
     </div>
   </div>
 </template>
@@ -96,12 +97,77 @@ export default {
           beginTime: "2017-06-10",
           endTime: "2018-10-12",
           status: 0
-        }
+        },
+        {
+          img: "/static/img/list-1.jpg",
+          title: "投融资讯活动",
+          local: "北京市海淀区天秀路10号中国农大国际科技园",
+          company: "北京开拓明天科技股份有限公司",
+          num: 255,
+          beginTime: "2017-06-10",
+          endTime: "2018-10-12",
+          status: 0
+        },
+        {
+          img: "/static/img/list-1.jpg",
+          title: "投融资讯活动",
+          local: "北京市海淀区天秀路10号中国农大国际科技园",
+          company: "北京开拓明天科技股份有限公司",
+          num: 255,
+          beginTime: "2017-06-10",
+          endTime: "2018-10-12",
+          status: 0
+        },
+        {
+          img: "/static/img/list-1.jpg",
+          title: "投融资讯活动",
+          local: "北京市海淀区天秀路10号中国农大国际科技园",
+          company: "北京开拓明天科技股份有限公司",
+          num: 255,
+          beginTime: "2017-06-10",
+          endTime: "2018-10-12",
+          status: 1
+        },
+        {
+          img: "/static/img/list-1.jpg",
+          title: "投融资讯活动",
+          local: "北京市海淀区天秀路10号中国农大国际科技园",
+          company: "北京开拓明天科技股份有限公司",
+          num: 255,
+          beginTime: "2017-06-10",
+          endTime: "2018-10-12",
+          status: 0
+        },
+        {
+          img: "/static/img/list-1.jpg",
+          title: "投融资讯活动",
+          local: "北京市海淀区天秀路10号中国农大国际科技园",
+          company: "北京开拓明天科技股份有限公司",
+          num: 255,
+          beginTime: "2017-06-10",
+          endTime: "2018-10-12",
+          status: 1
+        },
       ],
       mesData: [
         {
           content:'“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权'
-        }
+        },
+        {
+          content:'“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权'
+        },
+        {
+          content:'“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权'
+        },
+        {
+          content:'“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权'
+        },
+        {
+          content:'“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权'
+        },
+        {
+          content:'“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权'
+        },
       ]
     };
   },
@@ -112,9 +178,10 @@ export default {
     getStatus(e) {
       console.log(e);
     },
-    apply() {},
+    apply() {
+      this.$router.push('/activity/activityDetail')
+    },
     over() {
-      console.log(1);
       this.$notify.error({
         title: "错误",
         message: "活动已结束"
@@ -301,7 +368,7 @@ export default {
 }
 //活动排表
 .act_timelist {
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .mes_list {

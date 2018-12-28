@@ -34,7 +34,7 @@
           <i></i>
           消息通知
         </span>
-        <span class="mine el-dropdown-link">
+        <span class="mine el-dropdown-link" @click="$router.push('/person')">
           <i></i>
           个人中心
         </span>
