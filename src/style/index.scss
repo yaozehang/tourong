@@ -1,0 +1,49 @@
+.fll {
+  float: left;
+}
+
+.flr {
+  float: right;
+}
+
+.clearfix {
+  &::after{
+    content: '';
+    display:block;
+    clear: both;
+  }
+}
+
+.w1200 {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.w840 {
+  width: 840px;
+}
+
+.w360 {
+  width: 360px;
+}
+
+.pd-15 {
+  padding-bottom: 15px; 
+}
+
+a{
+  text-decoration: none;
+}
+
+.bread {
+    font-size: 12px;
+    font-family: "SimSun";
+    color: rgb( 153, 153, 153 ) !important;
+    text-align: justifyLeft;
+    padding: 20px 0 15px;
+    a {
+    font-size: 12px;
+    font-family: "SimSun";
+    color: rgb( 153, 153, 153 ) !important;
+    }
+}

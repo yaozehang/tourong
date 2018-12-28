@@ -1,0 +1,115 @@
+<template>
+  <div class="bg-413d3c">
+    <div class="w1200 clearfix">
+      <div class="contact fll">
+        <img src="/static/img/logo-2.png" alt class="logo-2">
+        <p class="contact-item">联系电话：{{contactData.phone}}</p>
+        <p class="contact-item">联系地址：{{contactData.address}}</p>
+        <p class="contact-item">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：{{contactData.eMail}}</p>
+      </div>
+      <div class="about fll">
+        <router-link to>
+          <img src="/static/img/about-1.png" alt class="about-1">
+        </router-link>
+        <router-link to>
+          <img src="/static/img/about-2.png" alt class="about-2">
+        </router-link>
+        <router-link to>
+          <img src="/static/img/about-3.png" alt class="about-3">
+        </router-link>
+      </div>
+      <div class="two-code flr clearfix">
+        <img src="/static/img/twoCode-1.png" alt class="twoCode-1 flr">
+        <img src="/static/img/twoCode-2.png" alt class="twoCode-2 flr">
+      </div>
+    </div>
+    <i class="line"></i>
+    <div class="end">
+      <span class="end-content">投融资讯平台 版权所有 copyright@2018 xxx Corporation, All Rights Reserve</span>
+      <router-link to>
+        <span class="clause-1">服务条款</span>
+      </router-link>
+      <span class="cl-137">|</span>
+      <router-link to>
+        <span class="clause-2">隐私条款</span>
+      </router-link>
+      <span class="cl-137">|</span>
+      <router-link to>
+        <span class="clause-2">风险提示</span>
+      </router-link>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      contactData: {
+        phone: "01088888888",
+        address: "北京市海淀区天秀路10号中国农大国际创业园",
+        eMail: "demodemo@demo.com"
+      }
+    };
+  }
+};
+</script>
+
+<style scoped lang="scss">
+.bg-413d3c {
+  width: 100%;
+  height: 300px;
+  background-color: #413d3c;
+}
+.logo-2 {
+  padding-top: 35px;
+}
+.contact-item {
+  font-size: 14px;
+  font-family: "Microsoft YaHei";
+  color: rgb(137, 137, 137);
+  text-align: left;
+}
+.about {
+  padding-top: 55px;
+  .about-1 {
+    padding-left: 110px;
+  }
+  .about-2 {
+    padding: 0 55px;
+  }
+}
+.two-code {
+  padding-top: 30px;
+  .twoCode-2 {
+    padding-right: 45px;
+  }
+}
+.line {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: 25px 0;
+  background: url(/static/img/line-1.png) no-repeat;
+}
+.end {
+  font-family: "Microsoft YaHei";
+  font-size: 14px;
+  text-align: center;
+  .end-content {
+    color: rgb(137, 137, 137);
+  }
+  .clause-1 {
+    color: #fff;
+    padding-left: 25px;
+    padding-right: 5px;
+  }
+  .clause-2 {
+    padding: 0 5px;
+    color: #fff;
+  }
+  .cl-137 {
+    color: rgb(137, 137, 137);
+  }
+}
+</style>
