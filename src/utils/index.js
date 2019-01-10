@@ -1,5 +1,4 @@
 import axios from 'axios';
-import qs from "qs"
 import * as Cookies from 'js-cookie'
 
 // let env = process.env.NODE_ENV == 
@@ -36,7 +35,7 @@ const xhr = {
   },
   post(url, data, config){
     return new Promise((resolve, reject) => {
-      instance.post(url, qs.stringify(data), config).then(res => {
+      instance.post(url, data, config).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)

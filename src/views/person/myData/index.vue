@@ -14,7 +14,8 @@
         <el-form-item label="头像">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action=""
+            :http-request="uploadImg"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -108,6 +109,18 @@ export default {
     };
   },
   methods: {
+    uploadImg(f){
+      console.log(f);
+      let param = new FormData(); //创建form对象
+         param.append('file',f.file);//通过append向form对象添加数据
+         let config = {
+           headers:{'content-type':'multipart/form-data'}
+         };  //添加请求头
+      this.$axios.post('/component/trUpload2/uploadify',param,config).then(res => {
+        console.log(res);
+        this.formData.avatar = res.data.relativePath
+      })
+    },
     onSubmit() {
       console.log("submit!");
     },
@@ -184,6 +197,9 @@ export default {
   },
   mounted(){
     this.pageInit()
+  },
+  created(){
+
   }
 };
 </script>

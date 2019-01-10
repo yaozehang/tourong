@@ -381,7 +381,7 @@ export default {
       line-height: 3.5 !important;
       position: absolute !important;
       color: #fff !important;
-      bottom: 5px !important;
+      bottom: 1px !important;
       left: 75% !important;
       // background-color: rgba(0, 0, 0, 0.5) !important;
     }

@@ -80,6 +80,7 @@
 <script>
 import Bottom from '@/components/Bottom.vue'
 import * as Cookies from 'js-cookie'
+import qs from "qs"
 
   export default {
     components:{
@@ -123,7 +124,7 @@ import * as Cookies from 'js-cookie'
           }
         }, 1000)
       }
-      this.$axios.get('/jsp/common/baseUser/ctrl/ajaxSendMobileValidCode.jsp',{params:{mobile:this.registerData.mobile}}).then(res => {
+      this.$axios.get('/jsp/common/baseUser/ctrl/ajaxSendMobileValidCode.jsp',qs.stringify({params:{mobile:this.registerData.mobile}})).then(res => {
         if(res.success == "true"){
           this.$notify.success({
             title: '成功',
@@ -149,7 +150,7 @@ import * as Cookies from 'js-cookie'
           } else {
             Cookies.set("userKey", res.data,{ expires: 3 });
           }
-          this.$axios.post('/jsp/wap/login/do/doLogin.jsp',{mobile:this.registerData.mobile,pwd:this.registerData.pwd,loginType:this.loginData.loginType}).then(res => {
+          this.$axios.post('/jsp/wap/login/do/doLogin.jsp',qs.stringify({mobile:this.registerData.mobile,pwd:this.registerData.pwd,loginType:this.loginData.loginType})).then(res => {
             if(res.success == "true"){
               this.$notify.success({
                 title: '成功',
@@ -172,7 +173,7 @@ import * as Cookies from 'js-cookie'
       }
     },
     login(){
-      this.$axios.post('/jsp/wap/login/do/doLogin.jsp',this.loginData).then(res => {
+      this.$axios.post('/jsp/wap/login/do/doLogin.jsp',qs.stringify(this.loginData)).then(res => {
         if(res.success == "true"){
           if(this.login_checked){
             Cookies.set("userKey", res.data,{ expires: 14 });
