@@ -29,7 +29,7 @@
             报名时间：{{item.regStartTimeStr}} 至 {{item.regStartTimeStr}}
           </p>
         </div>
-        <div class="fll" style="margin-left:150px;">
+        <div class="fll apply_mes">
           <p class="list-title">报名信息：</p>
           <p class="list-content2">
             <i class="time"></i>
@@ -45,6 +45,7 @@
           </p>
         </div>
       </div>
+      <p v-show="pageList.length == 0" class="noAtt">你没有任何资金哦~</p>
       <div class="mes_page">
         <el-pagination
           background
@@ -182,11 +183,13 @@
 //活动列表
 .act_list {
   // width: 810px;
-  height: 180px;
-  margin-bottom: 20px;
+  // height: 180px;
+  // margin-bottom: 20px;
+  border-bottom: 1px solid #ededed;
 }
 .list {
   margin-left: 20px;
+  padding: 10px 0;
 }
 .list-title {
   cursor: pointer;
@@ -277,6 +280,25 @@
       border: 1px solid #d9d9d9 !important;
       font-weight: 400;
     }
+  }
+}
+
+.apply_mes {
+  margin-left: 60px;
+  padding: 10px 0;
+  padding-left: 50px;
+  border-left: 1px solid #ededed;
+}
+
+.noAtt {
+  margin: 250px 0;
+  text-align: center;
+  height: 100px;
+}
+
+/deep/ {
+  .el-popper{
+   margin-left: 20px !important;
   }
 }
 </style>

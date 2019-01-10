@@ -95,6 +95,7 @@ export default {
         Cookies.remove('userKey')
         this.login = false
         location.reload()
+        this.$router.push('/home')
     },
     person(){
        if(Cookies.get('userKey')){
@@ -182,7 +183,6 @@ export default {
 }
 // 登录页跳转颜色
 a {
-  font-size: 16px;
   color: #e5e5e5;
 }
 .register {
