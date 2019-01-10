@@ -11,60 +11,67 @@
         <span class="act_type">分类：</span>
         <span
           class="type_item"
-          v-for="(item , index) in actType"
+          v-for="(item , index) in categoryList"
           :key="index"
-          @click="getType(item)"
-        >{{item}}</span>
+          @click="getType(item.dataValue,index)"
+          :class="{active:item.checked}"
+        >{{item.dataName}}</span>
       </div>
       <div class="pd-15">
         <span class="act_type">状态：</span>
         <span
           class="type_item"
-          v-for="(item , index) in actStatus"
+          v-for="(item , index) in statusList"
           :key="index"
-          @click="getStatus(item)"
-        >{{item}}</span>
+          @click="getStatus(item.statusValue,index)"
+          :class="{active:item.checked}"
+        >{{item.statusName}}</span>
       </div>
-      <div class="act_list clearfix" v-for="(item, index) in actlist" :key="index">
-        <img :src="item.img" alt width="270px" height="180px" class="fll">
-        <div class="fll list">
-          <p class="list-title">{{item.title}}</p>
-          <p class="list-content">
-            <i class="local"></i>
-            {{item.local}}
-          </p>
-          <p class="list-content">
-            <i class="company"></i>
-            {{item.company}}
-          </p>
-          <p class="list-content2">
-            <i class="num"></i>
-            报名人数：{{item.num}}
-          </p>
-          <p class="list-content2">
-            <i class="time"></i>
-            报名时间：{{item.beginTime}} 至 {{item.endTime}}
-          </p>
-        </div>
-        <div class="flr">
-          <span :class="item.status == 1 ? 'apply' : 'over'">{{item.status == 1 ? '报名中' : '已结束'}}</span>
-          <button
-            :class="item.status == 1 ? 'applyBtn' : 'overBtn'"
-            @click="item.status == 1 ? apply() : over() "
-          >{{item.status == 1 ? '我要报名' : '活动结束'}}</button>
+      <div v-loading="loading">
+        <div class="act_list clearfix" v-for="(item, index) in pageList" :key="index"  @click="toActivityDetailPage(item.id)">
+          <div>
+          <img :src="$url + item.imgPath" alt width="270px" height="180px" class="fll">
+          <div class="fll list">
+            <p class="list-title">{{item.title}}</p>
+            <p class="list-content">
+              <i class="local"></i>
+              {{item.address}}
+            </p>
+            <p class="list-content">
+              <i class="company"></i>
+              {{item.speaker}}
+            </p>
+            <p class="list-content2">
+              <i class="num"></i>
+              报名人数：{{item.applyNumStr}}
+            </p>
+            <p class="list-content2">
+              <i class="time"></i>
+              报名时间：{{item.regStartTimeStr}} 至 {{item.regEndTimeStr}}
+            </p>
+          </div>
+          </div>
+          <div class="flr">
+            <span :class="item.status == 1 ? 'apply' : 'over'">{{item.statusStr}}</span>
+             <!-- @click="apply(item.status,item.id)" -->
+            <button
+              :class="item.status == 1 ? 'applyBtn' : 'overBtn'"
+            >{{item.status == 1 ? '我要报名' :'' + item.status == 0 ? '尚未开始':'' + item.status == 3 ? '活动结束' : ''}}</button>
+          </div>
         </div>
       </div>
-      <div class="load_more">加载更多...</div>
+      <div class="load_more" @click="more" v-if="this.totalCount > this.pageList.length">加载更多...</div>
+      <p v-else>-------------------------------------------------没有更多活动了----------------------------------------------------</p>
     </div>
     <div class="w360 flr mes_list clearfix">
       <img src="/static/img/list-2.jpg" alt class="act_timelist">
       <p class="mes">热门资讯
-        <span class="mes_more flr">更多></span>
+        <span class="mes_more flr" @click="toMessagePage">更多></span>
       </p>
-      <ul class="mes_title">
-        <router-link to="">
-        <li v-for="(item , index) in mesData" :key="index" class="mes_content"><span class="cl-0">{{item.content}}</span></li>
-        </router-link>
+      <ul class="mes_title" v-loading="newsloading">
+          <li v-for="(item,index) in mesData" :key="index" class="mes_content" @click="toMessageDetailPage(item.id)">
+              <span class="cl-0">{{item.title}}</span>
+          </li>
       </ul>
       <img src="/static/img/bg-3.jpg" alt="" width="360px" height="350px" style="margin-bottom:75px">
     </div>
@@ -75,79 +82,80 @@
 export default {
   data() {
     return {
-      actType: ["商业考察", "研讨会议", "商务考察", "研讨会议"],
-      actStatus: ["报名中", "未开始", "已结束", "往期活动", "筛选"],
-      actlist: [
-        {
-          img: "/static/img/list-1.jpg",
-          title: "投融资讯活动",
-          local: "北京市海淀区天秀路10号中国农大国际科技园",
-          company: "北京开拓明天科技股份有限公司",
-          num: 255,
-          beginTime: "2017-06-10",
-          endTime: "2018-10-12",
-          status: 1
-        },
-        {
-          img: "/static/img/list-1.jpg",
-          title: "投融资讯活动",
-          local: "北京市海淀区天秀路10号中国农大国际科技园",
-          company: "北京开拓明天科技股份有限公司",
-          num: 255,
-          beginTime: "2017-06-10",
-          endTime: "2018-10-12",
-          status: 0
-        },
-        {
-          img: "/static/img/list-1.jpg",
-          title: "投融资讯活动",
-          local: "北京市海淀区天秀路10号中国农大国际科技园",
-          company: "北京开拓明天科技股份有限公司",
-          num: 255,
-          beginTime: "2017-06-10",
-          endTime: "2018-10-12",
-          status: 0
-        },
-        {
-          img: "/static/img/list-1.jpg",
-          title: "投融资讯活动",
-          local: "北京市海淀区天秀路10号中国农大国际科技园",
-          company: "北京开拓明天科技股份有限公司",
-          num: 255,
-          beginTime: "2017-06-10",
-          endTime: "2018-10-12",
-          status: 0
-        },
-        {
-          img: "/static/img/list-1.jpg",
-          title: "投融资讯活动",
-          local: "北京市海淀区天秀路10号中国农大国际科技园",
-          company: "北京开拓明天科技股份有限公司",
-          num: 255,
-          beginTime: "2017-06-10",
-          endTime: "2018-10-12",
-          status: 1
-        },
-        {
-          img: "/static/img/list-1.jpg",
-          title: "投融资讯活动",
-          local: "北京市海淀区天秀路10号中国农大国际科技园",
-          company: "北京开拓明天科技股份有限公司",
-          num: 255,
-          beginTime: "2017-06-10",
-          endTime: "2018-10-12",
-          status: 0
-        },
-        {
-          img: "/static/img/list-1.jpg",
-          title: "投融资讯活动",
-          local: "北京市海淀区天秀路10号中国农大国际科技园",
-          company: "北京开拓明天科技股份有限公司",
-          num: 255,
-          beginTime: "2017-06-10",
-          endTime: "2018-10-12",
-          status: 1
-        },
+      categoryList: [],
+      // statusList: ["报名中", "未开始", "已结束", "往期活动", "筛选"],
+      statusList: [],
+      pageList: [
+        // {
+        //   img: "/static/img/list-1.jpg",
+        //   title: "投融资讯活动",
+        //   local: "北京市海淀区天秀路10号中国农大国际科技园",
+        //   speaker: "北京开拓明天科技股份有限公司",
+        //   num: 255,
+        //   beginTime: "2017-06-10",
+        //   endTime: "2018-10-12",
+        //   status: 1
+        // },
+        // {
+        //   img: "/static/img/list-1.jpg",
+        //   title: "投融资讯活动",
+        //   local: "北京市海淀区天秀路10号中国农大国际科技园",
+        //   speaker: "北京开拓明天科技股份有限公司",
+        //   num: 255,
+        //   beginTime: "2017-06-10",
+        //   endTime: "2018-10-12",
+        //   status: 0
+        // },
+        // {
+        //   img: "/static/img/list-1.jpg",
+        //   title: "投融资讯活动",
+        //   local: "北京市海淀区天秀路10号中国农大国际科技园",
+        //   speaker: "北京开拓明天科技股份有限公司",
+        //   num: 255,
+        //   beginTime: "2017-06-10",
+        //   endTime: "2018-10-12",
+        //   status: 0
+        // },
+        // {
+        //   img: "/static/img/list-1.jpg",
+        //   title: "投融资讯活动",
+        //   local: "北京市海淀区天秀路10号中国农大国际科技园",
+        //   speaker: "北京开拓明天科技股份有限公司",
+        //   num: 255,
+        //   beginTime: "2017-06-10",
+        //   endTime: "2018-10-12",
+        //   status: 0
+        // },
+        // {
+        //   img: "/static/img/list-1.jpg",
+        //   title: "投融资讯活动",
+        //   local: "北京市海淀区天秀路10号中国农大国际科技园",
+        //   speaker: "北京开拓明天科技股份有限公司",
+        //   num: 255,
+        //   beginTime: "2017-06-10",
+        //   endTime: "2018-10-12",
+        //   status: 1
+        // },
+        // {
+        //   img: "/static/img/list-1.jpg",
+        //   title: "投融资讯活动",
+        //   local: "北京市海淀区天秀路10号中国农大国际科技园",
+        //   speaker: "北京开拓明天科技股份有限公司",
+        //   num: 255,
+        //   beginTime: "2017-06-10",
+        //   endTime: "2018-10-12",
+        //   status: 0
+        // },
+        // {
+        //   img: "/static/img/list-1.jpg",
+        //   title: "投融资讯活动",
+        //   local: "北京市海淀区天秀路10号中国农大国际科技园",
+        //   speaker: "北京开拓明天科技股份有限公司",
+        //   num: 255,
+        //   beginTime: "2017-06-10",
+        //   endTime: "2018-10-12",
+        //   status: 1
+        // },
       ],
       mesData: [
         {
@@ -168,25 +176,131 @@ export default {
         {
           content:'“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权'
         },
-      ]
+      ],
+      loading:false,
+      newsloading:false,
+      category:'',
+      status:'',
+      pn:1,
+      totalCount:'',
     };
   },
   methods: {
-    getType(e) {
-      console.log(e);
+    getTypeData(){
+      this.$axios.get('/jsp/wap/trActivity/ctrl/jsonCategoryList.jsp').then(res => {
+        if(res.success == "true"){
+          let categoryList = res.data.categoryList
+          categoryList.forEach(item => {
+            this.$set(item, 'checked', false)
+          });
+          this.categoryList = categoryList
+          let statusList = res.data.statusList
+          statusList.forEach(item => {
+            this.$set(item, 'checked', false)
+          });
+          this.statusList = statusList
+        }
+      })
     },
-    getStatus(e) {
-      console.log(e);
+    getActData(category,status){
+      this.loading = true
+      this.$axios.get('/jsp/wap/trActivity/ctrl/jsonActivityPage.jsp',{params:{categorys:category,statuss:status}}).then(res => {
+        if(res.success == "true"){
+          this.pageList = res.data.pageList
+          this.totalCount = res.data.pagination.totalCount
+          this.pn = 1
+          this.loading = false
+        }
+      })
     },
-    apply() {
-      this.$router.push('/activity/activityDetail')
+    getType(e,index) {
+      this.category = e
+      if(this.categoryList[index].checked){
+        this.categoryList[index].checked = !this.categoryList[index].checked
+        this.category = ''
+      } else {
+          this.categoryList.forEach(item => {
+              item.checked = false
+        });
+        this.categoryList[index].checked = true
+      }
+      this.getActData(this.category,this.status)
     },
-    over() {
-      this.$notify.error({
-        title: "错误",
-        message: "活动已结束"
+    getStatus(e,index) {
+      this.status = e
+      if(this.statusList[index].checked){
+        this.statusList[index].checked = !this.statusList[index].checked
+        this.status = ''
+      } else {
+          this.statusList.forEach(item => {
+              item.checked = false
+        });
+        this.statusList[index].checked = true
+      }
+      this.getActData(this.category,this.status)
+    },
+    getNewsList(){
+      this.newsloading = true;
+      this.$axios
+        .get("/jsp/wap/trNews/ctrl/jsonHotNewsList.jsp",)
+        .then(res => {
+          if (res.success == "true") {
+            this.mesData = res.data
+            this.newsloading = false;
+          }
+        });
+    },
+    apply(e,id) {
+      if(e == 0){
+        this.$notify.error({
+          title: "错误",
+          message: "活动尚未开始"
+        });
+      } else if (e == 1) {
+      this.$router.push({name:'activityDetail',query:{id}})
+      } else if (e == 3){
+        this.$notify.error({
+          title: "错误",
+          message: "活动已结束"
+        });
+      }
+    },
+    more(){
+      this.pn += 1
+      this.loading = true
+      this.$axios.get('/jsp/wap/trActivity/ctrl/jsonActivityPage.jsp',{params:{categorys:this.category,statuss:this.status,pageNumber:this.pn}}).then(res => {
+        if(res.success == "true"){
+          this.pageList = [...this.pageList,...res.data.pageList] 
+          this.totalCount = res.data.pagination.totalCount
+          this.loading = false
+        }
+      })
+    },
+    toActivityDetailPage(id){
+      let {href} = this.$router.resolve({
+          name: "activityDetail",
+          query: {id}
       });
-    }
+      window.open(href, '_blank');
+    },
+    toMessagePage(){
+      let {href} = this.$router.resolve({
+          name: "message",
+      });
+      window.open(href, '_blank');
+    },
+    toMessageDetailPage(id){
+      let {href} = this.$router.resolve({
+          name: "messageDetail",
+          query: {id}
+      });
+      window.open(href, '_blank');
+    },
+  },
+  created(){
+    this.getTypeData()
+    this.getActData(this.category,this.status)
+    this.getNewsList()
   }
 };
 </script>
@@ -209,6 +323,7 @@ export default {
 }
 //活动列表
 .act_list {
+  cursor: pointer;
   width: 810px;
   height: 180px;
   margin-bottom: 20px;
@@ -397,6 +512,7 @@ export default {
   padding-left: 20px;
 }
 .mes_content {
+  cursor: pointer;
   padding: 20px 0;
   border-bottom:1px dashed #d9d9d9;
   color: #d9d9d9;
@@ -409,5 +525,9 @@ export default {
 }
 .cl-0:hover {
   color: #005982;
+}
+.active {
+  color: #005982;
+  font-weight: 700;  
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w1200 clearfix">
-      <img src="/static/img/logo-1.png" alt="" class="logo-1">
+      <img src="/static/img/logo-1.png" alt="" class="logo-1" @click="$router.push('/home')">
       <router-link to="/home">
         <span class="flr toHome">返回首页</span>
       </router-link>
@@ -17,36 +17,40 @@
             <div v-show="login_show">
               <div class="inputBox">
                 <i class="phone"></i>
-                <input type="text" placeholder="请输入手机号码" :value="loginData.phone">
+                <input type="text" placeholder="请输入手机号码" v-model="loginData.mobile">
               </div>
               <div class="inputBox">
                 <i class="lock"></i>
-                <input type="password" placeholder="请输入密码" :value="loginData.password">
+                <input type="password" placeholder="请输入密码" v-model="loginData.pwd">
               </div>
               <div class="clearfix">
-                <el-checkbox v-model="login_checked" class="fll">两周内自动登录</el-checkbox>
+                <el-checkbox v-model="login_checked" class="fll" @click="!login_checked">两周内自动登录</el-checkbox>
                 <span class="flr forget" style="display:none">忘记密码？</span>
               </div>
             </div>
             <div v-show="!login_show">
               <div v-show="!email_show">
-              <p class="email_login" @click="email_show = true">我要使用邮箱注册</p>
+              <!-- <p class="email_login" @click="email_show = true">我要使用邮箱注册</p> -->
                 <div class="inputBox">
                   <i class="phone"></i>
-                  <input type="text" placeholder="请输入手机号码" :value="registerData.phone">
+                  <input type="text" placeholder="请输入手机号码" v-model="registerData.mobile">
                 </div>
                 <div class="inputBox_code">
                   <i class="code"></i>
-                  <input type="text" placeholder="请输入验证码" :value="registerData.code">
+                  <input type="text" placeholder="请输入验证码" v-model="registerData.code">
                 </div>
                 <span v-show="code_show" @click="getCode" class="count">获取验证码</span>
                 <span v-show="!code_show" class="count">{{count}}s</span>
                 <div class="inputBox">
+                <i class="email"></i>
+                <input type="text" placeholder="请输入邮箱" v-model="registerData.email">
+              </div>
+                <div class="inputBox">
                   <i class="lock"></i>
-                  <input type="password" placeholder="请输入密码" :value="registerData.password">
+                  <input type="password" placeholder="请输入密码" v-model="registerData.pwd" @keyup.enter="login">
                 </div>
             </div>
-            <div v-show="email_show">
+            <!-- <div v-show="email_show">
               <p class="email_login" @click="email_show = false">返回手机注册</p>
               <div class="inputBox">
                 <i class="phone"></i>
@@ -60,10 +64,11 @@
                 <i class="lock"></i>
                 <input type="password" placeholder="请确认密码" :value="loginData.password">
               </div>
-            </div>
+            </div> -->
             <el-checkbox v-model="register_checked" class="fll">我已阅读并同意《投融资讯平台服务协议》</el-checkbox>
             </div>
-            <button class="btn">{{login_show ? '登录': '注册'}}</button>
+            <button class="btn" v-if="login_show" @click="login">登录</button>
+            <button class="btn" v-else @click="register">注册</button>
           </div>
         </div>
       </div>
@@ -74,6 +79,8 @@
 
 <script>
 import Bottom from '@/components/Bottom.vue'
+import * as Cookies from 'js-cookie'
+
   export default {
     components:{
       Bottom
@@ -86,13 +93,14 @@ import Bottom from '@/components/Bottom.vue'
         login_checked:false,
         register_checked:true,
         loginData:{
-          phone:"",
-          password:""
+          mobile:"",
+          pwd:"",
+          loginType:"account_pwd"
         },
         registerData:{
-          phone:"",
+          mobile:"",
           code:"",
-          password:"",
+          pwd:"",
           email:""
         },
         count: '',
@@ -115,6 +123,70 @@ import Bottom from '@/components/Bottom.vue'
           }
         }, 1000)
       }
+      this.$axios.get('/jsp/common/baseUser/ctrl/ajaxSendMobileValidCode.jsp',{params:{mobile:this.registerData.mobile}}).then(res => {
+        if(res.success == "true"){
+          this.$notify.success({
+            title: '成功',
+            message: '发送成功'
+          });
+        } else {
+          this.$notify.error({
+            title: '错误',
+            message: res.message
+          });
+        }
+      })
+    },
+    register(){
+      if(this.registerData.code != ''){
+        this.$axios.get('/jsp/wap/login/do/doRegister.jsp',{params:{code:this.registerData.code,mobile:this.registerData.mobile,pwd:this.registerData.pwd,email:this.registerData.email}}).then(res => {
+          this.$notify.success({
+            title: '成功',
+            message: '注册成功'
+          });
+          if(this.login_checked){
+            Cookies.set("userKey", res.data,{ expires: 14 });
+          } else {
+            Cookies.set("userKey", res.data,{ expires: 3 });
+          }
+          this.$axios.post('/jsp/wap/login/do/doLogin.jsp',{mobile:this.registerData.mobile,pwd:this.registerData.pwd,loginType:this.loginData.loginType}).then(res => {
+            if(res.success == "true"){
+              this.$notify.success({
+                title: '成功',
+                message: '登录成功，欢迎您'
+              });
+              this.$router.push({name:'home'})
+            } else {
+              this.$notify.error({
+                title: '错误',
+                message: res.message
+              });
+            }
+          })
+        })
+      } else {
+        this.$notify.error({
+          title: '错误',
+          message: '请输入验证码'
+        });
+      }
+    },
+    login(){
+      this.$axios.post('/jsp/wap/login/do/doLogin.jsp',this.loginData).then(res => {
+        if(res.success == "true"){
+          if(this.login_checked){
+            Cookies.set("userKey", res.data,{ expires: 14 });
+          } else {
+            Cookies.set("userKey", res.data,{ expires: 3 });
+          }
+          this.$router.push({name:'home'})
+        } else {
+          this.$notify.error({
+            title: '错误',
+            message: res.message
+          });
+        }
+      })
     }
    }  
   }
@@ -124,6 +196,7 @@ import Bottom from '@/components/Bottom.vue'
 //头部
 .logo-1 {
   padding: 25px 0;
+  cursor: pointer;
 }
 .toHome {
   padding-top: 35px;
@@ -142,7 +215,7 @@ import Bottom from '@/components/Bottom.vue'
   .login-box {
     width: 410px;
     min-height: 395px;
-    margin-top: 115px;
+    margin-top: 80px;
     border-radius: 2px;
     border: 1px solid #ebeef5;
     background-color: #fff;
@@ -212,6 +285,16 @@ import Bottom from '@/components/Bottom.vue'
         width: 25px;
         height: 25px;
         background: url(/static/img/inp-2.png) no-repeat center;
+        background-size: contain;
+      }
+      .email {
+        display: inline-block;
+        position: absolute;
+        top: 18px;
+        left: 20px;
+        width: 25px;
+        height: 25px;
+        background: url(/static/img/youxiang.png) no-repeat center;
         background-size: contain;
       }
     }

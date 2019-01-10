@@ -3,41 +3,38 @@
     <div class="w840 fll mes_all">
       <div class="mes_top">
         <p class="mes_type">
-          <span :class="mes_type == 0 ? 'active' : ''" @click="toMeet" style="cursor:pointer">活动会议</span>
-          <span class="type" :class="mes_type == 1 ? 'active' : ''" @click="toScience">前端科技</span>
-          <span class="type" :class="mes_type == 2 ? 'active' : ''" @click="toPolicy">政策动态</span>
-          <span class="type" :class="mes_type == 3 ? 'active' : ''" @click="toInduty">行业</span>
-          <span class="type" :class="mes_type == 4 ? 'active' : ''" @click="toProduct">项目</span>
-          <span class="type" :class="mes_type == 5 ? 'active' : ''" @click="toOrgan">机构</span>
-          <span class="type" :class="mes_type == 6 ? 'active' : ''" @click="toRefe">活动推荐</span>
-          <span class="type" :class="mes_type == 7 ? 'active' : ''" @click="toServer">动态服务</span>
+          <span 
+          class="type"
+          v-for="(item , index) in categoryList"
+          :key="index"
+          @click="getType(item.dataValue,index)"
+          :class="{active:item.checked}"
+          style="cursor:pointer">{{item.dataName}}</span>
         </p>
       </div>
-      <div v-for="(item , index) in messageData" :key="index" class="mg-20">
-        <div v-if="item.img" class="clearfix">
-          <router-link to="/message/messageDetail">
-          <img :src="item.img" alt class="fll">
-          <div class="fll mes_box">
-            <p class="title">{{item.title}}</p>
-            <div class="clearfix">
-              <span class="fll time">发布时间；{{item.time}}</span>
-              <span class="flr num">浏览：{{item.num}}次</span>
+      <div style="min-height:500px;" v-loading="loading">
+        <div v-for="(item , index) in messageData" :key="index" style="cursor:pointer;" class="mg-20" @click="toMessageDetailPage(item.id)">
+          <div v-if="item.imgPath" class="clearfix">
+            <img :src="$url + item.imgPath" alt class="fll" width="152px" height="101px">
+            <div class="fll mes_box">
+              <p class="title">{{item.title}}</p>
+              <div class="clearfix">
+                <span class="fll time">发布时间；{{item.publishTimeStr}}</span>
+                <span class="flr num">浏览：{{item.readNum}}次</span>
+              </div>
+              <p class="content">{{item.brief}}</p>
             </div>
-            <p class="content">{{item.content}}</p>
           </div>
-          </router-link>
-        </div>
-        <div v-else class="clearfix">
-          <router-link to="/message/messageDetail">
-          <div class="fll mes_box2">
-            <p class="title">{{item.title}}</p>
-            <div class="clearfix">
-              <span class="fll time">发布时间；{{item.time}}</span>
-              <span class="flr num">浏览：{{item.num}}次</span>
+          <div v-else class="clearfix">
+            <div class="fll mes_box2">
+              <p class="title">{{item.title}}</p>
+              <div class="clearfix">
+                <span class="fll time">发布时间；{{item.publishTimeStr}}</span>
+                <span class="flr num">浏览：{{item.readNum}}次</span>
+              </div>
+              <p class="content" >{{item.brief}}</p>
             </div>
-            <p class="content">{{item.content}}</p>
           </div>
-          </router-link>
         </div>
       </div>
       <div class="mes_page">
@@ -45,23 +42,21 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-size="100"
+          :page-size="15"
           layout="total, prev, pager, next, jumper"
-          :total="1000"
+          :total="count"
         ></el-pagination>
       </div>
     </div>
     <div class="w360 flr mes_list clearfix">
       <p class="mes">
         热门资讯
-        <span class="mes_more flr">更多></span>
+        <span class="mes_more flr"  @click="toMessagePage">更多></span>
       </p>
-      <ul class="mes_title">
-        <router-link to>
-          <li v-for="(item , index) in mesData" :key="index" class="mes_content">
-            <span class="cl-0">{{item.content}}</span>
+      <ul class="mes_title" v-loading="newsloading">
+          <li v-for="(item,index) in mesData" :key="index" class="mes_content" @click="toMessageDetailPage(item.id)">
+              <span class="cl-0">{{item.title}}</span>
           </li>
-        </router-link>
       </ul>
       <img src="/static/img/bg-4.jpg" alt width="360px" height="350px" style="margin-bottom:75px">
     </div>
@@ -98,98 +93,121 @@ export default {
             "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
         }
       ],
-      mes_type: 1,
-      messageData: [
-        {
-          img: "/static/img/list-3.jpg",
-          title: "十九届中央第一轮巡视整改进展情况开始公布",
-          time: "2017-06-10",
-          num: 124,
-          content:
-            "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-        },
-        {
-          img: "/static/img/list-3.jpg",
-          title: "十九届中央第一轮巡视整改进展情况开始公布",
-          time: "2017-06-10",
-          num: 124,
-          content:
-            "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-        },
-        {
-          img: "",
-          title: "十九届中央第一轮巡视整改进展情况开始公布",
-          time: "2017-06-10",
-          num: 124,
-          content:
-            "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-        },
-        {
-          img: "/static/img/list-3.jpg",
-          title: "十九届中央第一轮巡视整改进展情况开始公布",
-          time: "2017-06-10",
-          num: 124,
-          content:
-            "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-        },
-        {
-          img: "/static/img/list-3.jpg",
-          title: "十九届中央第一轮巡视整改进展情况开始公布",
-          time: "2017-06-10",
-          num: 124,
-          content:
-            "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-        },
-        {
-          img: "",
-          title: "十九届中央第一轮巡视整改进展情况开始公布",
-          time: "2017-06-10",
-          num: 124,
-          content:
-            "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-        },
-        {
-          img: "/static/img/list-3.jpg",
-          title: "十九届中央第一轮巡视整改进展情况开始公布",
-          time: "2017-06-10",
-          num: 124,
-          content:
-            "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-        }
-      ]
+      count:1,
+      messageData:[],
+      loading:false,
+      newsloading:false,
+      categoryList:[],
+      categorys:''
     };
   },
   methods: {
-    toMeet() {
-      this.mes_type = 0;
+    getTypeData(){
+      this.$axios.get('/jsp/wap/trNews/ctrl/jsonCategoryList.jsp').then(res => {
+        console.log(res);
+        if(res.success == "true"){
+          let categoryList = res.data
+          categoryList.forEach(item => {
+            this.$set(item, 'checked', false)
+          });
+          categoryList.forEach(item => {
+            if(item.dataValue == this.categorys){
+              item.checked = true
+            }
+          })
+          this.categoryList = categoryList
+        }
+      })
     },
-    toScience() {
-      this.mes_type = 1;
+    getData(categorys,pageNumber){
+      this.loading = true
+      this.$axios.get('/jsp/wap/trNews/ctrl/jsonNewsPage.jsp',{params:{dataValues:categorys,pageNumber}}).then(res => {
+        this.messageData = res.data.pageList
+        this.count = Number(res.data.pagination.totalCount)
+        this.loading = false
+      })
     },
-    toPolicy() {
-      this.mes_type = 2;
+    getType(e,index) {
+      this.categorys = e
+      this.categoryList.forEach(item => {
+          item.checked = false
+      });
+      this.categoryList[index].checked = true
+      this.getData(this.categorys)
     },
-    toInduty() {
-      this.mes_type = 3;
+    getNewsList(){
+      this.newsloading = true;
+      this.$axios
+        .get("/jsp/wap/trNews/ctrl/jsonHotNewsList.jsp",)
+        .then(res => {
+          if (res.success == "true") {
+            this.mesData = res.data
+            this.newsloading = false;
+          }
+        });
     },
-    toProduct() {
-      this.mes_type = 4;
-    },
-    toOrgan() {
-      this.mes_type = 5;
-    },
-    toRefe() {
-      this.mes_type = 6;
-    },
-    toServer() {
-      this.mes_type = 7;
-    },
+    // toMeet() {
+    //   this.mes_type = 12;
+    //   this.getData(this.mes_type)
+    // },
+    // toScience() {
+    //   this.mes_type = 13;
+    //   this.getData(this.mes_type)
+    // },
+    // toPolicy() {
+    //   this.mes_type = 14;
+    //   this.getData(this.mes_type)
+    // },
+    // toInduty() {
+    //   this.mes_type = 15;
+    //   this.getData(this.mes_type)
+    // },
+    // toProduct() {
+    //   this.mes_type = 16;
+    //   this.getData(this.mes_type)
+    // },
+    // toOrgan() {
+    //   this.mes_type = 17;
+    //   this.getData(this.mes_type)
+    // },
+    // toRefe() {
+    //   this.mes_type = 6;
+    // },
+    // toServer() {
+    //   this.mes_type = 7;
+    // },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.getData(this.mes_type,val)
+    },
+    toMessagePage(){
+      let {href} = this.$router.resolve({
+          name: "message",
+      });
+      window.open(href, '_blank');
+    },
+    toMessageDetailPage(id){
+      let {href} = this.$router.resolve({
+          name: "messageDetail",
+          query: {id}
+      });
+      window.open(href, '_blank');
+    },
+  },
+  created(){
+    if(this.$route.query.category) {
+      this.categorys = this.$route.query.category
+      this.getTypeData()
+      this.getData(this.categorys)
+    } else {
+      this.categorys = '12'
+      this.getTypeData()
+      this.getData(this.categorys)
     }
+
+      this.getNewsList()
   }
 };
 </script>
@@ -222,6 +240,7 @@ export default {
   padding-left: 20px;
 }
 .mes_content {
+  cursor: pointer;
   padding: 20px 0;
   border-bottom: 1px dashed #d9d9d9;
   color: #d9d9d9;
@@ -247,7 +266,6 @@ export default {
   color: rgb(102, 102, 102);
   line-height: 1.333;
   text-align: left;
-  padding-left: 20px;
   border-left: 3px solid #005982;
   margin-bottom: 0;
   .type {
@@ -257,10 +275,10 @@ export default {
     -webkit-user-select: none;
     -ms-user-select: none;
   }
+}
   .active {
     color: #005982;
   }
-}
 .mes_top {
   padding-bottom: 18px;
   border-bottom: 1px solid #d9d9d9;
@@ -270,7 +288,7 @@ export default {
   margin-left: 20px;
   .title {
     color: #000;
-    margin-top: 5px;
+    margin-top: 0;
     margin-bottom: 10px;
   }
   .time {
@@ -297,7 +315,7 @@ export default {
     overflow: hidden;
   }
   .content::after {
-    content: "...";
+    // ;
     position: absolute;
     bottom: 0;
     right: 0;
@@ -338,7 +356,6 @@ export default {
     overflow: hidden;
   }
   .content::after {
-    content: "...";
     position: absolute;
     bottom: 0;
     right: 0;

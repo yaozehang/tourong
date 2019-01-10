@@ -12,80 +12,79 @@
             <div class="mes_list listbottom">
                 <p class="mes">资金详情</p>
             </div>
-            <div class="act_list clearfix" v-for="(item, index) in actlist" :key="index">
-                <router-link to="moneyDetail" class="fll list">
+            <div class="act_list clearfix" >
                     <div class="clearfix">
-                        <span class="list-title fll">{{item.title}}</span>
-                        <span class="title_time flr">{{item.userName}}</span>
+                        <span class="list-title fll">{{money.title}}</span>
+                        <span class="title_time flr">{{money.userName}}</span>
                     </div>
                     <div class="clearfix">
-                        <div class="fll company">{{item.company}}</div>
+                        <div class="fll company">{{money.company}}</div>
                         <div class="flr">
                             <el-button class="sendBtn">投递项目</el-button>
-                            <el-button plain class="focus">关注</el-button>
+                            <el-button v-if="follow" class="sendBtn" @click="nofollow">已关注</el-button>
+                            <el-button plain v-else class="focus" @click="gofollow">关注</el-button>
                         </div>
                     </div>
                     <div class="box_content">
                         <span class="list-contentName">投资资金：</span>
-                        <span class="list-content current">{{item.investMoney}}</span>
+                        <span class="list-content current">{{money.investAmountName}}</span>
                     </div>
                     <div class="clearfix">
                         <div class="fll">
                             <div class="box_content">
                                 <span class="list-contentName">投资方式：</span>
-                                <span class="list-content">{{actType[1]}}</span>
+                                <span class="list-content">{{money.investCase}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">投资地区：</span>
-                                <span class="list-content">{{investArea[0]}}</span>
+                                <span class="list-content">{{money.investRegionNameStr}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">投资类型：</span>
-                                <span class="list-content">{{item.investType}}</span>
+                                <span class="list-content">{{money.investTypeName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">支付方式：</span>
-                                <span class="list-content">{{item.payType}}</span>
+                                <span class="list-content">{{money.paymentTypeName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">保障措施：</span>
-                                <span class="list-content">{{item.measure}}</span>
+                                <span class="list-content">{{money.riskControlName}}</span>
                             </div>
                         </div>
                         <div class="fll">
                             <div class="box_content">
                                 <span class="list-contentName">资金类型：</span>
-                                <span class="list-content">{{moneyType[1]}}</span>
+                                <span class="list-content">{{money.capitalBodyName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">投资行业：</span>
-                                <span class="list-content">{{item.investIndustry}}</span>
+                                <span class="list-content">{{money.investIndustryName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">投资阶段：</span>
-                                <span class="list-content">{{item.investStage}}</span>
+                                <span class="list-content">{{money.investStageName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">有效期限：</span>
-                                <span class="list-content">{{item.investStage}}</span>
+                                <span class="list-content">{{money.expiryDateStartTime}}~{{money.expiryDateEndTime}}</span>
                             </div>
                         </div>
                         <div class="fll">
                             <div class="box_content">
                                 <span class="list-contentName">资金来源：</span>
-                                <span class="list-content">{{moneyType[1]}}</span>
+                                <span class="list-content">{{money.capitalSourceName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">市场热点：</span>
-                                <span class="list-content">{{item.hot}}</span>
+                                <span class="list-content">{{money.hot}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">区域热点：</span>
-                                <span class="list-content">{{item.hotArea}}</span>
+                                <span class="list-content">{{money.hotArea}}</span>
                             </div>
                         </div>
                     </div>
-                </router-link>
             </div>
             <div class="w810">
                 <div class="require">
@@ -95,7 +94,7 @@
 
                 </div>
                 <div class="requireContent">
-                    本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知
+                    {{money.investRequire}}
                 </div>
                 <div class="require">
                     <span>
@@ -103,7 +102,7 @@
                     </span>
                 </div>
                 <div class="requireContent">
-                    客户要求保密
+                    {{money.investCase}}
                 </div>
                 <div class="require">
                     <span>
@@ -112,7 +111,7 @@
 
                 </div>
                 <div class="requireContent">
-                    本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知
+                    {{money.otherExplain}}
                 </div>
             </div>
         </div>
@@ -127,7 +126,7 @@
                 <p><span>所属行业：</span><span>互联网</span></p>
                 <p><span>关注行业：</span><span>互联网、金融、节能环保</span></p>
                 <div class="lookBtnBox">
-                    <el-button class="lookBtn" @click="$router.push('/money/investors')">查看联系方式</el-button>          
+                    <el-button class="lookBtn" @click="$router.push('/money/moneyDetail/investors')">查看联系方式</el-button>          
                 </div>
             </el-card>
             <p class="mes">他的更多资金</p>
@@ -190,23 +189,62 @@
                     {
                         title: '北京某企资金1000万-9亿元寻求全国优质实体项目合作'
                     },
-                ]
+                ],
+                money:{},
+                follow:0,
+                id:""
             };
         },
         methods: {
-            getType(e) {
-                console.log(e);
+            getData(){
+                this.id = this.$route.query.id
+                this.loading = true
+                this.$axios.get(`/jsp/wap/trCapital/ctrl/jsonCapitalDetail.jsp?id=${this.id}`).then(res => {
+                    this.money = res.data
+                    this.loading = false
+                })
             },
-            getStatus(e) {
-                console.log(e);
+            //获取关注状态
+            getFollow(){
+                this.$axios.get(`/jsp/wap/trCapital/ctrl/jsonIsFollow.jsp?id=${this.id}`).then(res => {
+                    console.log(res);
+                    this.follow = Number(res.data)
+                })
             },
-            apply() { },
-            over() {
-                this.$notify.error({
-                    title: "错误",
-                    message: "活动已结束"
-                });
+            //关注
+            gofollow(){
+                this.$axios.get(`/jsp/wap/trCapital/do/doFollow.jsp?id=${this.id}`).then(res => {
+                    if(res.success == "true"){
+                        this.$notify.success({
+                            message: '关注成功'
+                        });
+                        this.follow = 1                         
+                    } else {
+                        this.$notify.error({
+                            message: '关注失败'
+                        });
+                    }
+                })
+            },
+            //取消关注
+            nofollow(){
+                this.$axios.get(`/jsp/wap/trCapital/do/doUnfollow.jsp?id=${this.id}`).then(res => {
+                    if(res.success == "true"){
+                        this.$notify.success({
+                            message: '取消关注成功'
+                        });
+                        this.follow = 0                         
+                    } else {
+                        this.$notify.error({
+                            message: '取消失败'
+                        });
+                    }
+                })
             }
+        },
+        created(){
+            this.getData()
+            this.getFollow()
         }
     };
 </script>
@@ -329,11 +367,14 @@
 
     .box_content {
         line-height: 2;
-        width: 250px
+        width: 250px;
+        overflow: hidden; /*超出部分隐藏*/
+        white-space: nowrap; /*不换行*/
+        text-overflow: ellipsis;
     }
 
     .require {
-        border-bottom: 2px solid #ccc
+        border-bottom: 1px solid #cdcdcd;
     }
 
     .require span {
@@ -343,7 +384,9 @@
         line-height: 1.5;
         display: inline-block;
         padding-bottom: 15px;
-        border-bottom: 2px solid #005982
+        border-bottom: 2px solid #005982;
+        position: relative;
+        bottom: -2px;
     }
 
     .requireContent {

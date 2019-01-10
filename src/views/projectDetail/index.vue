@@ -3,53 +3,78 @@
         <div class="bread">
             <span>
                 <router-link to="/home">首页 ></router-link>
-                <router-link to="/money">找项目 ></router-link>
+                <router-link to="/project">找项目 ></router-link>
             </span>
             <span>{{$route.meta.title}}</span>
         </div>
         <div class="w840 fll">
-            <div class="act_list clearfix" v-for="(item, index) in actlist" :key="index">
+            <div class="act_list clearfix">
                 <div class="fll list">
                     <div class="clearfix">
-                        <span class="list-title fll">{{item.title}}</span>
-                        <div class="flr company">{{item.beginTime}}</div>
+                        <span class="list-title fll">{{project.title}}</span>
+                        <div class="flr company">{{project.addTimeStr.slice(0,10)}}</div>
                     </div>
                     <div class="clearfix ">
                         <div class="fll">
                             <div class="box_content">
                                 <span class="list-contentName">编号：</span>
-                                <span class="list-content">4545611155</span>
+                                <span class="list-content">{{project.projectId}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">融资主体：</span>
-                                <span class="list-content">个人</span>
+                                <span class="list-content">{{project.financeBody}}</span>
                             </div>
                             <div class="box_content">
-                                <span class="list-contentName">公司市值：</span>
-                                <span class="list-content">100000万</span>
+                                <span class="list-contentName">公司估值：</span>
+                                <span class="list-content">{{project.companyAssessed}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">市净率(P/B):</span>
-                                <span class="list-content">100</span>
+                                <span class="list-content">{{project.pb}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">所在地区:</span>
+                                <span class="list-content">{{project.regionNameStr}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">所属行业:</span>
+                                <span class="list-content">{{project.industry}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">融资用途:</span>
+                                <span class="list-content">{{project.financingExplain}}</span>
                             </div>
                         </div>
                         <div class="fll">
                             <div class="box_content">
                                 <span class="list-contentName">融资方式：</span>
-                                <span class="list-content">{{moneyType[1]}}</span>
+                                <span class="list-content">{{project.financingWay}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">市盈率(P/E):</span>
-                                <span class="list-content">{{item.investIndustry}}</span>
+                                <span class="list-content">{{project.pe}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">支付方式:</span>
-                                <span class="list-content">{{item.payType}}</span>
+                                <span class="list-content">{{project.paymentType}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">行业性质:</span>
+                                <span class="list-content">{{project.industry}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">融资金额:</span>
+                                <span class="list-content">{{project.paymentType}}</span>
+                            </div>
+                            <div class="box_content">
+                                <span class="list-contentName">意向资金:</span>
+                                <span class="list-content">{{project.pb}}</span>
                             </div>
                         </div>
                         <div class="flr">
                             <el-button class="sendBtn">我要约谈</el-button>
-                            <el-button plain class="focus">关注</el-button>
+                            <el-button v-if="follow" class="sendBtn" @click="nofollow">已关注</el-button>
+                            <el-button plain v-else class="focus" @click="gofollow">关注</el-button>
                         </div>
                     </div>
                 </div>
@@ -62,7 +87,7 @@
 
                 </div>
                 <div class="requireContent">
-                    本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知
+                    {{project.brief}}
                 </div>
                 <div class="require">
                     <span>
@@ -73,33 +98,33 @@
                     <div class="fll">
                         <div class="box_content">
                             <span class="list-contentName">企业名称:</span>
-                            <span class="list-content">客户要求保密</span>
+                            <span class="list-content">{{project.companyName}} </span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">注册资本:</span>
-                            <span class="list-content">50000万</span>
+                            <span class="list-content">{{project.registeredCapital}}万</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">所在地：</span>
-                            <span class="list-content">北京</span>
+                            <span class="list-content">{{project.regionNameStr}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">详细地址:</span>
-                            <span class="list-content">天秀路10号中国农大国际创业园</span>
+                            <span class="list-content">{{project.address}}</span>
                         </div>
                     </div>
                     <div class="fll">
                         <div class="box_content">
                             <span class="list-contentName">团队平均年龄：</span>
-                            <span class="list-content">35</span>
+                            <span class="list-content">{{project.averageAge}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">建企时间：</span>
-                            <span class="list-content">2018-11-19</span>
+                            <span class="list-content">{{project.companyFoundTime}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">官方微信：</span>
-                            <span class="list-content">ktmt</span>
+                            <span class="list-content">{{project.weChat}}</span>
                         </div>
 
                     </div>
@@ -108,31 +133,31 @@
                 <div>
                     <span class="list-contentName" style="display:inline-block">主营业务：</span>
                     <p class="content_desc">
-                        国泰集团是集民用爆破器材生产制造、工程爆破服务为一体并延伸复合油相、纸塑包装、机加设计、危货运输等上下游产业链，同时辐射精细化工、3D打印、信息化技术应用与服务、消防器材等多元产业的大型国有控股上市企业集团，致力于打造国内知名的、兼具国际视野的民爆领军企业
+                        {{project.business}}
                     </p>
                 </div>
                  <div>
                     <span class="list-contentName" style="display:inline-block">公司亮点：</span>
-                    <p class="content_desc">
-                        国泰集团秉承“共创、共赢、共享、共进”的企业使命，“以人为本、科技创新、规范运作、争创一流”的经营理念，在做精做优民爆产业的基础上，近年来，积极延伸上下游产业链，形成了爆破服务一体化的发展模式，同时大力推进多元化产业拓展，迈开了非民爆产业跨领域发展的坚实步伐。
+                    <p class="content_desc">        
+                        {{project.brightSpot}}
                     </p>
                 </div>
                 <div>
                     <span class="list-contentName" style="display:inline-block">行业地位：</span>
                     <p class="content_desc">
-                        国泰集团秉承“共创、共赢、共享、共进”的企业使命，“以人为本、科技创新、规范运作、争创一流”的经营理念，在做精做优民爆产业的基础上，近年来，积极延伸上下游产业链，形成了爆破服务一体化的发展模式，同时大力推进多元化产业拓展，迈开了非民爆产业跨领域发展的坚实步伐。
+                        {{project.position}}
                     </p>
                 </div>
                 <div>
                     <span class="list-contentName" style="display:inline-block">近三年财务数据：</span>
                     <p class="content_desc">
-                        国泰集团秉承“共创、共赢、共享、共进”的企业使命，“以人为本、科技创新、规范运作、争创一流”的经营理念，在做精做优民爆产业的基础上，近年来，积极延伸上下游产业链，形成了爆破服务一体化的发展模式，同时大力推进多元化产业拓展，迈开了非民爆产业跨领域发展的坚实步伐。
+                        {{project.trienniumFinancialData}}
                     </p>
                 </div>
                 <div>
                     <span class="list-contentName" style="display:inline-block">3-5年盈利预测：</span>
                     <p class="content_desc">
-                        国泰集团秉承“共创、共赢、共享、共进”的企业使命，“以人为本、科技创新、规范运作、争创一流”的经营理念，在做精做优民爆产业的基础上，近年来，积极延伸上下游产业链，形成了爆破服务一体化的发展模式，同时大力推进多元化产业拓展，迈开了非民爆产业跨领域发展的坚实步伐。
+                        {{project.profitForecast}}
                     </p>
                 </div>
                 <div class="require">
@@ -142,7 +167,7 @@
 
                 </div>
                 <div class="requireContent">
-                   <img src="static/img/u7115.png" style="width:810px">
+                   <img :src="$url + project.stockStructureImgPath" style="width:810px">
                 </div>
                 <div class="require">
                     <span>
@@ -153,21 +178,21 @@
                      <div class="fll">
                         <div class="box_content">
                             <span class="list-contentName">姓名:</span>
-                            <span class="list-content">沈平</span>
+                            <span class="list-content">{{project.directorName}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">邮箱:</span>
-                            <span class="list-content">shenping@up72.com</span>
+                            <span class="list-content">{{project.directorEmail}}</span>
                         </div>
                     </div>
                     <div class="fll">
                         <div class="box_content">
                             <span class="list-contentName">职务：</span>
-                            <span class="list-content">产品经理</span>
+                            <span class="list-content">{{project.directorJob}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">电话：</span>
-                            <span class="list-content">13426213312</span>
+                            <span class="list-content">{{project.directorPhone}}</span>
                         </div>
                     </div>
                 </div>
@@ -177,9 +202,7 @@
                     </span>
                 </div>
                 <div class="requireContent">
-                     张麒（法人），之前就职于苏州工业园区大型企业10多年，管理企业大型项目，对现代化企业管理流程熟悉。而后在苏州房产销售公司博思堂就职，通过自己的一套营销方法，将业绩做到案场最高，并遥遥领先。
-　　黄羽（总经理），之前就职于招商银行，浦发银行，正式编制。对银行信贷，理财以及信用卡部相关管理流程很熟悉，并通过数年自身的努力得到上级领导和诸多大客户的信任，也从中累计到不少相关资源。
-　　张玉（业务总监），之前就职于中孚房抵，对于房抵业务流程熟悉，实操积累了丰富经验，能打通操作环节个个关节，同行中有相当的知名度。在房抵行业中能号召一批精英朝一个方向迈进。
+                     {{project.teamBrief}}
                 </div>
                 <div class="require">
                     <span>
@@ -187,31 +210,31 @@
                     </span>
                 </div>
                 <div class="requireContent">
-                    本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。
+                    {{projectData.comment}}
                 </div>
             </div>
         </div>
         <div class="w360 flr mes_list clearfix">
             <el-card class="box-card">
                 <div class="userImgBox">
-                    <img class="userImg" src="static/img/userImg.jpg" alt="">
+                    <img class="userImg" :src="projectData.boss.avatar" alt="">
                 </div>
-                <p class="username">李先生</p>
+                <p class="username">{{projectData.boss.name}}</p>
                 <p>
                     <span>职位：</span>
-                    <span>董事长</span>
+                    <span>{{projectData.boss.job}}</span>
                 </p>
                 <p>
                     <span>企业名称：</span>
-                    <span>北京开拓明天股份有限公司</span>
+                    <span>{{projectData.boss.company}}</span>
                 </p>
                 <p>
                     <span>所属行业：</span>
-                    <span>互联网</span>
+                    <span>{{projectData.boss.industry}}</span>
                 </p>
                 <p>
                     <span>关注行业：</span>
-                    <span>互联网、金融、节能环保</span>
+                    <span>{{projectData.boss.RelateIndustry}}</span>
                 </p>
             </el-card>
             <p class="mes">他的更多项目</p>
@@ -219,7 +242,7 @@
                 <router-link to="/">
                     <li v-for="(item,index) in mesData" :key="index" class="mes_content">
                         <p class="mes_listTitle">{{item.title}}</p>
-                        <p>北京开拓明天科技有限公司</p>
+                        <p>{{projectData.boss.company}}</p>
                     </li>
                 </router-link>
             </ul>
@@ -230,30 +253,9 @@
     export default {
         data() {
             return {
-                actType: ["股权投资", "债权投资", "金融投资", "BT/BOT项目投资", "其他投资"],
-                moneyType: ["个人资金", "企业资金", "天使投资", "VC投资", "PE投资", "小额贷款", "典当公司"],
                 area: ["北京", "上海", "广州", "深圳", "农大"],
                 investArea: ["不限", "北京", "上海", "广州", "深圳", "农大"],
                 investMoney: ["不限", "1-10W", "10-20W", "20-30W", "30-50W", "50-100W", "100-200W", "200-500W", "500-1000W"],
-                actlist: [
-                    {
-                        title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
-                        investMoney: "1000万-9亿",
-                        investType: "参股合作 收购/并购",
-                        investIndustry: "互联网",
-                        investStage: "成长期、成熟期",
-                        beginTime: "2019-01-01",
-                        endTime: "2049-10-01",
-                        focus: "155人关注",
-                        userName: "李先生",
-                        company: "北京青创服务平台有限公司",
-                        payType: "现金支付、股权对价",
-                        whereMoney: "自由资金，募集资金",
-                        measure: "包括但不限于业绩承诺(对赌)、回购、上市承诺",
-                        hot: "人工智能、大数据、物联网",
-                        hotArea: "京津冀 长三角"
-                    },
-                ],
                 mesData: [
                     {
                         title: '北京某企资金1000万-9亿元寻求全国优质实体项目合作'
@@ -270,23 +272,121 @@
                     {
                         title: '北京某企资金1000万-9亿元寻求全国优质实体项目合作'
                     },
-                ]
+                ],
+                projectData:{
+                    number:4545611155,
+                    subject:'个人',
+                    marketValue:'100000万',
+                    PB:100,
+                    moneyType: ["个人资金", "企业资金", "天使投资", "VC投资", "PE投资", "小额贷款", "典当公司"],
+                    actType: ["股权投资", "债权投资", "金融投资", "BT/BOT项目投资", "其他投资"],
+                    actlist: 
+                            {
+                                title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
+                                investMoney: "1000万-9亿",
+                                investType: "参股合作 收购/并购",
+                                investIndustry: "互联网",
+                                investStage: "成长期、成熟期",
+                                beginTime: "2019-01-01",
+                                endTime: "2049-10-01",
+                                focus: "155人关注",
+                                userName: "李先生",
+                                company: "北京青创服务平台有限公司",
+                                payType: "现金支付、股权对价",
+                                whereMoney: "自由资金，募集资金",
+                                measure: "包括但不限于业绩承诺(对赌)、回购、上市承诺",
+                                hot: "人工智能、大数据、物联网",
+                                hotArea: "京津冀 长三角"
+                            },
+                    company:{
+                        intro:'本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知本公司在金融行业运作多年，在北京市政府国资委的大力支持下，近些年来得到了飞速发展，已成为行业知',
+                        name:'客户要求保密',
+                        capital:5000,
+                        location:'北京',
+                        locationDetail:'天秀路10号中国农大国际创业园',
+                        age:35,
+                        buildTime:'2018-11-19',
+                        weixin:'ktmt',
+                        business :'国泰集团是集民用爆破器材生产制造、工程爆破服务为一体并延伸复合油相、纸塑包装、机加设计、危货运输等上下游产业链，同时辐射精细化工、3D打印、信息化技术应用与服务、消防器材等多元产业的大型国有控股上市企业集团，致力于打造国内知名的、兼具国际视野的民爆领军企业',
+                        lightspot :'国泰集团是集民用爆破器材生产制造、工程爆破服务为一体并延伸复合油相、纸塑包装、机加设计、危货运输等上下游产业链，同时辐射精细化工、3D打印、信息化技术应用与服务、消防器材等多元产业的大型国有控股上市企业集团，致力于打造国内知名的、兼具国际视野的民爆领军企业',
+                        position :'国泰集团是集民用爆破器材生产制造、工程爆破服务为一体并延伸复合油相、纸塑包装、机加设计、危货运输等上下游产业链，同时辐射精细化工、3D打印、信息化技术应用与服务、消防器材等多元产业的大型国有控股上市企业集团，致力于打造国内知名的、兼具国际视野的民爆领军企业',
+                        finance : '国泰集团秉承“共创、共赢、共享、共进”的企业使命，“以人为本、科技创新、规范运作、争创一流”的经营理念，在做精做优民爆产业的基础上，近年来，积极延伸上下游产业链，形成了爆破服务一体化的发展模式，同时大力推进多元化产业拓展，迈开了非民爆产业跨领域发展的坚实步伐。',
+                        forecast : '国泰集团秉承“共创、共赢、共享、共进”的企业使命，“以人为本、科技创新、规范运作、争创一流”的经营理念，在做精做优民爆产业的基础上，近年来，积极延伸上下游产业链，形成了爆破服务一体化的发展模式，同时大力推进多元化产业拓展，迈开了非民爆产业跨领域发展的坚实步伐。',
+                        structure: '/static/img/u7115.png',
+                    },
+                    staff: {
+                        name:'沈平',
+                        email:'shenping@up72.com',
+                        job:'产品经理',
+                        phone:'13426213312',
+                        core:'张麒（法人），之前就职于苏州工业园区大型企业10多年，管理企业大型项目，对现代化企业管理流程熟悉。而后在苏州房产销售公司博思堂就职，通过自己的一套营销方法，将业绩做到案场最高，并遥遥领先。黄羽（总经理），之前就职于招商银行，浦发银行，正式编制。对银行信贷，理财以及信用卡部相关管理流程很熟悉，并通过数年自身的努力得到上级领导和诸多大客户的信任，也从中累计到不少相关资源。张玉（业务总监），之前就职于中孚房抵，对于房抵业务流程熟悉，实操积累了丰富经验，能打通操作环节个个关节，同行中有相当的知名度。在房抵行业中能号召一批精英朝一个方向迈进。',
+                        comment:'本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设备，目前只是在生产样机，正在做产品的检测，近期就会有检测结果出来，融资500万，主要用于设备和销售渠道的建设。',
+                    },
+                    boss: {
+                        avatar:'static/img/userImg.jpg',
+                        name:'李先生',
+                        job:'董事长',
+                        company:'北京开拓明天股份有限公司',
+                        industry:'互联网',
+                        RelateIndustry:'互联网、金融、节能环保',
+                    }
+                },
+                project:{
+                    addTimeStr:'2018-01-07'
+                },
+                follow:0,
+                id:""
             };
         },
         methods: {
-            getType(e) {
-                console.log(e);
+            getData(){
+                this.id = this.$route.query.id
+                this.loading = true
+                this.$axios.get(`/jsp/wap/trProject/ctrl/jsonProjectDetail.jsp?id=${this.id}`).then(res => {
+                    this.project = res.data
+                    this.loading = false
+                })
             },
-            getStatus(e) {
-                console.log(e);
+            //获取关注状态
+            getFollow(){
+                this.$axios.get(`/jsp/wap/trProject/ctrl/jsonIsFollow.jsp?id=${this.id}`).then(res => {
+                    this.follow = Number(res.data)
+                })
             },
-            apply() { },
-            over() {
-                this.$notify.error({
-                    title: "错误",
-                    message: "活动已结束"
-                });
+            //关注
+            gofollow(){
+                this.$axios.get(`/jsp/wap/trProject/do/doFollow.jsp?id=${this.id}`).then(res => {
+                    if(res.success == "true"){
+                        this.$notify.success({
+                            message: '关注成功'
+                        });
+                        this.follow = 1                         
+                    } else {
+                        this.$notify.error({
+                            message: '关注失败'
+                        });
+                    }
+                })
+            },
+            //取消关注
+            nofollow(){
+                this.$axios.get(`/jsp/wap/trProject/do/doUnfollow.jsp?id=${this.id}`).then(res => {
+                    if(res.success == "true"){
+                        this.$notify.success({
+                            message: '取消关注成功'
+                        });
+                        this.follow = 0                         
+                    } else {
+                        this.$notify.error({
+                            message: '取消失败'
+                        });
+                    }
+                })
             }
+        },
+        created(){
+            this.getData()
+            this.getFollow()
         }
     };
 </script>
@@ -420,7 +520,7 @@
     }
 
     .require {
-        border-bottom: 2px solid #ccc
+        border-bottom: 1px solid #cdcdcd;
     }
 
     .require span {
@@ -430,14 +530,16 @@
         line-height: 1.5;
         display: inline-block;
         padding-bottom: 15px;
-        border-bottom: 2px solid #005982
+        border-bottom: 2px solid #005982;
+        position: relative;
+        bottom:-2px;
     }
 
     .requireContent {
         padding: 15px 0;
         line-height: 2;
         font-size: 14px;
-        text-indent: 2em;        
+        // text-indent: 2em;        
     }
 
     .list-content {

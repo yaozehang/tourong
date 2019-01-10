@@ -1,0 +1,181 @@
+<template>
+  <div class="fll">
+    <div class="person_content" style="min-height:150px">
+      <p class="week_now">
+        <span class="week_title">本期周报</span>
+      </p>
+      <router-link
+        :to="{name:'weeklyReportDetail',params:reportData[reportData.length - 1],query:reportData.length}"
+      >
+        <p class="report_now">
+          <i></i>
+          <span>{{reportData[reportData.length - 1].year}}年第{{reportData.length}}期</span>
+          <span class="time">{{reportData[reportData.length - 1].time}}</span>
+        </p>
+      </router-link>
+    </div>
+    <div class="person_content mg-20">
+      <p class="week_now">
+        <span class="week_title">往期周报</span>
+      </p>
+      <div class="clearfix">
+        <ul class="report_ul fll">
+          <router-link to>
+            <li class="report_list" v-for="(item , index) in reportData" :key="index">
+              <span class="time">{{item.time}}</span>
+              <span class="line"></span>
+              <i></i>
+              <span class="year">{{item.year}}年第{{index + 1}}期</span>
+            </li>
+          </router-link>
+        </ul>
+        <ul class="report_ul flr" style="margin-right:30px;">
+          <!-- <router-link to=""> -->
+          <li class="report_list" v-for="(item , index) in reportData" :key="index">
+            <span class="time">{{item.time}}</span>
+            <span class="line"></span>
+            <i></i>
+            <span class="year">{{item.year}}年第{{index + 1}}期</span>
+          </li>
+          <!-- </router-link> -->
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      reportData: [
+        {
+          time: "2018-11-14",
+          year: "2018",
+        },
+        {
+          time: "2018-11-14",
+          year: "2018"
+        },
+        {
+          time: "2018-11-14",
+          year: "2018"
+        },
+        {
+          time: "2018-11-14",
+          year: "2018"
+        },
+        {
+          time: "2018-11-14",
+          year: "2018"
+        },
+        {
+          time: "2018-11-14",
+          year: "2018"
+        },
+        {
+          time: "2018-11-14",
+          year: "2018"
+        },
+        {
+          time: "2018-11-14",
+          year: "2018",
+        }
+      ]
+    };
+  }
+};
+</script>
+
+<style scoped lang="scss">
+.week_now {
+  padding-bottom: 20px;
+  border-bottom: 1px dashed #cdcdcd;
+}
+.week_title {
+  padding-left: 20px;
+  border-left: 5px solid #005982;
+  font-size: 18px;
+  font-family: "Microsoft YaHei";
+  color: rgb(0, 83, 133);
+  font-weight: bold;
+}
+.report_now {
+  position: relative;
+  font-size: 18px;
+  font-family: "Microsoft YaHei";
+  color: rgb(51, 51, 51);
+  font-weight: bold;
+  margin-left: 35px;
+  margin-bottom: 0;
+  i {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: -1px;
+    left: -35px;
+    background: url(/static/img/zhoubao-2.png) no-repeat center;
+    background-size: contain;
+  }
+  .time {
+    margin-left: 30px;
+    font-size: 14.431px;
+    font-family: "Microsoft YaHei";
+    color: rgb(153, 153, 153);
+    -moz-transform: matrix(1.00001401727815, 0, 0, 0.97011118031353, 0, 0);
+    -webkit-transform: matrix(1.00001401727815, 0, 0, 0.97011118031353, 0, 0);
+    -ms-transform: matrix(1.00001401727815, 0, 0, 0.97011118031353, 0, 0);
+  }
+}
+
+li {
+  list-style-type: none;
+}
+
+.report_list {
+  font-size: 16px;
+  color: #000;
+  height: 80px;
+  position: relative;
+  .line {
+    padding: 0px 40px 55px 0;
+    margin-right: 60px;
+    border-right: 2px solid #ededed;
+    position: relative;
+    top: 15px;
+  }
+  i {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    top: 7px;
+    left: 130.5px;
+    background: url(/static/img/huidian.png) no-repeat center;
+    background-size: contain;
+  }
+}
+
+.report_ul .report_list:last-child {
+  .line {
+    border: none;
+  }
+}
+
+.report_ul .report_list:hover {
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+  color: rgb(0, 83, 133);
+    i {
+      display: inline-block;
+      width: 13px;
+      height: 13px;
+      position: absolute;
+      top: 7px;
+      left: 128px;
+      background: url(/static/img/landian.png) no-repeat center;
+      background-size: contain;
+  }
+}
+</style>

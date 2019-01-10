@@ -2,20 +2,24 @@
   <div>
     <div class="bg-89">
       <div class="w1200">
-        <span class="txt-202">您好，请
+        <span class="txt-202" v-show="login">您好，请
           <router-link to="/login">登录</router-link>!
         </span>
-        <span class="txt-202 register">免费注册</span>
+        <span class="txt-202" v-show="!login">
+          您好，欢迎您
+        </span>
+        <span class="txt-202 register" @click="$router.push('/login')"  v-show="login">免费注册</span>
+        <span class="txt-202 register"  v-show="!login" style="color:#fff;" @click="login_out">退出登录</span>
         <el-dropdown>
           <span class="invest el-dropdown-link">
             <i></i>
             我是投资人
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>发布资金</el-dropdown-item>
-            <el-dropdown-item>认证投资人</el-dropdown-item>
-            <el-dropdown-item>创投咨询</el-dropdown-item>
-            <el-dropdown-item>找项目</el-dropdown-item>
+            <el-dropdown-item @click.native="toMymoney">发布资金</el-dropdown-item>
+            <el-dropdown-item @click.native="toMemberAttest">认证投资人</el-dropdown-item>
+            <el-dropdown-item @click.native="$router.push('/message')">创投资讯</el-dropdown-item>
+            <el-dropdown-item @click.native="$router.push('/project')">找项目</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <el-dropdown>
@@ -24,25 +28,25 @@
             我是创业人
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>创建项目</el-dropdown-item>
-            <el-dropdown-item>创投咨询</el-dropdown-item>
-            <el-dropdown-item>认证创业者</el-dropdown-item>
-            <el-dropdown-item>找投资</el-dropdown-item>
+            <el-dropdown-item @click.native="toMyproject">创建项目</el-dropdown-item>
+            <el-dropdown-item @click.native="$router.push('/message')">创投资讯</el-dropdown-item>
+            <el-dropdown-item @click.native="toMemberAttest">认证创业者</el-dropdown-item>
+            <el-dropdown-item @click.native="$router.push('/money')">找投资</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <span class="message el-dropdown-link">
-          <i></i>
-          消息通知
-        </span>
-        <span class="mine el-dropdown-link" @click="$router.push('/person')">
+        <span class="mine el-dropdown-link flr" @click="person">
           <i></i>
           个人中心
+        </span>
+        <span class="message el-dropdown-link flr" @click="inform">
+          <i></i>
+          消息通知
         </span>
       </div>
     </div>
     <div class="header_2">
       <div class="w1200 nav clearfix">
-        <img src="/static/img/logo-1.png" alt="投融连线" class="fll">
+        <img src="/static/img/logo-1.png" alt="投融连线" class="fll" @click="$router.push('/home')" style="cursor:pointer">
         <div class="navMenu fll"><router-link to="/home">首页</router-link></div>
         <div class="navMenu fll"><router-link to="/money">找资金</router-link></div>
         <div class="navMenu fll"><router-link to="/project">选项目</router-link></div>
@@ -53,13 +57,13 @@
         <div class="navMenu fll" style="color:#999;">路演</div>
         <div class="search fll">
           <form action class="form fll">
-            <select value="1" class="select">
+            <select class="select"  v-model="type">
               <option value="1">找资金</option>
               <option value="2">找项目</option>
-              <option value="2">找咨询</option>
+              <option value="3">找资讯</option>
             </select>
-            <input type="text" placeholder="输入关键字" class="input">
-            <img src="/static/img/search.png" alt="" class="search-button">
+            <input type="text" placeholder="输入关键字" class="input" v-model="title" @keyup.enter="search">
+            <img src="/static/img/search.png" alt="" class="search-button" @click="search">
           </form>
           <img src="/static/img/kefu.png" alt="" class="fll" style="margin-left:5px;cursor:pointer;">
         </div>
@@ -69,7 +73,97 @@
 </template>
 
 <script>
-export default {};
+import * as Cookies from 'js-cookie'
+
+export default {
+  data() {
+    return {
+      login:false,
+      type:'1',
+      title:'',
+    }
+  },
+  methods:{
+    login_now(){
+       if(Cookies.get('userKey')){
+         this.login = false
+       } else {
+         this.login = true
+       }
+     },
+    login_out(){
+        Cookies.remove('userKey')
+        this.login = false
+        location.reload()
+    },
+    person(){
+       if(Cookies.get('userKey')){
+       this.$router.push('/person')
+       } else {
+         this.$router.push('/login')
+       }
+     },
+      toMymoney(){
+        if(Cookies.get('userKey')){
+        this.$router.push('/person/myMoney')
+        } else {
+          this.$router.push('/login')
+        }
+      },
+      toMemberAttest(){
+        if(Cookies.get('userKey')){
+        this.$router.push('/person/memberAttest')
+        } else {
+          this.$router.push('/login')
+        }
+      },
+      toMyproject(){
+        if(Cookies.get('userKey')){
+        this.$router.push('/person/myProject')
+        } else {
+          this.$router.push('/login')
+        }
+      },
+    inform(){
+       if(Cookies.get('userKey')){
+       this.$router.push('/person/inform')
+       } else {
+         this.$router.push('/login')
+       }
+     },
+    search(){
+      if(this.type == '1'){
+        let {href} = this.$router.resolve({
+            name: "searchMoney",
+            query: {
+              title:this.title,
+            }
+          });
+          window.open(href, '_blank');
+        
+      } else if(this.type == '2'){
+        let {href} = this.$router.resolve({
+            name: "searchProject",
+            query: {
+              title:this.title,
+            }
+          });
+        window.open(href, '_blank');
+      } else if(this.type == '3'){
+        let {href} = this.$router.resolve({
+            name: "searchMessage",
+            query: {
+              title:this.title,
+            }
+          });
+        window.open(href, '_blank');
+      }
+    }
+  },
+  created(){
+    this.login_now()
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -131,13 +225,12 @@ a {
 }
 .message {
   color: #e5e5e5;
-  margin-left: 75px;
   cursor: pointer;
   position: relative;
   i {
     display: inline-block;
     position: absolute;
-    bottom: 2px;
+    bottom: 6px;
     left: -23px;
     width: 17px;
     height: 17px;
@@ -153,7 +246,7 @@ a {
   i {
     display: inline-block;
     position: absolute;
-    bottom: 2px;
+    bottom: 6px;
     left: -20px;
     width: 17px;
     height: 16px;

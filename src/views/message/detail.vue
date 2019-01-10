@@ -6,23 +6,26 @@
           <router-link to="/home">首页 ></router-link>
         </span>
         <span>
-          <router-link to="/message">投融资讯 ></router-link>
+          <router-link :to="{name:'message',query:{category:mesDetailData.category}}">投融资讯 ></router-link>
+        </span>
+        <span>
+          <router-link :to="{name:'message',query:{category:mesDetailData.category}}">{{mesDetailData.categoryName}} ></router-link>
         </span>
         <span>{{$route.meta.title}}</span>
       </div>
-      <div class="w870 fll mes_card">
+      <div class="w870 fll mes_card" v-loading="loading">
         <p class="title">{{mesDetailData.title}}</p>
         <p class="about">
-          <span class="about_item">{{mesDetailData.time}}</span>
-          <span class="about_item">微信公众号：{{mesDetailData.weixin}}</span>
-          <span class="about_item">{{mesDetailData.author}}</span>
-          <span class="about_item">阅读：{{mesDetailData.num}}</span>
+          <span class="about_item">{{mesDetailData.publishTimeStr}}</span>
+          <span class="about_item">来源：{{mesDetailData.source}}</span>
+          <span class="about_item">作者：{{mesDetailData.author}}</span>
+          <span class="about_item">阅读：{{mesDetailData.readNum}}</span>
           <i class="zone"></i>
           <i class="microblog"></i>
           <i class="weixin"></i>
           <i class="add"></i>
         </p>
-        <p class="contentHtml" v-html="mesDetailData.contentHtml"></p>
+        <p class="contentHtml" v-html="mesDetailData.content"></p>
         <div class="discuss">
           <p class="login" @click="$router.push('/login')">登录</p>
           <textarea name="" id="" cols="96%" rows="3" placeholder="来说两句吧..."></textarea>
@@ -34,7 +37,7 @@
         <div class="common_line">
           <span class="common">评论</span>
         </div>
-        <p class="common_title">最新评论</p>
+        <p class="common_title" v-show="!commonData">最新评论</p>
         <div class="common_list clearfix" v-for="(item , index) in commonData" :key="index">
           <img :src="item.avatar" alt="" class="common_img fll">
           <div class="fll common_item">
@@ -50,16 +53,20 @@
             </div>
           </div>
         </div>
-        <button class="moreBtn">查看更多</button>
+        <button class="moreBtn" v-show="!commonData">查看更多</button>
+        <p v-show="commonData" style="text-align:center;">暂无评论</p>
       </div>
       <div class="w300 clearfix mes_list flr">
         <p class="mes">热门资讯
-        <span class="mes_more flr">更多></span>
+        <span class="mes_more flr" @click="toMessagePage">更多></span>
         </p>
-        <div class="mes_title">
-          <router-link to="">
-          <div v-for="(item , index) in mesData" :key="index" class="mes_content"><span class="cl-0"><span class="count" :class=" index <= 2 ? 'hot' : '' ">{{index + 1}}</span>{{item.content}}</span></div>
-          </router-link>
+        <div class="mes_title" v-loading="newsloading">
+          <div v-for="(item , index) in mesData" :key="index" class="mes_content" @click="toMessageDetailPage(item.id)">
+            <span class="cl-0">
+              <span class="count" :class=" index <= 2 ? 'hot' : '' ">{{index + 1}}</span>
+                {{item.title}}
+              </span>
+          </div>
         </div>
       </div>
     </div>
@@ -120,41 +127,87 @@ export default {
             "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
         }
       ],
-      commonData:[
-        {
-          avatar:'/static/img/avatar-1.png',
-          username:'投融网友',
-          location:'陕西省西安市',
-          beforeTime:'10分钟前',
-          content:'谢谢习主席',
-          from:'投融连线平台',
-          good:1,
-        },
-        {
-          avatar:'/static/img/avatar-1.png',
-          username:'投融网友',
-          location:'陕西省西安市',
-          beforeTime:'10分钟前',
-          content:'谢谢习主席',
-          from:'投融连线平台',
-          good:1,
-        },
-        {
-          avatar:'/static/img/avatar-1.png',
-          username:'投融网友',
-          location:'陕西省西安市',
-          beforeTime:'10分钟前',
-          content:'谢谢习主席',
-          from:'投融连线平台',
-          good:1,
-        },
-      ]
+      commonData:[],
+      // commonData:[
+      //   {
+      //     avatar:'/static/img/avatar-1.png',
+      //     username:'投融网友',
+      //     location:'陕西省西安市',
+      //     beforeTime:'10分钟前',
+      //     content:'谢谢习主席',
+      //     from:'投融连线平台',
+      //     good:1,
+      //   },
+      //   {
+      //     avatar:'/static/img/avatar-1.png',
+      //     username:'投融网友',
+      //     location:'陕西省西安市',
+      //     beforeTime:'10分钟前',
+      //     content:'谢谢习主席',
+      //     from:'投融连线平台',
+      //     good:1,
+      //   },
+      //   {
+      //     avatar:'/static/img/avatar-1.png',
+      //     username:'投融网友',
+      //     location:'陕西省西安市',
+      //     beforeTime:'10分钟前',
+      //     content:'谢谢习主席',
+      //     from:'投融连线平台',
+      //     good:1,
+      //   },
+      // ],
+      id:'',
+      loading:false,
+      newsloading:false,
     }
+  },
+  methods:{
+    getData(){
+      this.id = this.$route.query.id
+      this.loading = true
+      this.$axios.get(`/jsp/wap/trNews/ctrl/jsonNewsDetail.jsp?id=${this.id}`).then(res => {
+        console.log(res);
+        this.mesDetailData = res.data
+        this.loading = false
+      })
+    },
+    getNewsList(){
+      this.newsloading = true;
+      this.$axios
+        .get("/jsp/wap/trNews/ctrl/jsonHotNewsList.jsp",)
+        .then(res => {
+          if (res.success == "true") {
+            this.mesData = res.data
+            this.newsloading = false;
+          }
+        });
+    },
+    toMessagePage(){
+      let {href} = this.$router.resolve({
+          name: "message",
+      });
+      window.open(href, '_blank');
+    },
+    toMessageDetailPage(id){
+      let {href} = this.$router.resolve({
+          name: "messageDetail",
+          query: {id}
+      });
+      window.open(href, '_blank');
+    },
+  },
+  created(){
+    this.getData()
+    this.getNewsList()
   }
 };
 </script>
 
 <style scoped lang="scss">
+.contentHtml {
+  min-height: 500px;
+}
 //详情
 .mes_card {
   padding: 30px 20px;
@@ -215,6 +268,7 @@ export default {
 
 }
 .mes_content {
+  cursor: pointer;
   font-size: 14px;
   padding: 20px 0;
   border-bottom: 1px solid #d9d9d9;

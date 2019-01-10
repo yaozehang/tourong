@@ -8,10 +8,10 @@
         <p class="contact-item">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：{{contactData.eMail}}</p>
       </div>
       <div class="about fll">
-        <router-link to>
+        <router-link to="/aboutUs">
           <img src="/static/img/about-1.png" alt class="about-1">
         </router-link>
-        <router-link to>
+        <router-link to="/callUs">
           <img src="/static/img/about-2.png" alt class="about-2">
         </router-link>
         <router-link to>
@@ -46,9 +46,9 @@ export default {
   data() {
     return {
       contactData: {
-        phone: "01088888888",
-        address: "北京市海淀区天秀路10号中国农大国际创业园",
-        eMail: "demodemo@demo.com"
+        phone: "13141100137",
+        address: "北京市西城区裕民东路3号京版信息港8层",
+        eMail: "kefu@zqcmlink.com"
       }
     };
   }
@@ -83,6 +83,10 @@ export default {
   padding-top: 30px;
   .twoCode-2 {
     padding-right: 45px;
+    width: 140px;
+  }
+  .twoCode-1 {
+    width: 140px;
   }
 }
 .line {

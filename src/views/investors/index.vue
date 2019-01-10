@@ -4,6 +4,9 @@
                 <span>
                     <router-link to="/home">首页 ></router-link>
                 </span>
+                <span>
+                    <router-link to="/money">找资金 ></router-link>
+                </span>
                 <span>{{$route.meta.title}}</span>
             </div>
         <div class="w840 fll">

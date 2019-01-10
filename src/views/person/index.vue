@@ -1,40 +1,322 @@
 <template>
   <div class="bg-fa">
-    <div class="w1200">
+    <div class="w1200 clearfix">
       <div class="bread">
         <span>
           <router-link to="/home">首页 ></router-link>
         </span>
         <span>
-          <router-link to="/message">个人中心</router-link>
+          <router-link to="/person">个人中心</router-link>
         </span>
         <span v-show="$route.meta.title != '个人中心'">> {{$route.meta.title}}</span>
       </div>
-      <div class="person_navbar">
-        <div class="person_top"></div>
-        <div>
-          <img src="" alt="">
+      <div class="person_navbar fll">
+        <div class="person_top" @click="$router.push('/person')"></div>
+        <div class="person_information">
+          <img :src="personData.avatar" alt class="avatar">
+          <i class="attest"></i>
+          <p class="username">
+            <i></i>
+            {{personData.username}}
+          </p>
+          <p class="company" v-show="personData.company === 0">上市公司</p>
+          <p class="company" v-show="personData.company === 1">上市公司</p>
+          <p class="company" v-show="personData.company === 2">上市公司</p>
+          <p class="company" v-show="personData.company === 3">上市公司</p>
+          <p class="equity">
+            <i></i>会员权益中心
+          </p>
+        </div>
+        <div class="nav_list">
+          <div class="nav_item">
+            <span>
+              <router-link :to="{name:'weeklyReport'}">
+                <i class="place report"></i>
+                周报
+              </router-link>
+            </span>
+          </div>
+          <div class="nav_item">
+            <span>
+              <router-link :to="{name:'fastReport'}">
+                <i class="place fast"></i>
+                及时快报
+              </router-link>
+            </span>
+          </div>
+          <div class="nav_item">
+            <span>
+              <router-link :to="{name:'memberAttest'}">
+                <i class="place attest"></i>
+                会员认证
+              </router-link>
+            </span>
+          </div>
+          <div class="nav_item">
+            <span>
+              <router-link :to="{name:'myData'}">
+                <i class="place data"></i>
+                我的资料
+              </router-link>
+            </span>
+          </div>
+          <div class="nav_item">
+            <span>
+              <router-link :to="{name:'myAttention'}">
+                <i class="place attention"></i>
+                我的关注
+              </router-link>
+            </span>
+          </div>
+          <div class="nav_item">
+            <span>
+              <router-link :to="{name:'myMoney'}">
+                <i class="place money"></i>
+                我的资金
+              </router-link>
+            </span>
+          </div>
+          <div class="nav_item">
+            <span>
+              <router-link :to="{name:'myProject'}">
+                <i class="place project"></i>
+                我的项目
+              </router-link>
+            </span>
+          </div>
+          <div class="nav_item">
+            <span>
+              <router-link :to="{name:'myActivity'}">
+                <i class="place activity"></i>
+                我报名的活动
+              </router-link>
+            </span>
+          </div>
+          <div class="nav_item">
+            <span>
+              <router-link :to="{name:'myDemand'}">
+                <i class="place demand"></i>
+                需求填报
+              </router-link>
+            </span>
+          </div>
+          <div class="nav_item">
+            <span @click="login_out">
+              <a href="javascript:;">
+                <i class="place quit"></i>
+                退出登录
+              </a>
+            </span>
+          </div>
         </div>
       </div>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import * as Cookies from 'js-cookie'
+
+export default {
+  data() {
+    return {
+      personData: {
+        avatar: "/static/img/avatar-1.jpg",
+        attest: 1,
+        username: "李先生",
+        company: 0
+      }
+    };
+  },
+  methods:{
+    login_out(){
+        Cookies.remove('userKey')
+        this.login = false
+        this.$router.push('/login')
+     }
+  }
+};
 </script>
 
 <style scoped lang="scss">
+//左导航栏
 .person_navbar {
   width: 220px;
-  height: 865px;
+  height: 890px;
   background: #fff;
   margin-bottom: 100px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.1);
   .person_top {
     width: 100%;
     height: 50px;
     background: url(/static/img/person.png) no-repeat center;
     background-size: contain;
+    cursor: pointer;
+  }
+  .person_information {
+    position: relative;
+    .avatar {
+      display: block;
+      width: 80px;
+      height: 80px;
+      border: 1px solid #ededed;
+      border-radius: 50%;
+      margin: 0 auto;
+      margin-top: 20px;
+    }
+    .attest {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background: url(/static/img/renzheng.png);
+      background-size: contain;
+      position: absolute;
+      left: 55%;
+      top: 55px;
+    }
+    .username {
+      text-align: center;
+      margin-left: 18px;
+      position: relative;
+      i {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background: url(/static/img/ren.png) no-repeat center;
+        background-size: contain;
+        position: absolute;
+        top: 1px;
+        left: 58px;
+      }
+    }
+    .company {
+      text-align: center;
+      color: #999;
+    }
+    .equity {
+      width: 102px;
+      padding: 5px 10px 5px 25px;
+      font-size: 17px;
+      line-height: 1.5;
+      cursor: pointer;
+      background-color: #ededed;
+      margin: 20px auto;
+      position: relative;
+      i {
+        display: inline-block;
+        width: 20px;
+        height: 15px;
+        background: url(/static/img/zunshi.png) no-repeat center;
+        background-size: contain;
+        position: absolute;
+        top: 10px;
+        left: 5px;
+      }
+    }
+  }
+  .nav_item {
+    padding: 20px 0;
+    border-top: 1px dashed #cdcdcd;
+    position: relative;
+    span {
+      font-size: 16px;
+      font-family: "Microsoft YaHei";
+      cursor: pointer;
+    }
+    a {
+      color: #000;
+      border-left: 3px solid #fff;
+      padding-left: 90px;
+    }
+    .place {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      position: absolute;
+      top: 18px;
+      left: 58px;
+    }
+    .report {
+      background: url(/static/img/zhoubao.png) no-repeat center;
+      background-size: contain;
+    }
+    .fast {
+      background: url(/static/img/kuaibao.png) no-repeat center;
+      background-size: contain;
+    }
+    .attest {
+      background: url(/static/img/renzheng-3.png) no-repeat center;
+      background-size: contain;
+    }
+    .data {
+      background: url(/static/img/ziliao.png) no-repeat center;
+      background-size: contain;
+    }
+    .attention {
+      background: url(/static/img/guanzhu.png) no-repeat center;
+      background-size: contain;
+    }
+    .money {
+      background: url(/static/img/zijin.png) no-repeat center;
+      background-size: contain;
+    }
+    .project {
+      background: url(/static/img/xiangmu.png) no-repeat center;
+      background-size: contain;
+    }
+    .activity {
+      background: url(/static/img/huodong.png) no-repeat center;
+      background-size: contain;
+    }
+    .demand {
+      background: url(/static/img/xuqiu.png) no-repeat center;
+      background-size: contain;
+    }
+    .quit {
+      background: url(/static/img/tuichu.png) no-repeat center;
+      background-size: contain;
+    }
+    .router-link-active {
+      color: #005982;
+      border-left: 3px solid #005982;
+      .report {
+          background: url(/static/img/zhoubao-1.png) no-repeat center;
+          background-size: contain;
+      }
+      .fast {
+        background: url(/static/img/kuaibao-1.png) no-repeat center;
+        background-size: contain;
+      }
+      .attention {
+        background: url(/static/img/shoucang-1.png) no-repeat center;
+        background-size: contain;
+      }
+      .data {
+        background: url(/static/img/ziliao-1.png) no-repeat center;
+        background-size: contain;
+      }
+      .money {
+        background: url(/static/img/zijin-1.png) no-repeat center;
+        background-size: contain;
+      }
+      .project {
+        background: url(/static/img/xiangmu-1.png) no-repeat center;
+        background-size: contain;
+      }
+      .activity {
+      background: url(/static/img/huodong-1.png) no-repeat center;
+      background-size: contain;
+    }
+      .demand {
+        background: url(/static/img/xuqiu-1.png) no-repeat center;
+        background-size: contain;
+      }
+      .attest {
+        background: url(/static/img/renzheng-1.png) no-repeat center;
+        background-size: contain;
+      }
+    }
   }
 }
 </style>
