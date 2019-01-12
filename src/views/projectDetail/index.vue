@@ -357,9 +357,6 @@
             gofollow(){
                 this.$axios.get(`/jsp/wap/trProject/do/doFollow.jsp?id=${this.id}`).then(res => {
                     if(res.success == "true"){
-                        this.$notify.success({
-                            message: '关注成功'
-                        });
                         this.follow = 1                         
                     } else {
                         this.$notify.error({
@@ -372,9 +369,6 @@
             nofollow(){
                 this.$axios.get(`/jsp/wap/trProject/do/doUnfollow.jsp?id=${this.id}`).then(res => {
                     if(res.success == "true"){
-                        this.$notify.success({
-                            message: '取消关注成功'
-                        });
                         this.follow = 0                         
                     } else {
                         this.$notify.error({

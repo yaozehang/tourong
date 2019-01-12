@@ -82,7 +82,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="资金来源">
-          <el-checkbox-group v-model="capitalSources">
+          <el-checkbox-group v-model="capitalSources" @change="lalal">
             <el-checkbox
               v-for="capitalSource in capitalSourceList"
               :label="capitalSource.dataValue"
@@ -431,6 +431,16 @@ export default {
           this.riskControlList = res.data.riskControlList;
           this.datumList = res.data.datumList;
           this.pawnTypeList = res.data.pawnTypeList;
+          var file = {}
+          var fileList = []
+          var fileList = res.data.capital.fileList
+          if(fileList.length != 0){
+            fileList.forEach(item => {
+              file.name = item.name
+              file.url = item.filePaths
+            })
+            this.fileList.push(file)
+          }
         });
     },
     uploadFlie(f) {
@@ -451,7 +461,7 @@ export default {
           }
         });
     },
-    vip() {}
+    vip() {},
   },
   created() {
     let id = this.$route.query.id;

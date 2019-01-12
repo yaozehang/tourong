@@ -4,7 +4,7 @@
       <p class="clearfix">
         <span class="mine_money fll">我发布的项目/我关注的项目</span>
         <span class="flr clearfix">
-          <button class="noLikeBtn" @click="$router.push({name:'applyProject'})">
+          <button class="noLikeBtn" @click="applyProject">
             <i></i>添加项目
           </button>
           <el-upload
@@ -126,6 +126,12 @@ export default {
         } else {
           this.$message.info('项目尚未发布成功')
         }
+    },
+    applyProject(){
+      let {href} = this.$router.resolve({
+              name: "applyProject",
+          });
+      window.open(href, '_blank');
     },
   },
   created(){

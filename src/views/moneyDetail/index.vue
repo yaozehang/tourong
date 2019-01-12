@@ -91,7 +91,6 @@
                     <span>
                         投资要求概述
                     </span>
-
                 </div>
                 <div class="requireContent">
                     {{money.investRequire}}
@@ -108,7 +107,6 @@
                     <span>
                         其他说明
                     </span>
-
                 </div>
                 <div class="requireContent">
                     {{money.otherExplain}}
@@ -200,7 +198,6 @@
                 this.id = this.$route.query.id
                 this.loading = true
                 this.$axios.get(`/jsp/wap/trCapital/ctrl/jsonCapitalDetail.jsp?id=${this.id}`).then(res => {
-                    console.log(res);
                     this.money = res.data
                     this.loading = false
                 })
@@ -208,7 +205,6 @@
             //获取关注状态
             getFollow(){
                 this.$axios.get(`/jsp/wap/trCapital/ctrl/jsonIsFollow.jsp?id=${this.id}`).then(res => {
-                    console.log(res);
                     this.follow = Number(res.data)
                 })
             },
@@ -216,9 +212,6 @@
             gofollow(){
                 this.$axios.get(`/jsp/wap/trCapital/do/doFollow.jsp?id=${this.id}`).then(res => {
                     if(res.success == "true"){
-                        this.$notify.success({
-                            message: '关注成功'
-                        });
                         this.follow = 1                         
                     } else {
                         this.$notify.error({
@@ -231,9 +224,6 @@
             nofollow(){
                 this.$axios.get(`/jsp/wap/trCapital/do/doUnfollow.jsp?id=${this.id}`).then(res => {
                     if(res.success == "true"){
-                        this.$notify.success({
-                            message: '取消关注成功'
-                        });
                         this.follow = 0                         
                     } else {
                         this.$notify.error({
