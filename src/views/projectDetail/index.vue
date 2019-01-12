@@ -11,64 +11,64 @@
             <div class="act_list clearfix">
                 <div class="fll list">
                     <div class="clearfix">
-                        <span class="list-title fll">{{project.title}}</span>
-                        <div class="flr company">{{project.addTimeStr.slice(0,10)}}</div>
+                        <span class="list-title fll" v-if="project&&project.title">{{project.title}}</span>
+                        <div class="flr company" v-if="project&&project.addTimeStr">{{project.addTimeStr.slice(0,10)}}</div>
                     </div>
                     <div class="clearfix ">
                         <div class="fll">
                             <div class="box_content">
                                 <span class="list-contentName">编号：</span>
-                                <span class="list-content">{{project.projectId}}</span>
+                                <span class="list-content" v-if="project&&project.projectId">{{project.projectId}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">融资主体：</span>
-                                <span class="list-content">{{project.financeBody}}</span>
+                                <span class="list-content" v-if="project&&project.financeBodyName">{{project.financeBodyName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">公司估值：</span>
-                                <span class="list-content">{{project.companyAssessed}}</span>
+                                <span class="list-content" v-if="project&&project.companyAssessed">{{project.companyAssessed}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">市净率(P/B):</span>
-                                <span class="list-content">{{project.pb}}</span>
+                                <span class="list-content" v-if="project&&project.pb">{{project.pb}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">所在地区:</span>
-                                <span class="list-content">{{project.regionNameStr}}</span>
+                                <span class="list-content" v-if="project&&project.regionNameStr">{{project.regionNameStr}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">所属行业:</span>
-                                <span class="list-content">{{project.industry}}</span>
+                                <span class="list-content" v-if="project&&project.industryName">{{project.industryName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">融资用途:</span>
-                                <span class="list-content">{{project.financingExplain}}</span>
+                                <span class="list-content" v-if="project&&project.financingExplain">{{project.financingExplain}}</span>
                             </div>
                         </div>
                         <div class="fll">
                             <div class="box_content">
                                 <span class="list-contentName">融资方式：</span>
-                                <span class="list-content">{{project.financingWay}}</span>
+                                <span class="list-content" v-if="project&&project.financingWayName">{{project.financingWayName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">市盈率(P/E):</span>
-                                <span class="list-content">{{project.pe}}</span>
+                                <span class="list-content" v-if="project&&project.pe">{{project.pe}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">支付方式:</span>
-                                <span class="list-content">{{project.paymentType}}</span>
+                                <span class="list-content" v-if="project&&project.paymentTypeName">{{project.paymentTypeName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">行业性质:</span>
-                                <span class="list-content">{{project.industry}}</span>
+                                <span class="list-content" v-if="project&&project.industryName">{{project.industryName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">融资金额:</span>
-                                <span class="list-content">{{project.paymentType}}</span>
+                                <span class="list-content" v-if="project&&project.paymentTypeName">{{project.paymentTypeName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">意向资金:</span>
-                                <span class="list-content">{{project.pb}}</span>
+                                <span class="list-content" v-if="project&&project.intentCapitalList">{{project.intentCapitalList}}</span>
                             </div>
                         </div>
                         <div class="flr">
@@ -86,7 +86,7 @@
                     </span>
 
                 </div>
-                <div class="requireContent">
+                <div class="requireContent" v-if="project&&project.brief">
                     {{project.brief}}
                 </div>
                 <div class="require">
@@ -98,33 +98,33 @@
                     <div class="fll">
                         <div class="box_content">
                             <span class="list-contentName">企业名称:</span>
-                            <span class="list-content">{{project.companyName}} </span>
+                            <span class="list-content" v-if="project&&project.companyName">{{project.companyName}} </span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">注册资本:</span>
-                            <span class="list-content">{{project.registeredCapital}}万</span>
+                            <span class="list-content" v-if="project&&project.registeredCapital">{{project.registeredCapital}}万</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">所在地：</span>
-                            <span class="list-content">{{project.regionNameStr}}</span>
+                            <span class="list-content" v-if="project&&project.regionNameStr">{{project.regionNameStr}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">详细地址:</span>
-                            <span class="list-content">{{project.address}}</span>
+                            <span class="list-content" v-if="project&&project.address">{{project.address}}</span>
                         </div>
                     </div>
                     <div class="fll">
                         <div class="box_content">
                             <span class="list-contentName">团队平均年龄：</span>
-                            <span class="list-content">{{project.averageAge}}</span>
+                            <span class="list-content" v-if="project&&project.averageAge">{{project.averageAge}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">建企时间：</span>
-                            <span class="list-content">{{project.companyFoundTime}}</span>
+                            <span class="list-content" v-if="project&&project.companyFoundTimeStr">{{project.companyFoundTimeStr}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">官方微信：</span>
-                            <span class="list-content">{{project.weChat}}</span>
+                            <span class="list-content" v-if="project&&project.weChat">{{project.weChat}}</span>
                         </div>
 
                     </div>
@@ -133,31 +133,31 @@
                 <div>
                     <span class="list-contentName" style="display:inline-block">主营业务：</span>
                     <p class="content_desc">
-                        {{project.business}}
+                        <span v-if="project&&project.business">{{project.business}}</span>
                     </p>
                 </div>
                  <div>
                     <span class="list-contentName" style="display:inline-block">公司亮点：</span>
                     <p class="content_desc">        
-                        {{project.brightSpot}}
+                        <span v-if="project&&project.brightSpot">{{project.brightSpot}}</span>
                     </p>
                 </div>
                 <div>
                     <span class="list-contentName" style="display:inline-block">行业地位：</span>
                     <p class="content_desc">
-                        {{project.position}}
+                        <span v-if="project&&project.position">{{project.position}}</span>
                     </p>
                 </div>
                 <div>
                     <span class="list-contentName" style="display:inline-block">近三年财务数据：</span>
                     <p class="content_desc">
-                        {{project.trienniumFinancialData}}
+                        <span v-if="project&&project.trienniumFinancialData">{{project.trienniumFinancialData}}</span>
                     </p>
                 </div>
                 <div>
                     <span class="list-contentName" style="display:inline-block">3-5年盈利预测：</span>
                     <p class="content_desc">
-                        {{project.profitForecast}}
+                        <span v-if="project&&project.profitForecast">{{project.profitForecast}}</span>
                     </p>
                 </div>
                 <div class="require">
@@ -167,7 +167,7 @@
 
                 </div>
                 <div class="requireContent">
-                   <img :src="$url + project.stockStructureImgPath" style="width:810px">
+                   <img :src="$url + project.stockStructureImgPath" style="width:810px"  v-if="project&&project.stockStructureImgPath">
                 </div>
                 <div class="require">
                     <span>
@@ -178,21 +178,21 @@
                      <div class="fll">
                         <div class="box_content">
                             <span class="list-contentName">姓名:</span>
-                            <span class="list-content">{{project.directorName}}</span>
+                            <span class="list-content" v-if="project&&project.directorName">{{project.directorName}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">邮箱:</span>
-                            <span class="list-content">{{project.directorEmail}}</span>
+                            <span class="list-content" v-if="project&&project.directorEmail">{{project.directorEmail}}</span>
                         </div>
                     </div>
                     <div class="fll">
                         <div class="box_content">
                             <span class="list-contentName">职务：</span>
-                            <span class="list-content">{{project.directorJob}}</span>
+                            <span class="list-content" v-if="project&&project.directorJob">{{project.directorJob}}</span>
                         </div>
                         <div class="box_content">
                             <span class="list-contentName">电话：</span>
-                            <span class="list-content">{{project.directorPhone}}</span>
+                            <span class="list-content" v-if="project&&project.directorPhone">{{project.directorPhone}}</span>
                         </div>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
                         团队核心
                     </span>
                 </div>
-                <div class="requireContent">
+                <div class="requireContent" v-if="project&&project.teamBrief">
                      {{project.teamBrief}}
                 </div>
                 <div class="require">
@@ -210,7 +210,7 @@
                     </span>
                 </div>
                 <div class="requireContent">
-                    {{projectData.comment}}
+                    <span v-if="project&&project.comment">{{projectData.comment}}</span>
                 </div>
             </div>
         </div>
@@ -221,19 +221,19 @@
                 </div>
                 <p class="username">{{projectData.boss.name}}</p>
                 <p>
-                    <span>职位：</span>
+                    <span class="_666">职位：</span>
                     <span>{{projectData.boss.job}}</span>
                 </p>
                 <p>
-                    <span>企业名称：</span>
+                    <span class="_666">企业名称：</span>
                     <span>{{projectData.boss.company}}</span>
                 </p>
                 <p>
-                    <span>所属行业：</span>
+                    <span class="_666">所属行业：</span>
                     <span>{{projectData.boss.industry}}</span>
                 </p>
                 <p>
-                    <span>关注行业：</span>
+                    <span class="_666">关注行业：</span>
                     <span>{{projectData.boss.RelateIndustry}}</span>
                 </p>
             </el-card>
@@ -692,6 +692,9 @@
                 -moz-user-select: none;
                 -webkit-user-select: none;
                 -ms-user-select: none;
+            }
+            .mes_more:hover{
+            color: #005385;
             }
         }
     }

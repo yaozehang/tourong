@@ -95,7 +95,13 @@ export default {
     methods:{
     cancelBtn(index){
       this.investData.splice(index,1)
+    },
+    getData(){
+
     }
+  },
+  created(){
+    this.getData()
   }
 };
 </script>

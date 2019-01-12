@@ -13,16 +13,14 @@
       <div class="person_navbar fll">
         <div class="person_top" @click="$router.push('/person')"></div>
         <div class="person_information">
-          <img :src="personData.avatar" alt class="avatar">
-          <i class="attest"></i>
+          <img :src="$url + personData.avatar" alt class="avatar" v-if="personData&&personData.avatar">
+          <i class="attest" v-show="personData.vip == '1'"></i>
           <p class="username">
             <i></i>
-            {{personData.username}}
+            <span v-if="personData&&personData.avatar">{{personData.name}}</span>
           </p>
-          <p class="company" v-show="personData.company === 0">上市公司</p>
-          <p class="company" v-show="personData.company === 1">上市公司</p>
-          <p class="company" v-show="personData.company === 2">上市公司</p>
-          <p class="company" v-show="personData.company === 3">上市公司</p>
+          <p class="company" v-if="personData.authenticationName != ''">{{personData.authenticationName}}</p>
+          <p class="company" v-else>暂未认证</p>
           <p class="equity">
             <i></i>会员权益中心
           </p>
@@ -122,10 +120,11 @@ export default {
   data() {
     return {
       personData: {
-        avatar: "/static/img/avatar-1.jpg",
+        avatar: "/static/img/avatar-1.png",
         attest: 1,
-        username: "李先生",
-        company: 0
+        name: "投融用户",
+        authenticationName: '',
+        isVip:'0'
       }
     };
   },
@@ -134,7 +133,20 @@ export default {
         Cookies.remove('userKey')
         this.login = false
         this.$router.push('/login')
-     }
+     },
+    getData(){
+      if(this.$store.state.userinfo.headImgPath != ''){
+        this.personData.avatar = this.$store.state.userinfo.headImgPath
+      } 
+      if(this.$store.state.userinfo.name != '') {
+        this.personData.name = this.$store.state.userinfo.name
+      } 
+        this.personData.isVip = this.$store.state.userinfo.isVip
+        this.personData.authenticationName = this.$store.state.userinfo.authenticationName
+    }
+  },
+  created(){
+    this.getData()
   }
 };
 </script>
@@ -187,7 +199,7 @@ export default {
         background-size: contain;
         position: absolute;
         top: 1px;
-        left: 58px;
+        left: 45px;
       }
     }
     .company {

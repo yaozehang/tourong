@@ -2,7 +2,7 @@
   <div>
     <p class="project_title">
       <span class="project_">请选择感兴趣的标签</span>
-      <span class="project_more flr" @click="likeAll">
+      <span class="project_more flr" @click="followAll">
         <label class="my_protocol">
           <input class="input_agreement_protocol" type="checkbox">
           <span></span>
@@ -12,12 +12,12 @@
     </p>
     <div class="babel_list">
       <button
-        v-for="(item, index) in label"
+        v-for="(item, index) in labelData"
         :key="index"
         class="babel_btn"
-        :class="(item.name.length > 2 ? '':'letter') + (item.like == 0 ? ' nolike' : ' like')"
-        @click="babelike(index)"
-      >{{item.name}}</button>
+        :class="(item.industryName.length > 2 ? '':'letter') + (item.isFollow == 0 ? ' nolike' : ' like')"
+        @click="babelFollow(item.industryValue,index)"
+      >{{item.industryName}}</button>
     </div>
   </div>
 </template>
@@ -88,18 +88,44 @@ export default {
           name: "投资",
           like: 0
         }
-      ]
+      ],
+      labelData:[],
     };
   },
   methods: {
-    babelike(index) {
-      this.label[index].like = !this.label[index].like;
+    babelFollow(industryValue,index) {
+      if(this.labelData[index].isFollow == '0'){
+        this.$axios.get('/jsp/wap/center/do/doFollowIndustry.jsp',{params:{ industryValue}}).then(res => {
+          console.log(res);
+          this.labelData[index].isFollow = '1'
+        })
+      } else {
+        this.$axios.get('/jsp/wap/center/do/doUnfollowIndustry.jsp',{params:{ industryValue}}).then(res => {
+          console.log(res);
+          this.labelData[index].isFollow = '0'
+        })
+      }
     },
-    likeAll() {
-      this.label.forEach(item => {
-        item.like = 1;
-      });
+    followAll() {
+      var industry = []
+      this.labelData.forEach(item => {
+        industry.push(item.industryValue)
+      })
+      var industryValue = industry.join(',')
+      this.$axios.get('/jsp/wap/center/do/doFollowIndustry.jsp',{params:{industryValue}}).then(res => {
+          this.labelData.forEach(item => {
+            item.isFollow = '1'    
+          })    
+      })
+    },
+    getData(){
+      this.$axios.get('/jsp/wap/center/ctrl/jsonIndustry.jsp').then(res => {
+        this.labelData = res.data
+      })
     }
+  },
+  created(){
+    this.getData()
   }
 };
 </script>

@@ -2,18 +2,18 @@
   <div class="fll">
     <div class="person_content">
       <p class="clearfix">
-        <span class="mine_money fll">我发布的投资/我关注的投资</span>
+        <span class="mine_money fll">我发布的投资</span>
         <span class="flr clearfix">
-          <button class="noLikeBtn" @click="$router.push({name:'applyMoney'})">
+          <button class="noLikeBtn" @click="applyMoney">
             <i></i>添加投资
           </button>
           <el-upload
             class="upload-demo flr"
             action=""
             >
-          <button class="likeBtn">
+          <div class="likeBtn">
             <i></i>快速上传
-          </button>
+          </div>
           </el-upload>
         </span>
       </p>
@@ -56,7 +56,8 @@
           <!-- <span class="flr" :class="item.check == 0 ? ' already':'' + item.check == 1 ? ' being':'' + item.check == 2 ? ' not':'' + item.check == 3 ? ' fail':''">{{item.check == 0 ? '已发布':'' + item.check == 1 ? '审核中':'' + item.check == 2 ? '未发布':''}}</span> -->
           <span class="flr not" v-if="item.status == '0'">未发布</span>
           <span class="flr" v-else :class="item.status  == '5' ? ' being':'' + item.status == '10' ? ' already':'' + item.status == '15'? ' fail':''">{{item.status  == '5' ? '审核中':'' + item.status == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
-          <span class="flr cancel" @click="cancelBtn(index)">修改/删除</span>
+          <el-button type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>
         <p v-show="pageList.length == 0" class="noAtt">你没有任何资金哦~</p>
       </div>
@@ -136,7 +137,6 @@ export default {
   methods: {
     getData(pageNumber){
         this.$axios.get('/jsp/wap/center/ctrl/jsonMyCapitalList.jsp',{params:{pageNumber}}).then(res => {
-          console.log(res);
           if(res.success == 'true'){
             this.pageList = res.data.pageList
             this.count = Number(res.data.pagination.totalCount)
@@ -157,8 +157,30 @@ export default {
           this.$message.info('资金尚未发布成功')
         }
       },
-    cancelBtn(index) {
-      this.investData.splice(index, 1);
+    amend(id){
+      let {href} = this.$router.resolve({
+              name: "applyMoney",
+              query: {id}
+          });
+          window.open(href, '_blank');
+    },
+    applyMoney(){
+      let {href} = this.$router.resolve({
+              name: "applyMoney",
+          });
+      window.open(href, '_blank');
+    },
+    delete_item(id,index){
+      this.$confirm("即将删除资金, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(()=> {
+        this.$axios.get(`/jsp/wap/center/do/doDelCapital.jsp?id=${id}`).then(res => {
+          this.pageList.splice(index,1)
+          this.count -= 1
+        })
+      })
     }
   },
   created(){
@@ -227,16 +249,18 @@ export default {
   white-space: nowrap; /*不换行*/
   text-overflow: ellipsis;
 }
+.cancel1 {
+  position: absolute;
+  right: 40px;
+  bottom: 10px;
+  background-color: rgb(0, 83, 133);
+  border: #005982;
+}
 
-.cancel {
+.cancel2 {
   position: absolute;
   right: 0;
   bottom: 10px;
-  cursor: pointer;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  color: rgb(0, 83, 133);
 }
 
 .invest-menu .invest-item:last-of-type {
@@ -343,18 +367,21 @@ export default {
   //提醒样式
   .already {
     margin-top: 60px;
+    margin-right: 7px;
     font-size: 18px;
-    color: #cdcdcd;
+    color: #999;
   }
   .being {
     margin-top: 60px;
+    margin-right: 7px;
     font-size: 18px;
     color: #fc7f7f;
   }
   .not {
     margin-top: 60px;
+    margin-right: 7px;
     font-size: 18px;
-    color: #ffcc9c;
+    color: #faa251;
   }
   .fail {
     display: inline-block;

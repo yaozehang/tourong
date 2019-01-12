@@ -180,11 +180,11 @@
           <span class="item_title">附件上传</span>
         </p>
         <el-form-item label="附件材料" prop="file">
+          <div>商业计划书、融资计划书等文件请在此上传</div>
           <el-upload class="upload-demo" action multiple :file-list="fileList">
-            <div>商业计划书、融资计划书等文件请在此上传</div>
-            <button class="likeBtn fll">
+            <div class="likeBtn fll">
               <i></i>点击上传文件
-            </button>
+            </div>
           </el-upload>
         </el-form-item>
         <p>
@@ -435,7 +435,7 @@ export default {
   box-sizing: border-box;
   outline: none;
   margin: 0;
-  margin-left: 15px;
+  // margin-left: 15px;
   transition: 0.1s;
   font-weight: 500;
   -moz-user-select: none;
@@ -451,7 +451,7 @@ export default {
     background: url(/static/img/shangchuan-1.png) no-repeat center;
     background-size: contain;
     position: absolute;
-    top: 9px;
+    top: 7px;
     left: 4px;
   }
 }

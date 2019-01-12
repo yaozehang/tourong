@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="load_more" @click="more" v-if="this.totalCount > this.pageList.length">加载更多...</div>
-      <p v-else>-------------------------------------------------没有更多活动了----------------------------------------------------</p>
+      <p style="color:#999;" v-else>-------------------------------------------------没有更多活动了----------------------------------------------------</p>
     </div>
     <div class="w360 flr mes_list clearfix">
       <img src="/static/img/list-2.jpg" alt class="act_timelist">
@@ -337,6 +337,10 @@ export default {
   color: rgb(51, 51, 51);
   margin: 10px 0 25px;
 }
+.list-title:hover {
+  font-weight: 700;
+  color:#005385;
+}
 .list-content {
   margin-left: 30px;
   font-size: 14px;
@@ -504,6 +508,9 @@ export default {
       -moz-user-select: none;
       -webkit-user-select: none;
       -ms-user-select: none;
+    }
+    .mes_more:hover{
+      color: #005385;
     }
   }
 }

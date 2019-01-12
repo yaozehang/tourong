@@ -23,8 +23,8 @@ Vue.config.productionTip = false
 
 Vue.prototype.$axios = $axios;
 
-Vue.prototype.$url = 'http://192.168.4.11:8484'
-// Vue.prototype.$url = 'http://39.96.39.111:6022'
+// Vue.prototype.$url = 'http://192.168.4.11:8484'
+Vue.prototype.$url = 'http://39.96.39.111:6022'
 
 /* eslint-disable no-new */
 new Vue({

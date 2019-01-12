@@ -18,9 +18,9 @@
         </div>
         <div class="project-menu">
           <div v-for="(item , index) in projectData.slice(0,6)" :key="index" class="project-item fll" @click="toProjectDetailPage(item.id)">
-              <img :src="$url + item.recommendImgPath" alt width="360px" height="120px" style="cursor:pointer">
-              <p class="project-item-title">{{item.title}}</p>
-              <p class="project-item-content">{{item.brief}}</p>
+              <img :src="$url + item.recommendImgPath" alt width="360px" height="120px" style="cursor:pointer" v-if="item&&item.recommendImgPath">
+              <p class="project-item-title" v-if="item&&item.title">{{item.title}}</p>
+              <p class="project-item-content" v-if="item&&item.brief">{{item.brief}}</p>
           </div>
         </div>
       </div>
@@ -36,34 +36,34 @@
           <div v-for="(item , index) in investData.slice(0,4)" :key="index" class="invest-item fll clearfix" @click="toMoneyDetailPage(item.id)">
             <img :src="$url + item.recommendImgPath" alt width="140px" height="180px" class="fll" style="cursor:pointer">
             <div class="invest-text fll">
-              <p class="invest-item-title">{{item.title}}</p>
+              <p class="invest-item-title" v-if="item&&item.title">{{item.title}}</p>
               <p class="invest-item-list">
                 投资资金：
-                <span class="invest-money">{{item.investAmountName}}</span>
+                <span class="invest-money" v-if="item&&item.investAmountName">{{item.investAmountName}}</span>
               </p>
               <p class="invest-item-list w230 inb">
                 投资方式：
-                <span class="invest-content">{{item.investCase}}</span>
+                <span class="invest-content" v-if="item&&item.investCase">{{item.investCase}}</span>
               </p>
               <p class="invest-item-list inb w175">
                 资金类型：
-                <span class="invest-content">{{item.investTypeName}}</span>
+                <span class="invest-content" v-if="item&&item.investTypeName">{{item.investTypeName}}</span>
               </p>
               <p class="invest-item-list w230 inb">
                 投资地区：
-                <span class="invest-content">{{item.investRegionNameStr}}</span>
+                <span class="invest-content" v-if="item&&item.investRegionNameStr">{{item.investRegionNameStr}}</span>
               </p>
               <p class="invest-item-list inb w175">
                 投资行业：
-                <span class="invest-content">{{item.investIndustryName}}</span>
+                <span class="invest-content" v-if="item&&item.investIndustryName">{{item.investIndustryName}}</span>
               </p>
               <p class="invest-item-list w230 inb">
                 投资类型：
-                <span class="invest-content">{{item.investTypeName}}</span>
+                <span class="invest-content" v-if="item&&item.investTypeName">{{item.investTypeName}}</span>
               </p>
               <p class="invest-item-list inb w175">
                 投资阶段：
-                <span class="invest-content">{{item.investStageName}}</span>
+                <span class="invest-content" v-if="item&&item.investStageName">{{item.investStageName}}</span>
               </p>
             </div>
           </div>
@@ -79,13 +79,14 @@
         <span class="mes-title-item"
           v-for="(item , index) in categoryList"
           :key="index"
-          @click="getType(item.dataValue)"
+          @click="getType(item.dataValue,index)"
+          :class="{active:item.checked}"
         >{{item.dataName}}</span>
       <div class="mes-content clearfix">
         <ul class="clearfix">
           <li v-for="(item,index) in messageData.slice(0,18)" :key="index" class="fll mes-list" @click="toMessageDetailPage(item.id)">
-              <span class="mes-text fll">{{item.title}}</span>
-              <span class="mes-time">{{item.addTimeStr.slice(0,10)}}</span>
+              <span class="mes-text fll" v-if="item&&item.title">{{item.title}}</span>
+              <span class="mes-time" v-if="item&&item.addTimeStr">{{item.addTimeStr.slice(0,10)}}</span>
           </li>
         </ul>
       </div>
@@ -97,6 +98,8 @@
 <script>
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
+import * as Cookies from 'js-cookie'
+
 let vm = null;
 
 export default {
@@ -139,88 +142,88 @@ export default {
       // swiperSlides: ["/static/img/lunbo-1.png"],
       swiperSlides: [],
       projectData: [
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        }
+        // {
+        //   recommendImgPath:'/static/img/pro-1.jpg',
+        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
+        //   brief:
+        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
+        // },
+        // {
+        //   recommendImgPath:'/static/img/pro-1.jpg',
+        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
+        //   brief:
+        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
+        // },
+        // {
+        //   recommendImgPath:'/static/img/pro-1.jpg',
+        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
+        //   brief:
+        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
+        // },
+        // {
+        //   recommendImgPath:'/static/img/pro-1.jpg',
+        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
+        //   brief:
+        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
+        // },
+        // {
+        //   recommendImgPath:'/static/img/pro-1.jpg',
+        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
+        //   brief:
+        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
+        // },
+        // {
+        //   recommendImgPath:'/static/img/pro-1.jpg',
+        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
+        //   brief:
+        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
+        // }
       ],
       investData: [
-        {
-          img:'/static/img/touzi-1.png',
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期"
-        },
-        {
-          img:'/static/img/touzi-1.png',
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期"
-        },
-        {
-          img:'/static/img/touzi-1.png',
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期"
-        },
-        {
-          img:'/static/img/touzi-1.png',
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期"
-        }
+        // {
+        //   recommendImgPath:'/static/img/touzi-1.png',
+        //   title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
+        //   investAmountName: "200-500W",
+        //   investCase: "股权投资",
+        //   moneyType: "企业资金",
+        //   region: "不限",
+        //   trade: "互联网",
+        //   investType: "参股合作 收购/并购",
+        //   stage: "成长期、成熟期"
+        // },
+        // {
+        //   recommendImgPath:'/static/img/touzi-1.png',
+        //   title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
+        //   investAmountName: "200-500W",
+        //   investCase: "股权投资",
+        //   moneyType: "企业资金",
+        //   region: "不限",
+        //   trade: "互联网",
+        //   investType: "参股合作 收购/并购",
+        //   stage: "成长期、成熟期"
+        // },
+        // {
+        //   recommendImgPath:'/static/img/touzi-1.png',
+        //   title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
+        //   investAmountName: "200-500W",
+        //   investCase: "股权投资",
+        //   moneyType: "企业资金",
+        //   region: "不限",
+        //   trade: "互联网",
+        //   investType: "参股合作 收购/并购",
+        //   stage: "成长期、成熟期"
+        // },
+        // {
+        //   recommendImgPath:'/static/img/touzi-1.png',
+        //   title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
+        //   investAmountName: "200-500W",
+        //   investCase: "股权投资",
+        //   moneyType: "企业资金",
+        //   region: "不限",
+        //   trade: "互联网",
+        //   investType: "参股合作 收购/并购",
+        //   stage: "成长期、成熟期"
+        // }
       ],
       categoryList:[],
       categorys:'',
@@ -260,6 +263,14 @@ export default {
       this.$axios.get('/jsp/wap/trNews/ctrl/jsonCategoryList.jsp').then(res => {
         if(res.success == "true"){
           let categoryList = res.data
+          categoryList.forEach(item => {
+            this.$set(item, 'checked', false)
+          });
+          categoryList.forEach(item => {
+            if(item.dataValue == this.categorys){
+              item.checked = true
+            }
+          })
           this.categoryList = categoryList
         }
       })
@@ -269,9 +280,19 @@ export default {
         this.messageData = res.data.pageList
       })
     },
-    getType(e) {
+    getType(e,index) {
       this.categorys = e
+      this.categoryList.forEach(item => {
+          item.checked = false
+      });
+      this.categoryList[index].checked = true
+      this.getData(this.categorys)
       this.getMessageData(this.categorys)
+    },
+    getUserInfo(){
+       this.$axios.get('/jsp/wap/center/ctrl/jsonUserInfo.jsp').then(res => {
+         this.$store.commit('CHANGE_USERINFO',res.data)
+       })
     },
     //首页跳转打开新窗口
     toProductPage(){
@@ -319,6 +340,11 @@ export default {
     this.getTypeData()
     this.getMessageData()
     vm = this;
+  },
+  mounted(){
+    if(Cookies.get('userKey')){
+      this.getUserInfo()
+    }
   }
 };
 </script>
@@ -592,10 +618,14 @@ export default {
 .mes-title-item {
   font-size: 18px;
   font-family: "Microsoft YaHei";
-  color: rgb(0, 89, 130);
+  color: #444;
   line-height: 4.444;
   margin-right: 30px;
   cursor: pointer;
+}
+.active{
+  color: #005982;
+  font-weight:700;
 }
 .mes-content {
   margin-top: 20px;

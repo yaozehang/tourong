@@ -1,17 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-import * as Cookies from 'js-cookie'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state:{
-    userinfo:{
-      username: '',
-      email: '',
-      avatar: ''
-    }
+    userinfo:{}
   },
   mutations:{
     CHANGE_USERINFO(state, userinfo){
@@ -21,9 +16,10 @@ const store = new Vuex.Store({
   actions:{},
   plugins: [createPersistedState({
     storage: {
-      getItem: key => Cookies.get(key),
-      setItem: (key, value) => Cookies.set(key, value, { expires: 14, secure: true }),
-      removeItem: key => Cookies.remove(key)
+      getItem: key => sessionStorage.getItem(key),
+      setItem: (key, value) =>
+      sessionStorage.setItem(key, value),
+      removeItem: key => sessionStorage.removeItem(key),
     },
   })],
 })

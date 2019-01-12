@@ -27,7 +27,8 @@
         </p>
         <p class="contentHtml" v-html="mesDetailData.content"></p>
         <div class="discuss">
-          <p class="login" @click="$router.push('/login')">登录</p>
+          <img :src="$url + avatar" alt="" class="avatar" v-if="avatar != ''">
+          <p class="login" @click="$router.push('/login')" v-else>登录</p>
           <textarea name="" id="" cols="96%" rows="3" placeholder="来说两句吧..."></textarea>
         </div>
         <div class="clearfix">
@@ -74,6 +75,8 @@
 </template>
 
 <script>
+import * as Cookies from 'js-cookie'
+
 export default {
   data(){
     return {
@@ -160,6 +163,7 @@ export default {
       id:'',
       loading:false,
       newsloading:false,
+      avatar:'/static/img/avatar-1.png'
     }
   },
   methods:{
@@ -171,6 +175,9 @@ export default {
         this.mesDetailData = res.data
         this.loading = false
       })
+      if(Cookies.get('userKey') && this.$store.state.userinfo.headImgPath != ''){
+        this.avatar = this.$store.state.userinfo.headImgPath
+      }
     },
     getNewsList(){
       this.newsloading = true;
@@ -260,6 +267,9 @@ export default {
       -moz-user-select: none;
       -webkit-user-select: none;
       -ms-user-select: none;
+    }
+    .mes_more:hover {
+      color:#005982;
     }
   }
 }
@@ -447,5 +457,12 @@ export default {
   background: #fff;
   border-color: #409eff;
   color: #409eff;
+}
+
+.avatar {
+  width:46px;
+  height: 46px;
+  margin-left: 6px;
+  border-radius: 50%;
 }
 </style>

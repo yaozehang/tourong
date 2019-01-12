@@ -60,7 +60,13 @@ export default {
   methods:{
     cancelBtn(index){
       this.projectData.splice(index,1)
+    },
+    getData(){
+
     }
+  },
+  created(){
+    this.getData()
   }
 };
 </script>

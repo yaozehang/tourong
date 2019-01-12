@@ -2,77 +2,83 @@
   <div class="fll">
     <div class="person_content">
       <p class="project_title">
-        <span class="project_">基本信息已认证</span>
+        <span class="project_">基本信息</span>
       </p>
-      <el-form ref="form" :model="formData" label-width="80px">
+      <el-form ref="ruleForm" :model="formData" label-width="80px" :rules="rules">
         <el-form-item label="认证状态" class="w180">
-          <el-input v-model="formData.status" :disabled="true"></el-input>
+          <el-input v-model="formData.authenticationName" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="账号" class="w180">
-          <el-input v-model="formData.account" :disabled="true"></el-input>
+          <el-input v-model="formData.userName" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="头像">
           <el-upload
             class="avatar-uploader"
-            action=""
+            action
             :http-request="uploadImg"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="formData.avatar" :src="formData.avatar" class="avatar">
+            <img v-if="formData.headImgPath" :src="formData.headImgPath" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="真实姓名" class="w180">
+        <el-form-item label="真实姓名" class="w180" prop="name">
           <el-input v-model="formData.name"></el-input>
         </el-form-item>
         <el-form-item label="真实照片">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action
+            :http-request="uploadphotoImg"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="formData.truephoto" :src="formData.truephoto" class="avatar">
+            <img v-if="formData.photoImgPath" :src="formData.photoImgPath" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="身份证号" class="w180">
+        <el-form-item label="身份证号" style="width:320px;" prop="IDcard">
           <el-input v-model="formData.IDcard"></el-input>
         </el-form-item>
         <el-form-item label="性别">
-          <el-radio-group v-model="formData.resource">
+          <el-radio-group v-model="formData.sex">
             <el-radio label="1">男</el-radio>
-            <el-radio label="0">女</el-radio>
+            <el-radio label="2">女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="出生日期">
-            <select name="year" id="year"></select>年
-            <select name="month" id="month"></select>月
-            <select name="day" id="day"></select>日
+          <select name="year" id="year" v-model="year"></select>年
+          <select name="month" id="month" v-model="month"></select>月
+          <select name="day" id="day" v-model="day"></select>日
         </el-form-item>
         <el-form-item label="公司名称" class="w320">
           <el-input v-model="formData.company"></el-input>
         </el-form-item>
         <el-form-item label="所在地区">
-          <v-distpicker @selected='selected'></v-distpicker>
+          <v-distpicker
+            :province="provinceStr"
+            :city="cityStr"
+            :area="countyStr"
+            @selected="selected"
+          ></v-distpicker>
         </el-form-item>
         <el-form-item label="详细地址" style="width:600px">
-          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.location"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.address"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话" class="w320">
-          <el-input v-model="formData.phone"></el-input>
+        <el-form-item label="联系电话" class="w320" prop="mobile">
+          <el-input v-model="formData.mobile"></el-input>
         </el-form-item>
         <el-form-item label="常用QQ" class="w320">
           <el-input v-model="formData.qq"></el-input>
         </el-form-item>
-        <el-form-item label="电子邮箱" class="w320">
+        <el-form-item label="电子邮箱" class="w320" prop="email">
           <el-input v-model="formData.email"></el-input>
         </el-form-item>
         <el-form-item>
-          <button class="subBtn" @click="onSubmit">提交</button>
+          <button class="subBtn" @click="submitForm('ruleForm')">提交</button>
         </el-form-item>
       </el-form>
     </div>
@@ -80,49 +86,200 @@
 </template>
 
 <script>
-import VDistpicker from 'v-distpicker'
+import VDistpicker from "v-distpicker";
 
 export default {
   components: { VDistpicker },
   data() {
     return {
+      year: "2019",
+      month: "1",
+      day: "11",
+      countyStr: "昌平区",
+      provinceStr: "北京市",
+      cityStr: "北京城区",
       formData: {
-        status: "上市公司",
-        phone: "",
+        authenticationName: "",
+        mobile: "",
         name: "李先生",
         region: "",
         date1: "",
         date2: "",
         delivery: false,
         type: [],
-        resource: "0",
+        sex: "2",
         desc: "",
-        avatar: "",
-        truephoto: "",
+        headImgPath: "",
+        photoImgPath: "",
         IDcard: "",
-        company:"",
-        location:"",
-        account:"1888555999",
-        qq:"",
-        email:"",
+        company: "",
+        address: "",
+        userName: "",
+        qq: "",
+        email: "",
+        provinceId: "",
+        cityId: "",
+        countyId: "",
+        birthdayTimeStr: ""
       },
+      rules: {
+        name: [
+          { required: true, message: "请输入姓名", trigger: "blur" },
+          { min: 2, message: "长度不少于1个字", trigger: "blur" }
+        ],
+        IDcard: [
+          {
+            required: true,
+            message: "请输入身份证ID",
+            trigger: "blur"
+          },
+          {
+            pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+            message: "你的身份证格式不正确"
+          }
+        ],
+        mobile: [
+          {
+            required: true,
+            message: "请输入手机号码",
+            trigger: "blur"
+          },
+          {
+            validator: function(rule, value, callback) {
+              if (/^1[34578]\d{9}$/.test(value) == false) {
+                callback(new Error("请输入正确的手机号"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ],
+        email: [
+          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
+        ]
+      }
     };
   },
   methods: {
-    uploadImg(f){
-      console.log(f);
-      let param = new FormData(); //创建form对象
-         param.append('file',f.file);//通过append向form对象添加数据
-         let config = {
-           headers:{'content-type':'multipart/form-data'}
-         };  //添加请求头
-      this.$axios.post('/component/trUpload2/uploadify',param,config).then(res => {
+    getDate() {
+      this.$axios.get("/jsp/wap/center/ctrl/jsonUserInfo.jsp").then(res => {
         console.log(res);
-        this.formData.avatar = res.data.relativePath
-      })
+        this.$store.commit("CHANGE_USERINFO", res.data);
+        this.formData.userName = this.$store.state.userinfo.userName;
+        this.formData.name = this.$store.state.userinfo.name;
+        this.formData.headImgPath = this.$store.state.userinfo.headImgPath;
+        this.formData.photoImgPath = this.$store.state.userinfo.photoImgPath;
+        this.formData.authenticationName = this.$store.state.userinfo.authenticationName;
+        this.formData.email = this.$store.state.userinfo.email;
+        if (this.$store.state.userinfo.provinceStr != "") {
+          this.provinceStr = this.$store.state.userinfo.provinceStr;
+          if (
+            this.provinceStr == "北京市" &&
+            this.$store.state.userinfo.cityStr == "市辖区"
+          ) {
+            this.cityStr = "北京城区";
+          } else if (
+            this.provinceStr == "天津市" &&
+            this.$store.state.userinfo.cityStr == "市辖区"
+          ) {
+            this.cityStr = "天津城区";
+          } else if (
+            this.provinceStr == "上海市" &&
+            this.$store.state.userinfo.cityStr == "市辖区"
+          ) {
+            this.cityStr = "上海城区";
+          } else if (
+            this.provinceStr == "重庆市" &&
+            this.$store.state.userinfo.cityStr == "市辖区"
+          ) {
+            this.cityStr = "重庆城区";
+          } else {
+            this.cityStr = this.$store.state.userinfo.cityStr;
+          }
+          this.countyStr = this.$store.state.userinfo.countyStr;
+        }
+        this.formData.sex = this.$store.state.userinfo.sex;
+        if (this.$store.state.userinfo.birthdayTimeStr != "") {
+          this.formData.birthdayTimeStr = this.$store.state.userinfo.birthdayTimeStr;
+          this.year = this.formData.birthdayTimeStr.split("-")[0];
+          this.month = ~~this.formData.birthdayTimeStr.split("-")[1];
+          this.day = ~~this.formData.birthdayTimeStr.split("-")[2];
+        }
+        this.formData.mobile = this.$store.state.userinfo.mobile;
+        this.formData.IDcard = this.$store.state.userinfo.identity;
+        this.formData.qq = this.$store.state.userinfo.qq;
+        this.formData.address = this.$store.state.userinfo.address;
+        this.formData.company = this.$store.state.userinfo.company;
+      });
     },
-    onSubmit() {
-      console.log("submit!");
+    uploadImg(f) {
+      let param = new FormData(); //创建form对象
+      param.append("file", f.file); //通过append向form对象添加数据
+      let config = {
+        headers: { "content-type": "multipart/form-data" }
+      }; //添加请求头
+      this.$axios
+        .post("/component/trUpload2/uploadify", param, config)
+        .then(res => {
+          this.formData.headImgPath = res.data.relativePath;
+        });
+    },
+    uploadphotoImg(f) {
+      let param = new FormData(); //创建form对象
+      param.append("file", f.file); //通过append向form对象添加数据
+      let config = {
+        headers: { "content-type": "multipart/form-data" }
+      }; //添加请求头
+      this.$axios
+        .post("/component/trUpload2/uploadify", param, config)
+        .then(res => {
+          this.formData.photoImgPath = res.data.relativePath;
+        });
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          var month = this.month < 10 ? "0" + this.month : "" + this.month;
+          var day = this.day < 10 ? "0" + this.day : "" + this.day;
+          var birthdayTime = [this.year, month, day];
+          var birthdayTimeStr = birthdayTime.join("-");
+          this.$axios
+            .get("/jsp/wap/center/do/doEditUser.jsp", {
+              params: {
+                headImgPath: this.formData.headImgPath,
+                name: this.formData.name,
+                photoImgPath: this.formData.photoImgPath,
+                sex: this.formData.sex,
+                birthdayTimeStr: birthdayTimeStr,
+                company: this.formData.company,
+                address: this.formData.address,
+                mobile: this.formData.mobile,
+                qq: this.formData.qq,
+                email: this.formData.email,
+                provinceId: this.formData.provinceId,
+                cityId: this.formData.cityId,
+                countyId: this.formData.countyId,
+                identity: this.formData.IDcard
+              }
+            })
+            .then(res => {
+              if (res.success == "true") {
+                this.$message.success("信息上传成功");
+              } else {
+                this.$message.error("信息上传失败，请您检查网络");
+              }
+            });
+        } else {
+          this.$message.error("信息填入错误或不全");
+          return false;
+        }
+      });
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
@@ -138,68 +295,76 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
-    },  
-   selected(e){
-     console.log(e);
-   },
-   //出生日期选择器
-   doyear(){
-		var select = document.getElementById("year");
-		var thisYear = new Date().getFullYear();
-		for(var i=1950;i<=thisYear;i++){
-			var option = document.createElement("option");
-			option.value = i;
-			option.innerText = i;
-			select.appendChild(option);
-		}
-	},
-	domoth(){
-		var select = document.getElementById("month");
-		for(var i=1;i<=12;i++){
-			var option = document.createElement("option");
-			option.value = i;
-			option.innerText = i;
-			select.appendChild(option);
-		}
-	},
-	doday(){
-		var select = document.getElementById("day"); 
-		var selectYear = parseInt(year.options[year.selectedIndex].value);
-		var selectMonth = parseInt(month.options[month.selectedIndex].value); 
-		var date = new Date(selectYear,selectMonth,0);
-		
-		for(var i=1;i<=date.getDate();i++){
-			var option = document.createElement("option");
-			option.value = i;
-			option.innerText = i;
-			select.appendChild(option);
-		}
-	},
-  deleteOldChildNodes(){
+    },
+    selected(e) {
+      this.formData.provinceId = e.province.code;
+      this.formData.cityId = e.city.code;
+      this.formData.countyId = e.area.code;
+    },
+    //出生日期选择器
+    doyear() {
+      var select = document.getElementById("year");
+      var thisYear = new Date().getFullYear();
+      for (var i = 1950; i <= thisYear; i++) {
+        var option = document.createElement("option");
+        option.value = i;
+        option.innerText = i;
+        select.appendChild(option);
+      }
+    },
+    domoth() {
+      var select = document.getElementById("month");
+      for (var i = 1; i <= 12; i++) {
+        var option = document.createElement("option");
+        option.value = i;
+        option.innerText = i;
+        select.appendChild(option);
+      }
+    },
+    doday() {
+      var select = document.getElementById("day");
+      var selectYear = parseInt(year.options[year.selectedIndex].value);
+      var selectMonth = parseInt(month.options[month.selectedIndex].value);
+      var date = new Date(selectYear, selectMonth, 0);
+
+      for (var i = 1; i <= date.getDate(); i++) {
+        var option = document.createElement("option");
+        option.value = i;
+        option.innerText = i;
+        select.appendChild(option);
+      }
+    },
+    deleteOldChildNodes() {
       var day = document.getElementById("day");
-      var node=day.firstChild;
+      var node = day.firstChild;
       var tmpNode;
-      while(node!=day.lastChild){
+      while (node != day.lastChild) {
         tmpNode = node.nextSibling;
         day.removeChild(node);
         node = tmpNode;
       }
       day.removeChild(day.lastChild);
-  },
-    pageInit(){
+    },
+    pageInit() {
       this.doyear();
       this.domoth();
       this.doday();
-      var that = this
-      year.onchange = function(){that.deleteOldChildNodes();that.doday();};
-      month.onchange = function(){that.deleteOldChildNodes();that.doday();};
-    }, 
+      var that = this;
+      year.onchange = function() {
+        that.deleteOldChildNodes();
+        that.doday();
+      };
+      month.onchange = function() {
+        that.deleteOldChildNodes();
+        that.doday();
+      };
+    }
   },
-  mounted(){
-    this.pageInit()
+  mounted() {
+    this.pageInit();
   },
-  created(){
-
+  created() {
+    this.getDate();
   }
 };
 </script>

@@ -124,7 +124,7 @@ import qs from "qs"
           }
         }, 1000)
       }
-      this.$axios.get('/jsp/common/baseUser/ctrl/ajaxSendMobileValidCode.jsp',qs.stringify({params:{mobile:this.registerData.mobile}})).then(res => {
+      this.$axios.get('/jsp/common/baseUser/ctrl/ajaxSendMobileValidCode.jsp',{params:{mobile:this.registerData.mobile}}).then(res => {
         if(res.success == "true"){
           this.$notify.success({
             title: '成功',
@@ -141,10 +141,6 @@ import qs from "qs"
     register(){
       if(this.registerData.code != ''){
         this.$axios.get('/jsp/wap/login/do/doRegister.jsp',{params:{code:this.registerData.code,mobile:this.registerData.mobile,pwd:this.registerData.pwd,email:this.registerData.email}}).then(res => {
-          this.$notify.success({
-            title: '成功',
-            message: '注册成功'
-          });
           if(this.login_checked){
             Cookies.set("userKey", res.data,{ expires: 14 });
           } else {
@@ -152,10 +148,6 @@ import qs from "qs"
           }
           this.$axios.post('/jsp/wap/login/do/doLogin.jsp',qs.stringify({mobile:this.registerData.mobile,pwd:this.registerData.pwd,loginType:this.loginData.loginType})).then(res => {
             if(res.success == "true"){
-              this.$notify.success({
-                title: '成功',
-                message: '登录成功，欢迎您'
-              });
               this.$router.push({name:'home'})
             } else {
               this.$notify.error({

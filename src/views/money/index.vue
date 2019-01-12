@@ -60,9 +60,9 @@
         :class="{active:item.checked}"
       >{{item.dataName}}</span>
     </div>
-    <div class="clearfix">
+    <div class="clearfix" style="position:relative;">
       <div class="pd-15 fll" v-if="!isCheck">
-        <span class="act_type fll">所属地区：</span>
+        <span class="act_type fll" style="margin-right:5px;">所属地区：</span>
         <div class="titleRight fll" v-if="!isShowArea">
           <span
             class="type_item"
@@ -120,14 +120,18 @@
         </div>
       </div>
 
-      <div class="flr checkBoxBtn" @click="handleCheck">
+      <div class="flr checkBoxBtn" @click="handleCheck" v-if="!isShowArea">
+        多选
+        <i class="el-icon-plus"></i>
+      </div>
+      <div class="flr checkBoxBtn2" @click="handleCheck" v-else>
         多选
         <i class="el-icon-plus"></i>
       </div>
     </div>
-    <div class="clearfix">
+    <div class="clearfix" style="position:relative;">
       <div class="pd-15 fll" v-if="!isCheck1">
-        <span class="act_type fll">投资地区：</span>
+        <span class="act_type fll" style="margin-right:5px;">投资地区：</span>
         <div class="titleRight fll" v-if="!isShowArea1">
           <span
             class="type_item"
@@ -184,7 +188,11 @@
         </div>
       </div>
 
-      <div class="flr checkBoxBtn" @click="handleCheck1">
+      <div class="flr checkBoxBtn" @click="handleCheck1" v-if="!isShowArea1">
+        多选
+        <i class="el-icon-plus"></i>
+      </div>
+      <div class="flr checkBoxBtn2" @click="handleCheck1" v-else>
         多选
         <i class="el-icon-plus"></i>
       </div>
@@ -208,43 +216,43 @@
       <div class="act_list clearfix" v-for="(item, index) in pageList" :key="index">
         <div @click="toMoneyDetailPage(item.id)">
           <div class="clearfix">
-            <span class="list-title fll">{{item.title}}</span>
-            <span class="title_time flr">{{item.addTimeStr.slice(0,10)}}</span>
+            <span class="list-title fll" v-if="item&&item.title">{{item.title}}</span>
+            <span class="title_time flr" v-if="item&&item.addTimeStr">{{item.addTimeStr.slice(0,10)}}</span>
           </div>
           <div class="clearfix">
             <div class="fll box_content">
               <span class="list-contentName">投资资金：</span>
-              <span class="current">{{item.investAmountName}}</span>
+              <span class="current" v-if="item&&item.investAmountName">{{item.investAmountName}}</span>
             </div>
-            <div class="focusNum flr">{{item.followNum}}人关注</div>
+            <div class="focusNum flr" v-if="item&&item.followNum">{{item.followNum}}人关注</div>
           </div>
           <div class="clearfix">
             <div class="fll">
               <div class="box_content">
                 <span class="list-contentName">投资方式：</span>
-                <span class="list-content">{{item.investCase}}</span>
+                <span class="list-content" v-if="item&&item.investCase">{{item.investCase}}</span>
               </div>
               <div class="box_content">
                 <span class="list-contentName">投资地区：</span>
-                <span class="list-content">{{item.investRegionNameStr}}</span>
+                <span class="list-content" v-if="item&&item.investRegionNameStr">{{item.investRegionNameStr}}</span>
               </div>
               <div class="box_content">
                 <span class="list-contentName">投资类型：</span>
-                <span class="list-content">{{item.investTypeName}}</span>
+                <span class="list-content" v-if="item&&item.investTypeName">{{item.investTypeName}}</span>
               </div>
             </div>
             <div class="fll">
               <div class="box_content">
                 <span class="list-contentName">资金类型：</span>
-                <span class="list-content">{{item.pawnTypeName}}</span>
+                <span class="list-content" v-if="item&&item.pawnTypeName">{{item.pawnTypeName}}</span>
               </div>
               <div class="box_content">
                 <span class="list-contentName">投资行业：</span>
-                <span class="list-content">{{item.investIndustryName}}</span>
+                <span class="list-content" v-if="item&&item.investIndustryName">{{item.investIndustryName}}</span>
               </div>
               <div class="box_content">
                 <span class="list-contentName">投资阶段：</span>
-                <span class="list-content">{{item.investStageName}}</span>
+                <span class="list-content" v-if="item&&item.investStageName">{{item.investStageName}}</span>
               </div>
             </div>
           </div>
@@ -253,10 +261,10 @@
       </div>
       </div>
       <div class="load_more" @click="more" v-if="this.totalCount > this.pageList.length">加载更多...</div>
-      <p v-else>-------------------------------------------------没有更多资金了----------------------------------------------------</p>
+      <p style="color:#999;" v-else>-------------------------------------------------没有更多资金了----------------------------------------------------</p>
     </div>
     <div class="w360 flr mes_list clearfix">
-      <img src="/static/img/money_list.jpg" alt class="act_timelist">
+      <img src="/static/img/money_list.jpg" alt class="act_timelist" @click="toMymoney">
       <p class="mes">
         热门资讯
         <span class="mes_more flr" @click="toMessagePage">更多></span>
@@ -278,7 +286,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="dialogFormVisible = false">确认投递</el-button>
+        <el-button type="info" @click="apply_money">确认投递</el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -286,6 +294,8 @@
 </template>
 
 <script>
+import * as Cookies from 'js-cookie'
+
 export default {
   data() {
     return {
@@ -720,6 +730,20 @@ export default {
             this.loading = false;
           }
         });
+    },
+    toMymoney(){
+        if(Cookies.get('userKey')){
+          let {href} = this.$router.resolve({
+            name: "applyMoney",
+          });
+          window.open(href, '_blank');
+        } else {
+          this.$router.push('/login')
+        }
+      },
+    apply_money(){
+      this.dialogFormVisible = false
+      this.$message.success('投递成功')
     }
   },
   created() {
@@ -789,13 +813,26 @@ export default {
   cursor: pointer;
   margin-right: 20px;
 }
+.checkBoxBtn2 {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 4px 5px;
+  color: #606266;
+  font-size: 12px;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  bottom: 40px;
+}
 
 .type_item {
   font-size: 12px;
   font-family: "Microsoft YaHei";
   color: #444;
   cursor: pointer;
-  padding-right: 45px;
+  // padding-right: 45px;
+  display: inline-block;
+  width: 96px;
 } //活动列表
 .act_list {
   cursor: pointer;
@@ -818,7 +855,7 @@ export default {
 .title_time {
   display: block;
   margin-top: 10px;
-  color: #666;
+  color: #888;
 }
 
 .focusNum {
@@ -858,7 +895,7 @@ export default {
 }
 
 .box_content {
-  width: 395px;
+  width: 365px;
   line-height: 2;
   font-size: 14px !important;
 }
@@ -999,6 +1036,7 @@ export default {
 } //活动排表
 .act_timelist {
   margin: 20px 0;
+  cursor: pointer;
 }
 
 .mes_list {
@@ -1019,6 +1057,9 @@ export default {
       -moz-user-select: none;
       -webkit-user-select: none;
       -ms-user-select: none;
+    }
+    .mes_more:hover{
+      color: #005385;
     }
   }
 }
@@ -1082,13 +1123,27 @@ export default {
 }
 
 /deep/ {
+  .el-checkbox{
+    width:102px!important;
+    padding-bottom: 3.1px!important;
+  }
   .el-checkbox + .el-checkbox {
-    margin-left: 10px !important;
+    margin-left: 0;
   }
 }
 
 .active {
   color: #005982;
   font-weight: 700;  
+}
+
+.titleRight .type_item:nth-child(25){
+  padding-right: 20px;
+}
+.titleRight .type_item:nth-child(15){
+  padding-right: 20px;
+}
+.titleRight .type_item:nth-child(5){
+  padding-right: 20px;
 }
 </style>

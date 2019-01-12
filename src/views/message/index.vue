@@ -104,7 +104,6 @@ export default {
   methods: {
     getTypeData(){
       this.$axios.get('/jsp/wap/trNews/ctrl/jsonCategoryList.jsp').then(res => {
-        console.log(res);
         if(res.success == "true"){
           let categoryList = res.data
           categoryList.forEach(item => {
@@ -180,7 +179,7 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      this.getData(this.mes_type,val)
+      this.getData(this.categorys,val)
     },
     toMessagePage(){
       let {href} = this.$router.resolve({
@@ -277,6 +276,7 @@ export default {
   }
 }
   .active {
+    font-weight: 700;
     color: #005982;
   }
 .mes_top {

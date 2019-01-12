@@ -5,13 +5,18 @@
         <span class="project_">需求填报</span>
       </p>
       <p>请详细填写您的需求：</p>
-      <el-input
-        type="textarea"
-        :autosize="{ minRows: 20}"
-        placeholder="请输入内容"
-        v-model="content">
-      </el-input>
-      <button class="sub_btn flr" @click="submit">提交</button>
+      <el-form :rules="rules" ref="ruleForm">
+        <el-form-item prop="content">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 20}"
+          placeholder="请输入内容"
+          v-model="content"
+          >
+        </el-input>
+        </el-form-item>
+        <button class="sub_btn flr" @click="submit">提交</button>
+      </el-form>
     </div>
   </div>
 </template>
@@ -20,7 +25,10 @@
   export default {
     data(){
       return {
-        content:''
+        content:'',
+        rules:{
+          content:{ required: true, message: "请填写需求", trigger: "blur" }
+        }
       }
     },
     methods:{

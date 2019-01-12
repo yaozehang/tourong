@@ -275,6 +275,9 @@ export default {
       -webkit-user-select: none;
       -ms-user-select: none;
     }
+    .mes_more:hover{
+      color: #005385;
+    }
   }
 }
 .mes_title {

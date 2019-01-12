@@ -1,158 +1,195 @@
 <template>
   <div class="fll">
     <div class="person_content">
+      <img
+        src="/static/img/VIP.png"
+        alt
+        width="924px"
+        height="150px"
+        style="cursor:pointer"
+        @click="vip"
+      >
       <p class="project_title">
         <span class="project_">发布资金信息</span>
       </p>
       <el-form ref="form" :model="formData" label-width="150px">
         <el-form-item label="投资主题" style="width:600px">
-          <el-input v-model="formData.status"></el-input>
+          <el-input v-model="formData.title"></el-input>
           <span style="color:#999">格式参考：广东某企业5000万元起寻互联网项目合作</span>
         </el-form-item>
         <el-form-item label="所在地区">
-          <v-distpicker></v-distpicker>
+          <v-distpicker
+            :province="provinceStr"
+            :city="cityStr"
+            :area="countyStr"
+            @selected="selected"
+          ></v-distpicker>
         </el-form-item>
         <el-form-item label="联系地址" style="width:600px">
-          <el-input v-model="formData.location"></el-input>
+          <el-input v-model="formData.linkmanAddress"></el-input>
         </el-form-item>
         <el-form-item label="资金主体">
-          <el-radio-group v-model="formData.resource">
-            <el-radio label="企业资金"></el-radio>
-            <el-radio label="个人资金"></el-radio>
+          <el-radio-group v-model="formData.capitalBody">
+            <el-radio
+              v-for="capital in capitalBodyList"
+              :key="capital.dataValue"
+              :label="capital.dataValue"
+            >{{capital.dataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="联系人姓名" class="w350">
-          <el-input v-model="formData.money"></el-input>
+          <el-input v-model="formData.linkmanName"></el-input>
         </el-form-item>
         <el-form-item label="联系人电话" class="w350">
-          <el-input v-model="formData.money"></el-input>
+          <el-input v-model="formData.linkmanPhone"></el-input>
         </el-form-item>
         <el-form-item label="投资地区">
-          <v-distpicker></v-distpicker>
+          <v-distpicker
+            :province="provinceStr1"
+            :city="cityStr1"
+            :area="countyStr1"
+            @selected="selected1"
+          ></v-distpicker>
         </el-form-item>
         <el-form-item label="投资金额">
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="formData.investAmount" placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
+              v-for="item in investAmountList"
+              :key="item.dataValue"
+              :label="item.dataName"
+              :value="item.dataValue"
+            >{{item.dataName}}</el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="投资行业">
-          <el-checkbox-group v-model="formData.industy">
-            <el-checkbox label="金融" name="type"></el-checkbox>
-            <el-checkbox label="房地产" name="type"></el-checkbox>
-            <el-checkbox label="能源" name="type"></el-checkbox>
-            <el-checkbox label="互联网" name="type"></el-checkbox>
+          <el-checkbox-group v-model="investIndustrys">
+            <el-checkbox
+              v-for="industry in investIndustryList"
+              :label="industry.dataValue"
+              :key="industry.dataValue"
+              name="type"
+            >{{industry.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="投资阶段">
-          <el-checkbox-group v-model="formData.industy">
-            <el-checkbox label="金融" name="type"></el-checkbox>
-            <el-checkbox label="房地产" name="type"></el-checkbox>
-            <el-checkbox label="能源" name="type"></el-checkbox>
-            <el-checkbox label="互联网" name="type"></el-checkbox>
+          <el-checkbox-group v-model="investStages">
+            <el-checkbox
+              v-for="investStage in investStageList"
+              :label="investStage.dataValue"
+              :key="investStage.dataValue"
+              name="type"
+            >{{investStage.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="资金来源">
-          <el-checkbox-group v-model="formData.industy">
-            <el-checkbox label="金融" name="type"></el-checkbox>
-            <el-checkbox label="房地产" name="type"></el-checkbox>
-            <el-checkbox label="能源" name="type"></el-checkbox>
-            <el-checkbox label="互联网" name="type"></el-checkbox>
+          <el-checkbox-group v-model="capitalSources">
+            <el-checkbox
+              v-for="capitalSource in capitalSourceList"
+              :label="capitalSource.dataValue"
+              :key="capitalSource.dataValue"
+              name="type"
+            >{{capitalSource.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="投资类型">
-          <el-checkbox-group v-model="formData.industy">
-            <el-checkbox label="金融" name="type"></el-checkbox>
-            <el-checkbox label="房地产" name="type"></el-checkbox>
-            <el-checkbox label="能源" name="type"></el-checkbox>
-            <el-checkbox label="互联网" name="type"></el-checkbox>
+          <el-checkbox-group v-model="investTypes">
+            <el-checkbox
+              v-for="investType in investTypeList"
+              :label="investType.dataValue"
+              :key="investType.dataValue"
+              name="type"
+            >{{investType.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="前期费用">
-          <el-radio-group v-model="formData.resource">
-            <el-radio label="评估"></el-radio>
-            <el-radio label="无任何费用"></el-radio>
-            <el-radio label="其他费用"></el-radio>
+          <el-radio-group v-model="formData.upfrontCost">
+            <el-radio
+              v-for="upfrontCost in upfrontCostList"
+              :key="upfrontCost.dataValue"
+              :label="upfrontCost.dataValue"
+            >{{upfrontCost.dataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="最低回报要求" style="width:600px">
-          <el-input v-model="formData.company"></el-input>
+          <el-input v-model="formData.minRepay"></el-input>
         </el-form-item>
         <el-form-item label="有效期限">
-            <div style="width:28.16667%" class="fll">
-              <el-date-picker type="year" placeholder="选择日期" v-model="formData.date1"></el-date-picker>
-            </div>
-            <el-col class="line" :span="1" style="text-align:center;">~</el-col>
-            <el-col :span="7">
-              <el-date-picker type="year" placeholder="选择日期" v-model="formData.date2"></el-date-picker>
-            </el-col>
-            <el-col :span="1" style="text-align:center;">
-              年
-            </el-col>
+          <div style="width:28.16667%" class="fll">
+            <el-date-picker
+              type="year"
+              placeholder="选择日期"
+              v-model="formData.expiryDateStartTimeStr"
+            ></el-date-picker>
+          </div>
+          <el-col class="line" :span="1" style="text-align:center;">~</el-col>
+          <el-col :span="7">
+            <el-date-picker type="year" placeholder="选择日期" v-model="formData.expiryDateEndTimeStr"></el-date-picker>
+          </el-col>
+          <el-col :span="1" style="text-align:center;">年</el-col>
         </el-form-item>
         <el-form-item label="风控要求">
-          <el-checkbox-group v-model="formData.industy">
-            <el-checkbox label="金融" name="type"></el-checkbox>
-            <el-checkbox label="房地产" name="type"></el-checkbox>
-            <el-checkbox label="能源" name="type"></el-checkbox>
-            <el-checkbox label="互联网" name="type"></el-checkbox>
+          <el-checkbox-group v-model="riskControls">
+            <el-checkbox
+              v-for="riskControl in riskControlList"
+              :label="riskControl.dataValue"
+              :key="riskControl.dataValue"
+              name="type"
+            >{{riskControl.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="材料要求">
-          <el-checkbox-group v-model="formData.industy">
-            <el-checkbox label="金融" name="type"></el-checkbox>
-            <el-checkbox label="房地产" name="type"></el-checkbox>
-            <el-checkbox label="能源" name="type"></el-checkbox>
-            <el-checkbox label="互联网" name="type"></el-checkbox>
+          <el-checkbox-group v-model="datums">
+            <el-checkbox
+              v-for="datum in datumList"
+              :label="datum.dataValue"
+              :key="datum.dataValue"
+              name="type"
+            >{{datum.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="抵押物类型">
-          <el-checkbox-group v-model="formData.industy">
-            <el-checkbox label="金融" name="type"></el-checkbox>
-            <el-checkbox label="房地产" name="type"></el-checkbox>
-            <el-checkbox label="能源" name="type"></el-checkbox>
-            <el-checkbox label="互联网" name="type"></el-checkbox>
+          <el-checkbox-group v-model="pawnTypes">
+            <el-checkbox
+              v-for="pawnType in pawnTypeList"
+              :label="pawnType.dataValue"
+              :key="pawnType.dataValue"
+              name="type"
+            >{{pawnType.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="有效期限">
-            <div style="width:28.16667%" class="fll">
-              <el-input v-model="formData.date1"></el-input>
-            </div>
-            <el-col class="line" :span="1" style="text-align:center;">~</el-col>
-            <el-col :span="7">
-              <el-input v-model="formData.date2"></el-input>
-            </el-col>
-            <el-col :span="1" style="text-align:center;">
-              折
-            </el-col>
+        <el-form-item label="抵押物折扣率">
+          <div style="width:28.16667%" class="fll">
+            <el-input v-model="formData.pawnDiscountRateMin"></el-input>
+          </div>
+          <el-col class="line" :span="1" style="text-align:center;">~</el-col>
+          <el-col :span="7">
+            <el-input v-model="formData.pawnDiscountRateMax"></el-input>
+          </el-col>
+          <el-col :span="1" style="text-align:center;">折</el-col>
         </el-form-item>
         <el-form-item label="投资要求概述" style="width:600px">
-          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.resume"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.investRequire"></el-input>
         </el-form-item>
         <el-form-item label="投资案例" style="width:600px">
-          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.resume"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.investCase"></el-input>
         </el-form-item>
         <el-form-item label="其他说明" style="width:600px">
-          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.resume"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.otherExplain"></el-input>
         </el-form-item>
         <p>
           <span class="item_title">附件上传</span>
         </p>
-        <el-form-item label="附件材料" prop="file">
-          <el-upload class="upload-demo" action multiple :file-list="fileList">
-            <div>商业计划书、融资计划书等文件请在此上传</div>
-            <button class="likeBtn fll">
+        <el-form-item label="附件材料" prop="file" style="width:600px">
+          <div>商业计划书、融资计划书等文件请在此上传</div>
+          <el-upload class="upload-demo" action :http-request="uploadFlie" :file-list="fileList">
+            <div class="likeBtn fll">
               <i></i>点击上传文件
-            </button>
+            </div>
           </el-upload>
         </el-form-item>
         <el-form-item>
-          <button class="subBtn" @click="onSave" style="margin-right:20px;">保存</button>
-          <button class="subBtn" @click="onSubmit">提交</button>
+          <div class="subBtn" @click="onSave" style="margin-right:20px;">保存</div>
+          <div class="subBtn" @click="onSubmit">提交</div>
         </el-form-item>
       </el-form>
     </div>
@@ -161,77 +198,264 @@
 
 <script>
 import VDistpicker from "v-distpicker";
+import qs from "qs"
+
 export default {
   components: { VDistpicker },
   data() {
     return {
       templateData: "<p>lalala</p>",
       formData: {
-        status: "上市公司",
-        phone: "",
-        name: "李先生",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        stage: [
-          { name: "种子期", checked: false },
-          { name: "初创期", checked: false },
-          { name: "成长期", checked: false },
-          { name: "扩张期", checked: false }
-        ],
-        resource: "0",
-        desc: "",
-        avatar: "",
-        truephoto: "",
-        IDcard: "",
-        company: "",
-        location: "",
-        account: "1888555999",
-        qq: "",
-        email: "",
-        resume: "",
-        industy: [],
-        money: "",
-        people: ""
+        title: "",
+        linkmanPhone: "",
+        linkmanName: "",
+        upfrontCost: "",
+        linkmanAddress: "",
+        regionProvinceId: "",
+        regionCityId: "",
+        regionCountyId: "",
+        investRegionProvinceId: "",
+        investRegionCityId: "",
+        investRegionCountyId: "",
+        investAmount: "",
+        minRepay: "",
+        expiryDateStartTimeStr: "",
+        expiryDateEndTimeStr: "",
+        pawnDiscountRateMin: "",
+        pawnDiscountRateMax: "",
+        investRequire: "",
+        investCase: "",
+        otherExplain:"",
+        capitalBody:""
       },
-      fileList: [{ name: "创业项目商业计划书.doc", url: "" }],
-       options: [{
-          value: '选项1',
-          label: '不限'
-        },],
-        value: ''
+      fileList: [],
+      value: "",
+      countyStr: "昌平区",
+      provinceStr: "北京市",
+      cityStr: "北京城区",
+      countyStr1: "昌平区",
+      provinceStr1: "北京市",
+      cityStr1: "北京城区",
+      capitalBodyList: [],
+      investAmountList: [],
+      investIndustryList: [],
+      investIndustrys: [],
+      investStageList: [],
+      investStages: [],
+      capitalSourceList: [],
+      capitalSources: [],
+      investTypeList: [],
+      investTypes: [],
+      upfrontCostList: [],
+      riskControlList: [],
+      riskControls: [],
+      datumList: [],
+      datums: [],
+      pawnTypeList: [],
+      pawnTypes: [],
+      fileNames: [],
+      filePaths: []
     };
   },
   methods: {
-    get_type(index) {
-      console.log(index);
-      this.formData.stage[index].checked = !this.formData.stage[index].checked;
-    },
-    onSave(){
+    onSave() {
       this.$notify({
-          title: '成功',
-          message: '保存成功',
-          type: 'success'
+        title: "成功",
+        message: "保存成功",
+        type: "success"
+      });
+    },
+    onSubmit() {
+      this.$confirm("即将提交资金, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          var fileNames = this.fileNames.join(";=;");
+          var filePaths = this.filePaths.join(",");
+          var investStages = this.investStages.join(',')
+          var investIndustrys = this.investIndustrys.join(',')
+          var capitalSources = this.capitalSources.join(',')
+          var investTypes = this.investTypes.join(',')
+          var riskControls = this.riskControls.join(',')
+          var pawnTypes = this.pawnTypes.join(',')
+          var datums = this.datums.join(',')
+          var id = this.$route.query.id;
+          if(id != ''){
+            var params = 
+              {
+                id,
+                title: this.formData.title,
+                linkmanPhone: this.formData.linkmanPhone,
+                linkmanName: this.formData.linkmanName,
+                upfrontCost: this.formData.upfrontCost,
+                linkmanAddress: this.formData.linkmanAddress,
+                regionProvinceId: this.formData.regionProvinceId,
+                regionCityId: this.formData.regionCityId,
+                regionCountyId: this.formData.regionCountyId,
+                investRegionProvinceId: this.formData.investRegionProvinceId,
+                investRegionCityId: this.formData.investRegionCityId,
+                investRegionCountyId: this.formData.investRegionCountyId,
+                investAmount: this.formData.investAmount,
+                minRepay: this.formData.minRepay,
+                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
+                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                pawnDiscountRateMin: this.formData.pawnDiscountRateMin,
+                pawnDiscountRateMax: this.formData.pawnDiscountRateMax,
+                investRequire: this.formData.investRequire,
+                investCase: this.formData.investCase,
+                otherExplain: this.formData.otherExplain,
+                capitalBody:this.formData.capitalBody,
+                fileNames,
+                filePaths,
+                investStages,
+                investIndustrys,
+                capitalSources,
+                investTypes,
+                riskControls,
+                pawnTypes,
+                datums
+              }
+          } else {
+            var params = 
+              {
+                title: this.formData.title,
+                linkmanPhone: this.formData.linkmanPhone,
+                linkmanName: this.formData.linkmanName,
+                upfrontCost: this.formData.upfrontCost,
+                linkmanAddress: this.formData.linkmanAddress,
+                regionProvinceId: this.formData.regionProvinceId,
+                regionCityId: this.formData.regionCityId,
+                regionCountyId: this.formData.regionCountyId,
+                investRegionProvinceId: this.formData.investRegionProvinceId,
+                investRegionCityId: this.formData.investRegionCityId,
+                investRegionCountyId: this.formData.investRegionCountyId,
+                investAmount: this.formData.investAmount,
+                minRepay: this.formData.minRepay,
+                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
+                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                pawnDiscountRateMin: this.formData.pawnDiscountRateMin,
+                pawnDiscountRateMax: this.formData.pawnDiscountRateMax,
+                investRequire: this.formData.investRequire,
+                investCase: this.formData.investCase,
+                otherExplain: this.formData.otherExplain,
+                capitalBody:this.formData.capitalBody,
+                fileNames,
+                filePaths,
+                investStages,
+                investIndustrys,
+                capitalSources,
+                investTypes,
+                riskControls,
+                pawnTypes,
+                datums
+              }
+          }
+          this.$axios
+            .post('/jsp/wap/center/do/doEditCapital.jsp',qs.stringify(params)
+            )
+            .then(res => {
+              if (res.success == "true") {
+                this.$message.success("上传资金成功");
+                this.$router.push('/person/myMoney')
+              } else {
+                this.$message.error("上传资金失败，请完善资金信息或检查网络");
+              }
+            });
+        })
+    },
+    selected(e) {
+      this.formData.regionProvinceId = e.province.code;
+      this.formData.regionCityId = e.city.code;
+      this.formData.regionCountyId = e.area.code;
+    },
+    selected1(e) {
+      this.formData.investRegionProvinceId = e.province.code;
+      this.formData.investRegionCityId = e.city.code;
+      this.formData.investRegionCountyId = e.area.code;
+    },
+    getData(id) {
+      this.$axios
+        .get(`/jsp/wap/center/ctrl/jsonCapitalDetail.jsp?id=${id}`)
+        .then(res => {
+          console.log(res);
+          this.formData = res.data.capital;
+          this.investIndustrys = res.data.capital.investIndustryStr.split(",")
+          this.investStages = res.data.capital.investStageStr.split(",")
+          this.capitalSources = res.data.capital.capitalSourceStr.split(",")
+          this.investTypes = res.data.capital.investTypeStr.split(",")
+          this.riskControls = res.data.capital.riskControlStr.split(",")
+          this.datums = res.data.capital.datumStr.split(",")
+          this.pawnTypes =  res.data.capital.pawnTypesStr.split(",")
+          this.capitalBodyList = res.data.capitalBodyList;
+          let capital = res.data.capital;
+          if (capital.regionNameStr != "") {
+            this.provinceStr = capital.regionNameStr.split(",")[0];
+            var cityStr = capital.regionNameStr.split(",")[1];
+            if (this.provinceStr == "北京市" && cityStr == "市辖区") {
+              cityStr = "北京城区";
+            } else if (this.provinceStr == "天津市" && cityStr == "市辖区") {
+              this.cityStr = "天津城区";
+            } else if (this.provinceStr == "上海市" && cityStr == "市辖区") {
+              this.cityStr = "上海城区";
+            } else if (this.provinceStr == "重庆市" && cityStr == "市辖区") {
+              this.cityStr = "重庆城区";
+            } else {
+              this.cityStr = capital.regionNameStr.split(",")[1];
+            }
+            this.countyStr = capital.regionNameStr.split(",")[2];
+          }
+          if (capital.investRegionNameStr != "") {
+            this.provinceStr1 = capital.investRegionNameStr.split(",")[0];
+            var cityStr1 = capital.investRegionNameStr.split(",")[1];
+            if (this.provinceStr1 == "北京市" && cityStr1 == "市辖区") {
+              cityStr1 = "北京城区";
+            } else if (this.provinceStr1 == "天津市" && cityStr1 == "市辖区") {
+              this.cityStr1 = "天津城区";
+            } else if (this.provinceStr1 == "上海市" && cityStr1 == "市辖区") {
+              this.cityStr1 = "上海城区";
+            } else if (this.provinceStr1 == "重庆市" && cityStr1 == "市辖区") {
+              this.cityStr1 = "重庆城区";
+            } else {
+              this.cityStr1 = capital.investRegionNameStr.split(",")[1];
+            }
+            this.countyStr1 = capital.investRegionNameStr.split(",")[2];
+          }
+          this.investAmountList = res.data.investAmountList;
+          this.investIndustryList = res.data.investIndustryList;
+          this.investStageList = res.data.investStageList;
+          this.capitalSourceList = res.data.capitalSourceList;
+          this.investTypeList = res.data.investTypeList;
+          this.upfrontCostList = res.data.upfrontCostList;
+          this.riskControlList = res.data.riskControlList;
+          this.datumList = res.data.datumList;
+          this.pawnTypeList = res.data.pawnTypeList;
         });
     },
-    onSubmit(){
-      this.$confirm('即将提交资金, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$notify({
-            type: 'success',
-            message: '提交成功!'
-          });
-        }).catch(() => {
-          this.$notify({
-            type: 'info',
-            message: '已取消提交'
-          });          
+    uploadFlie(f) {
+      let param = new FormData(); //创建form对象
+      param.append("file", f.file); //通过append向form对象添加数据
+      let config = {
+        headers: { "content-type": "multipart/form-data" }
+      }; //添加请求头
+      this.$axios
+        .post("/component/trUpload2/uploadify", param, config)
+        .then(res => {
+          if (res.success == true) {
+            console.log(res);
+            this.fileNames.push(res.data.originalName);
+            this.filePaths.push(res.data.relativePath);
+          } else {
+            this.$message.error("上传失败，请检查网络");
+          }
         });
-    }
+    },
+    vip() {}
+  },
+  created() {
+    let id = this.$route.query.id;
+    this.getData(id);
   }
 };
 </script>
@@ -377,7 +601,7 @@ export default {
   box-sizing: border-box;
   outline: none;
   margin: 0;
-  margin-left: 15px;
+  // margin-left: 15px;
   transition: 0.1s;
   font-weight: 500;
   -moz-user-select: none;
@@ -393,7 +617,7 @@ export default {
     background: url(/static/img/shangchuan-1.png) no-repeat center;
     background-size: contain;
     position: absolute;
-    top: 9px;
+    top: 7px;
     left: 4px;
   }
 }

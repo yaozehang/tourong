@@ -14,28 +14,28 @@
         <el-form-item label="类型：" prop="type">
           <div v-for="(item , index) in type" :key="index" class="fll type_btn" :class="{'active':item.checked}" @click="get_type(index)">{{item.name}}</div>
         </el-form-item>
-        <el-form-item label="认证材料：" prop="file">
+        <el-form-item label="认证材料：">
           <el-upload
             class="upload-demo"
+            :http-request="uploadFlie"
             action=""
-            multiple
             :file-list="fileList"
           >
-            <button class="likeBtn">
+            <div class="likeBtn">
               <i></i>点击上传文件
-            </button>
+            </div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="介绍：" prop="desc">
+        <el-form-item label="介绍：" prop="brief">
           <el-input
             type="textarea"
-            v-model="attestForm.introduce"
+            v-model="attestForm.brief"
             :autosize="{ minRows: 15}"
             placeholder="请输入内容"
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <button class="sub_btn" @click="submitForm">提交认证</button>
+          <button class="sub_btn" @click="submitForm('ruleForm')">提交认证</button>
         </el-form-item>
       </el-form>
     </div>
@@ -47,38 +47,88 @@ export default {
   data() {
     return {
       attestForm: {
-        introduce: "",
-        type: ""
+        brief: "",
+        type: "",
+        fileNames:[],
+        filePaths:[],
       },
-      type: [{name:"专家",checked:false},{name:"投资方",checked:false}, {name:"项目方",checked:false}],
+      type: [ {name:"项目方",checked:false},{name:"投资人",checked:false},{name:"专家",checked:false}],
       rules: {
         type: [
           {
-            type: "array",
+            type: "string",
             required: true,
-            message: "请至少选择一个活动性质",
+            message: "请至少选择一个认证类型",
             trigger: "change"
           }
         ],
-        file: [
-          {
-            type: "file",
-            required: true,
-            message: "请上传资料",
-            trigger: "change"
-          }
-        ],
-        desc: [{ required: true, message: "请填写活动形式", trigger: "blur" }]
+        // file: [
+        //   {
+        //     type: "file",
+        //     required: true,
+        //     message: "请上传资料",
+        //     trigger: "change"
+        //   }
+        // ],
+        brief: [{ required: true, message: "请填写介绍", trigger: "blur" }]
       },
-      fileList: [{ name: "企业介绍资料", url: "" }]
+      fileList: []
     };
   },
   methods: {
-    submitForm() {},
+    submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            var fileNames = this.attestForm.fileNames.join(';=;')
+            var filePaths = this.attestForm.filePaths.join(',')
+            this.$axios.get('/jsp/wap/center/do/doAuthentication.jsp',{params:{type:this.attestForm.type,brief:this.attestForm.brief,fileNames,filePaths}}).then(res => {
+              if(res.success == "true") {
+                this.$message.success('上传认证资料成功')
+                this.attestForm.brief = ""
+                this.type.forEach(item => {
+                  item.checked = false
+                })
+                this.attestForm.type = ""
+                this.fileList = []
+                this.attestForm.fileNames = []
+                this.attestForm.filePaths = []
+              } else {
+                this.$message.error('上传认证资料失败，请检查网络')
+              }
+            })
+          } else {
+            // console.log('error submit!!');
+            return false;
+          }
+        });
+      },
     get_type(index){
-      console.log(index);
-      this.type[index].checked = !this.type[index].checked
-    }
+      if(this.type[index].checked == true) {
+          this.type[index].checked = false
+          this.attestForm.type = ''
+      } else {
+          this.type.forEach(item => {
+          item.checked = false
+        })
+        this.type[index].checked = true
+        this.attestForm.type = (index + 1).toString()
+      }
+    },
+    uploadFlie(f){
+      let param = new FormData(); //创建form对象
+         param.append('file',f.file);//通过append向form对象添加数据
+         let config = {
+           headers:{'content-type':'multipart/form-data'}
+         };  //添加请求头
+      this.$axios.post('/component/trUpload2/uploadify',param,config).then(res => {
+        if(res.success == true) {
+          this.attestForm.fileNames.push(res.data.originalName)
+          this.attestForm.filePaths.push(res.data.relativePath)
+        } else {
+          this.$message.error('上传失败，请检查网络')
+        }
+      })
+    },
   }
 };
 </script>
@@ -152,7 +202,7 @@ export default {
     background: url(/static/img/shangchuan-1.png) no-repeat center;
     background-size: contain;
     position: absolute;
-    top: 9px;
+    top: -5px;
     left: 0;
   }
 }

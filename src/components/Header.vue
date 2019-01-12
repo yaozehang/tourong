@@ -10,7 +10,7 @@
         </span>
         <span class="txt-202 register" @click="$router.push('/login')"  v-show="login">免费注册</span>
         <span class="txt-202 register"  v-show="!login" style="color:#fff;" @click="login_out">退出登录</span>
-        <el-dropdown>
+        <el-dropdown placement="bottom">
           <span class="invest el-dropdown-link">
             <i></i>
             我是投资人
@@ -22,7 +22,8 @@
             <el-dropdown-item @click.native="$router.push('/project')">找项目</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-dropdown>
+        <span style="display:inline-block;width:40px;"></span>
+        <el-dropdown placement="bottom">
           <span class="gem el-dropdown-link">
             <i></i>
             我是创业人
@@ -57,15 +58,15 @@
         <div class="navMenu fll" style="color:#999;">路演</div>
         <div class="search fll">
           <form action class="form fll">
-            <select class="select"  v-model="type">
-              <option value="1">找资金</option>
-              <option value="2">找项目</option>
-              <option value="3">找资讯</option>
+            <select v-model="type" class="select">
+              <option value="1" class="option">找资金</option>
+              <option value="2" class="option">找项目</option>
+              <option value="3" class="option">找资讯</option>
             </select>
             <input type="text" placeholder="输入关键字" class="input" v-model="title" @keyup.enter="search">
             <img src="/static/img/search.png" alt="" class="search-button" @click="search">
           </form>
-          <img src="/static/img/kefu.png" alt="" class="fll" style="margin-left:5px;cursor:pointer;">
+          <img src="/static/img/kefu.png" alt="" class="fll" style="margin-left:5px;cursor:pointer;" @click="tokefu">
         </div>
       </div>
     </div>
@@ -74,6 +75,9 @@
 
 <script>
 import * as Cookies from 'js-cookie'
+// import Vue from 'vue'
+// import vSelect from 'vue-select'
+// Vue.component('v-select', vSelect)
 
 export default {
   data() {
@@ -124,6 +128,9 @@ export default {
         } else {
           this.$router.push('/login')
         }
+      },
+      tokefu(){
+        window.open('https://tb.53kf.com/code/client/10193554/1','_blank')
       },
     inform(){
        if(Cookies.get('userKey')){
@@ -187,10 +194,10 @@ a {
 }
 .register {
   margin-left: 15px;
+  margin-right: 600px;
   cursor: pointer;
 }
 .invest {
-  margin-left: 600px;
   font-weight: 700;
   color: #fff;
   cursor: pointer;
@@ -208,7 +215,6 @@ a {
 }
 .gem {
   font-weight: 700;
-  margin-left: 40px;
   color: #fff;
   cursor: pointer;
   position: relative;
@@ -302,13 +308,23 @@ a {
   -moz-outline: none;
   appearance: none;
   border: 0;
-  width: 65px;
-  margin-left: 10px;
-  background: #e6e6e6;
+  width: 68px;
+  padding-left: 10px;
+  padding-bottom: 6px;
+  // // background: #e6e6e6;
+  background: rgba(0,0,0,0);;
   background-image: url(/static/img/xiala.png);
   background-size: 20% auto;
   background-repeat: no-repeat;
-  background-position: calc(100% - 5px) 50%;
+  background-position: 100% 30%;
+}
+.select::-ms-expand { 
+     display: none; 
+}
+option{
+  color: black;
+  line-height: 40px;
+  border: none;
 }
 @-moz-document url-prefix() {
   .select {

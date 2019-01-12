@@ -18,7 +18,7 @@
                         <span class="title_time flr">{{money.userName}}</span>
                     </div>
                     <div class="clearfix">
-                        <div class="fll company">{{money.company}}</div>
+                        <div class="fll company"><span>{{money.linkmanName}}</span></div>
                         <div class="flr">
                             <el-button class="sendBtn">投递项目</el-button>
                             <el-button v-if="follow" class="sendBtn" @click="nofollow">已关注</el-button>
@@ -49,7 +49,7 @@
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">保障措施：</span>
-                                <span class="list-content">{{money.riskControlName}}</span>
+                                <span class="list-content">{{money.safeguardName}}</span>
                             </div>
                         </div>
                         <div class="fll">
@@ -67,7 +67,7 @@
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">有效期限：</span>
-                                <span class="list-content">{{money.expiryDateStartTime}}~{{money.expiryDateEndTime}}</span>
+                                <span class="list-content">{{money.expiryDateStartTimeStr}}~{{money.expiryDateEndTimeStr}}</span>
                             </div>
                         </div>
                         <div class="fll">
@@ -121,10 +121,10 @@
                     <img class="userImg" src="static/img/userImg.jpg" alt="">        
                 </div>
                 <p class="username">李先生</p>
-                <p><span>职位：</span><span>董事长</span></p>
-                <p><span>企业名称：</span><span>北京开拓明天股份有限公司</span></p>
-                <p><span>所属行业：</span><span>互联网</span></p>
-                <p><span>关注行业：</span><span>互联网、金融、节能环保</span></p>
+                <p><span class="_666">职位：</span><span>董事长</span></p>
+                <p><span class="_666">企业名称：</span><span>北京开拓明天股份有限公司</span></p>
+                <p><span class="_666">所属行业：</span><span>互联网</span></p>
+                <p><span class="_666">关注行业：</span><span>互联网、金融、节能环保</span></p>
                 <div class="lookBtnBox">
                     <el-button class="lookBtn" @click="$router.push('/money/moneyDetail/investors')">查看联系方式</el-button>          
                 </div>
@@ -200,6 +200,7 @@
                 this.id = this.$route.query.id
                 this.loading = true
                 this.$axios.get(`/jsp/wap/trCapital/ctrl/jsonCapitalDetail.jsp?id=${this.id}`).then(res => {
+                    console.log(res);
                     this.money = res.data
                     this.loading = false
                 })
@@ -544,6 +545,9 @@
                 -moz-user-select: none;
                 -webkit-user-select: none;
                 -ms-user-select: none;
+            }
+            .mes_more:hover{
+            color: #005385;
             }
         }
     }

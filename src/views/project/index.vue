@@ -46,9 +46,9 @@
         </div>
       </div>
     </div>
-    <div class="clearfix">
+    <div class="clearfix" style="position:relative;">
       <div class="pd-15 fll" v-if="!isCheck">
-        <span class="act_type fll">所属地区：</span>
+        <span class="act_type fll" style="margin-right:5px;">所属地区：</span>
         <div class="titleRight fll" v-if="!isShowArea">
           <span
             class="type_item"
@@ -101,7 +101,11 @@
         </div>
       </div>
 
-      <div class="flr checkBoxBtn" @click="handleCheck">
+      <div class="flr checkBoxBtn" @click="handleCheck" v-if="!isShowArea">
+        多选
+        <i class="el-icon-plus"></i>
+      </div>
+      <div class="flr checkBoxBtn2" @click="handleCheck" v-else>
         多选
         <i class="el-icon-plus"></i>
       </div>
@@ -146,10 +150,10 @@
       </div>
       </div>
       <div class="load_more" @click="more" v-if="this.totalCount > this.pageList.length">加载更多...</div>
-      <p v-else>-------------------------------------------------没有更多项目了----------------------------------------------------</p>
+      <p style="color:#999;" v-else>-------------------------------------------------没有更多项目了----------------------------------------------------</p>
     </div>
     <div class="w360 flr mes_list clearfix">
-      <img src="/static/img/project_list.jpg" alt class="act_timelist">
+      <img src="/static/img/project_list.jpg" alt class="act_timelist" @click="toMyproject">
       <p class="mes">
         热门资讯
         <span class="mes_more flr" @click="$router.push('/message')">更多></span>
@@ -173,7 +177,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="dialogFormVisible = false">确认投递</el-button>
+        <el-button type="info" @click="apply_project">确认投递</el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -535,6 +539,20 @@ export default {
             this.loading = false;
           }
         });
+    },
+    toMyproject(){
+        if(Cookies.get('userKey')){
+          let {href} = this.$router.resolve({
+            name: "applyProject",
+          });
+          window.open(href, '_blank');
+        } else {
+          this.$router.push('/login')
+        }
+      },
+    apply_project(){
+      this.dialogFormVisible = false
+      this.$message.success('提交成功')
     }
   },
   created(){
@@ -596,6 +614,17 @@ export default {
   cursor: pointer;
   margin-right: 20px;
 }
+.checkBoxBtn2 {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 4px 5px;
+  color: #606266;
+  font-size: 12px;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  bottom: 40px;
+}
 
 .input-with-select {
   height: 30px;
@@ -613,7 +642,9 @@ export default {
   font-family: "Microsoft YaHei";
   color: #444;
   cursor: pointer;
-  padding-right: 45px;
+  // padding-right: 45px;
+  display: inline-block;
+  width: 96px;
 } //活动列表
 .act_list {
   cursor: pointer;
@@ -826,6 +857,7 @@ export default {
 } //活动排表
 .act_timelist {
   margin: 20px 0;
+  cursor: pointer;
 }
 
 .mes_list {
@@ -846,6 +878,9 @@ export default {
       -moz-user-select: none;
       -webkit-user-select: none;
       -ms-user-select: none;
+    }
+    .mes_more:hover{
+      color: #005385;
     }
   }
 }
@@ -903,13 +938,17 @@ export default {
   padding: 12px 20px;
   border-radius: 4px;
   position: absolute;
-  top: 10px;
+  top: 0;
   right: 0;
 }
 
 /deep/ {
+  .el-checkbox{
+    width:102px!important;
+    padding-bottom: 3.1px!important;
+  }
   .el-checkbox + .el-checkbox {
-    margin-left: 10px !important;
+    margin-left: 0;
   }
 }
 
@@ -917,4 +956,30 @@ export default {
   color: #005982;
   font-weight: 700;  
 }
+
+.titleRight .type_item:nth-child(25){
+  padding-right: 20px;
+}
+.titleRight .type_item:nth-child(15){
+  padding-right: 20px;
+}
+.titleRight .type_item:nth-child(5){
+  padding-right: 20px;
+}
+
+// .titleRight .type_item:nth-child(17){
+//   padding-right: 80px;
+// }
+// .titleRight .type_item:nth-child(20){
+//   padding-right: 10px;
+// }
+// .titleRight .type_item:nth-child(26){
+//   padding-right: 21px;
+// }
+// .titleRight .type_item:nth-child(29){
+//   padding-right: 80px;
+// }
+// .titleRight .type_item:nth-child(30){
+//   padding-right: 77px;
+// }
 </style>
