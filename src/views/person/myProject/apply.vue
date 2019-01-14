@@ -265,9 +265,9 @@ export default {
     return {
       loading:false,
       templateData: "<p>lalala</p>",
-      provinceStr: "",
-      cityStr: "",
-      countyStr: "",
+      countyStr: "昌平区",
+      provinceStr: "北京市",
+      cityStr: "北京城区",
       formData: {
         title: "",
         brief: "",
