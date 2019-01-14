@@ -323,8 +323,8 @@ export default {
     },
     doday() {
       var select = document.getElementById("day");
-      var selectYear = parseInt(year.options[year.selectedIndex].value);
-      var selectMonth = parseInt(month.options[month.selectedIndex].value);
+      var selectYear = parseInt(year.options[year.selectedIndex].value,10);
+      var selectMonth = parseInt(month.options[month.selectedIndex].value,10);
       var date = new Date(selectYear, selectMonth, 0);
 
       for (var i = 1; i <= date.getDate(); i++) {

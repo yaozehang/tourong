@@ -41,7 +41,10 @@ const components = {
   searchProject: () => import('@/views/search/project'), //搜索项目
   searchMessage: () => import('@/views/search/message'),//搜索资讯
   aboutUs: () => import('@/views/aboutUs'), //关于我们
-  callUs: () => import('@/views/aboutUs/call') //联系我们
+  callUs: () => import('@/views/aboutUs/call'), //联系我们
+  seriver:() => import('@/views/serverBottom/seriver'),
+  yinsi:() => import('@/views/serverBottom/yinsi'),
+  mianze: () => import('@/views/serverBottom/mianze'),
 }
 
 const router = new Router({
@@ -148,6 +151,30 @@ const router = new Router({
           component:components.projectDetail,
           meta:{
             title:'项目详情'
+          }
+        },
+        {
+          path:'/seriver',
+          name:'seriver',
+          component:components.seriver,
+          meta:{
+            title:'服务条款'
+          }
+        },
+        {
+          path:'/yinsi',
+          name:'yinsi',
+          component:components.yinsi,
+          meta:{
+            title:'隐私条款'
+          }
+        },
+        {
+          path:'/mianze',
+          name:'mianze',
+          component:components.mianze,
+          meta:{
+            title:'免责声明'
           }
         },
         {

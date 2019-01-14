@@ -12,7 +12,7 @@
       <p class="project_title">
         <span class="project_">发布资金信息</span>
       </p>
-      <el-form ref="form" :model="formData" label-width="150px">
+      <el-form ref="formData" :model="formData" label-width="150px" :rules="rules">
         <el-form-item label="投资主题" style="width:600px">
           <el-input v-model="formData.title"></el-input>
           <span style="color:#999">格式参考：广东某企业5000万元起寻互联网项目合作</span>
@@ -40,7 +40,7 @@
         <el-form-item label="联系人姓名" class="w350">
           <el-input v-model="formData.linkmanName"></el-input>
         </el-form-item>
-        <el-form-item label="联系人电话" class="w350">
+        <el-form-item label="联系人电话" class="w350" prop="linkmanPhone">
           <el-input v-model="formData.linkmanPhone"></el-input>
         </el-form-item>
         <el-form-item label="投资地区">
@@ -82,7 +82,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="资金来源">
-          <el-checkbox-group v-model="capitalSources" @change="lalal">
+          <el-checkbox-group v-model="capitalSources">
             <el-checkbox
               v-for="capitalSource in capitalSourceList"
               :label="capitalSource.dataValue"
@@ -110,7 +110,7 @@
             >{{upfrontCost.dataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="最低回报要求" style="width:600px">
+        <el-form-item label="最低回报要求" style="width:600px" prop="minRepay">
           <el-input v-model="formData.minRepay"></el-input>
         </el-form-item>
         <el-form-item label="有效期限">
@@ -119,11 +119,12 @@
               type="year"
               placeholder="选择日期"
               v-model="formData.expiryDateStartTimeStr"
+              value-format="yyyy-MM-dd"
             ></el-date-picker>
           </div>
           <el-col class="line" :span="1" style="text-align:center;">~</el-col>
           <el-col :span="7">
-            <el-date-picker type="year" placeholder="选择日期" v-model="formData.expiryDateEndTimeStr"></el-date-picker>
+            <el-date-picker value-format="yyyy-MM-dd" type="year" placeholder="选择日期" v-model="formData.expiryDateEndTimeStr"></el-date-picker>
           </el-col>
           <el-col :span="1" style="text-align:center;">年</el-col>
         </el-form-item>
@@ -157,7 +158,7 @@
             >{{pawnType.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="抵押物折扣率">
+        <el-form-item label="抵押物折扣率" prop="pawnDiscountRateMin">
           <div style="width:28.16667%" class="fll">
             <el-input v-model="formData.pawnDiscountRateMin"></el-input>
           </div>
@@ -189,7 +190,7 @@
         </el-form-item>
         <el-form-item>
           <div class="subBtn" @click="onSave" style="margin-right:20px;">保存</div>
-          <div class="subBtn" @click="onSubmit">提交</div>
+          <div class="subBtn" @click="onSubmit(5,'formData')">提交</div>
         </el-form-item>
       </el-form>
     </div>
@@ -198,13 +199,43 @@
 
 <script>
 import VDistpicker from "v-distpicker";
-import qs from "qs"
+import qs from "qs";
 
 export default {
   components: { VDistpicker },
   data() {
+    var checkPhone = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("联系人手机号不能为空"));
+      } else {
+        callback()
+      }
+      if (!/^1[34578]\d{9}$/.test(value)) {
+        callback("手机号码有误，请重填");
+      } else {
+        callback()
+      }
+    };
+    var checkNumber = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("不能为空"));
+      } else {
+        callback()
+      }
+      var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+      if (!re.test(value)) {
+        callback(new Error("请输入数字值"));
+      } else {
+        callback()
+      }
+    };
     return {
       templateData: "<p>lalala</p>",
+      rules: {
+        minRepay: [{ validator: checkNumber, trigger: "blur" }],
+        pawnDiscountRateMin: [{ validator: checkNumber, trigger: "blur" }],
+        linkmanPhone: [{ validator: checkPhone, trigger: "blur" }],
+      },
       formData: {
         title: "",
         linkmanPhone: "",
@@ -225,8 +256,8 @@ export default {
         pawnDiscountRateMax: "",
         investRequire: "",
         investCase: "",
-        otherExplain:"",
-        capitalBody:""
+        otherExplain: "",
+        capitalBody: ""
       },
       fileList: [],
       value: "",
@@ -259,32 +290,28 @@ export default {
   },
   methods: {
     onSave() {
-      this.$notify({
-        title: "成功",
-        message: "保存成功",
-        type: "success"
-      });
+      this.onSubmit(0,formName);
     },
-    onSubmit() {
-      this.$confirm("即将提交资金, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          var fileNames = this.fileNames.join(";=;");
-          var filePaths = this.filePaths.join(",");
-          var investStages = this.investStages.join(',')
-          var investIndustrys = this.investIndustrys.join(',')
-          var capitalSources = this.capitalSources.join(',')
-          var investTypes = this.investTypes.join(',')
-          var riskControls = this.riskControls.join(',')
-          var pawnTypes = this.pawnTypes.join(',')
-          var datums = this.datums.join(',')
-          var id = this.$route.query.id;
-          if(id != ''){
-            var params = 
-              {
+    onSubmit(status,formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$confirm("即将提交资金, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            var fileNames = this.fileNames.join(";=;");
+            var filePaths = this.filePaths.join(",");
+            var investStages = this.investStages.join(",");
+            var investIndustrys = this.investIndustrys.join(",");
+            var capitalSources = this.capitalSources.join(",");
+            var investTypes = this.investTypes.join(",");
+            var riskControls = this.riskControls.join(",");
+            var pawnTypes = this.pawnTypes.join(",");
+            var datums = this.datums.join(",");
+            var id = this.$route.query.id;
+            if (id != "") {
+              var params = {
                 id,
                 title: this.formData.title,
                 linkmanPhone: this.formData.linkmanPhone,
@@ -306,7 +333,7 @@ export default {
                 investRequire: this.formData.investRequire,
                 investCase: this.formData.investCase,
                 otherExplain: this.formData.otherExplain,
-                capitalBody:this.formData.capitalBody,
+                capitalBody: this.formData.capitalBody,
                 fileNames,
                 filePaths,
                 investStages,
@@ -315,11 +342,11 @@ export default {
                 investTypes,
                 riskControls,
                 pawnTypes,
-                datums
-              }
-          } else {
-            var params = 
-              {
+                datums,
+                status,
+              };
+            } else {
+              var params = {
                 title: this.formData.title,
                 linkmanPhone: this.formData.linkmanPhone,
                 linkmanName: this.formData.linkmanName,
@@ -340,7 +367,7 @@ export default {
                 investRequire: this.formData.investRequire,
                 investCase: this.formData.investCase,
                 otherExplain: this.formData.otherExplain,
-                capitalBody:this.formData.capitalBody,
+                capitalBody: this.formData.capitalBody,
                 fileNames,
                 filePaths,
                 investStages,
@@ -349,21 +376,35 @@ export default {
                 investTypes,
                 riskControls,
                 pawnTypes,
-                datums
-              }
-          }
-          this.$axios
-            .post('/jsp/wap/center/do/doEditCapital.jsp',qs.stringify(params)
-            )
-            .then(res => {
-              if (res.success == "true") {
-                this.$message.success("上传资金成功");
-                this.$router.push('/person/myMoney')
-              } else {
-                this.$message.error("上传资金失败，请完善资金信息或检查网络");
-              }
-            });
-        })
+                datums,
+                status,
+              };
+            }
+            this.$axios
+              .post(
+                "/jsp/wap/center/do/doEditCapital.jsp",
+                qs.stringify(params)
+              )
+              .then(res => {
+                if (res.success == "true") {
+                  if(status == 0){
+                    this.$message.success("保存成功")
+                    this.$router.push("/person/myMoney");
+                  } else {
+                    this.$message.success("上传资金成功");
+                    this.$router.push("/person/myMoney");
+                  }
+                } else {
+                  this.$message.error("上传资金失败，请完善资金信息或检查网络");
+                }
+              });
+          });
+        } else {
+          console.log("error submit!!");
+          this.$message.error('请完善信息')
+          return false;
+        }
+      });
     },
     selected(e) {
       this.formData.regionProvinceId = e.province.code;
@@ -381,13 +422,27 @@ export default {
         .then(res => {
           console.log(res);
           this.formData = res.data.capital;
-          this.investIndustrys = res.data.capital.investIndustryStr.split(",")
-          this.investStages = res.data.capital.investStageStr.split(",")
-          this.capitalSources = res.data.capital.capitalSourceStr.split(",")
-          this.investTypes = res.data.capital.investTypeStr.split(",")
-          this.riskControls = res.data.capital.riskControlStr.split(",")
-          this.datums = res.data.capital.datumStr.split(",")
-          this.pawnTypes =  res.data.capital.pawnTypesStr.split(",")
+          if (res.data.capital.investIndustryStr != ''){
+            this.investIndustrys = res.data.capital.investIndustryStr.split(",");
+          }
+          if (res.data.capital.investStageStr != ''){
+            this.investStages = res.data.capital.investStageStr.split(",");
+          }
+          if (res.data.capital.capitalSourceStr != ''){
+            this.capitalSources = res.data.capital.capitalSourceStr.split(",");            
+          }
+          if (res.data.capital.investTypeStr != ''){
+            this.investTypes = res.data.capital.investTypeStr.split(",");            
+          }
+          if (res.data.capital.riskControlStr != ''){
+            this.riskControls = res.data.capital.riskControlStr.split(",");            
+          }
+          if (res.data.capital.datumStr != ''){
+            this.datums = res.data.capital.datumStr.split(",");            
+          }
+          if (res.data.capital.pawnTypesStr != ''){
+            this.pawnTypes = res.data.capital.pawnTypesStr.split(",");            
+          }
           this.capitalBodyList = res.data.capitalBodyList;
           let capital = res.data.capital;
           if (capital.regionNameStr != "") {
@@ -431,15 +486,15 @@ export default {
           this.riskControlList = res.data.riskControlList;
           this.datumList = res.data.datumList;
           this.pawnTypeList = res.data.pawnTypeList;
-          var file = {}
-          var fileList = []
-          var fileList = res.data.capital.fileList
-          if(fileList.length != 0){
+          var file = {};
+          var fileList = [];
+          var fileList = res.data.capital.fileList;
+          if (fileList.length != 0) {
             fileList.forEach(item => {
-              file.name = item.name
-              file.url = item.filePaths
-            })
-            this.fileList.push(file)
+              file.name = item.name;
+              file.url = item.filePaths;
+            });
+            this.fileList.push(file);
           }
         });
     },
@@ -461,7 +516,7 @@ export default {
           }
         });
     },
-    vip() {},
+    vip() {}
   },
   created() {
     let id = this.$route.query.id;

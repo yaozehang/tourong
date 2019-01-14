@@ -178,6 +178,7 @@ export default {
 // 最上面的背景
 .bg-89 {
   width: 100%;
+  min-width: 1200px;
   height: 30px;
   background-color: #898989;
   font-size: 14px;

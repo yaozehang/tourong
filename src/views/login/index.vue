@@ -67,8 +67,8 @@
             </div> -->
             <el-checkbox v-model="register_checked" class="fll">我已阅读并同意《投融资讯平台服务协议》</el-checkbox>
             </div>
-            <button class="btn" v-if="login_show" @click="login">登录</button>
-            <button class="btn" v-else @click="register">注册</button>
+            <div class="btn" v-if="login_show" @click="login">登录</div>
+            <div class="btn" v-else @click="register">注册</div>
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@ import qs from "qs"
           mobile:"",
           code:"",
           pwd:"",
-          email:""
+          email_:""
         },
         count: '',
         timer: null,
@@ -139,8 +139,28 @@ import qs from "qs"
       })
     },
     register(){
-      if(this.registerData.code != ''){
-        this.$axios.get('/jsp/wap/login/do/doRegister.jsp',{params:{code:this.registerData.code,mobile:this.registerData.mobile,pwd:this.registerData.pwd,email:this.registerData.email}}).then(res => {
+      if(this.registerData.mobile == ''){
+        this.$notify.error({
+          title: '错误',
+          message: '请输入手机号'
+        });
+      } else if (this.registerData.mobile.length < 11){
+        this.$notify.error({
+          title: '错误',
+          message: '手机号不得少于11位'
+        });
+      } else if (this.registerData.code == ''){
+        this.$notify.error({
+          title: '错误',
+          message: '请输入验证码'
+        });
+      } else if (this.registerData.pwd.length < 6){
+        this.$notify.error({
+          title: '错误',
+          message: '密码不能少于6位'
+        });
+      } else {
+        this.$axios.get('/jsp/wap/login/do/doRegister.jsp',{params:{code:this.registerData.code,mobile:this.registerData.mobile,pwd:this.registerData.pwd,email_:this.registerData.email_}}).then(res => {
           if(this.login_checked){
             Cookies.set("userKey", res.data,{ expires: 14 });
           } else {
@@ -157,11 +177,6 @@ import qs from "qs"
             }
           })
         })
-      } else {
-        this.$notify.error({
-          title: '错误',
-          message: '请输入验证码'
-        });
       }
     },
     login(){
@@ -201,6 +216,7 @@ import qs from "qs"
 //登录
 .login {
   width: 100%;
+  min-width: 1200px;
   height: 693px;
   background: url(/static/img/bg-1.jpg) no-repeat center;
   background-size: cover;

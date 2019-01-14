@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-    <img src="/static/img/touronglianxian.png" alt width="100%" style="display:block;">
+    <img src="/static/img/touronglianxian.png" alt width="100%" style="display:block;min-width: 1200px;">
     <div class="bg-f2f2f3">
       <div class="w1200 clearfix">
         <div class="invest-title">
@@ -91,6 +91,13 @@
         </ul>
       </div>
     </div>
+    </div>
+    <div class="enter">
+      <div class="w1200 clearfix">
+        <img src="/static/img/fabuzijin.jpg" alt="" class="fll" width="400px" style="cursor:pointer" @click="tozijin">
+        <img src="/static/img/fabuxiangmu.jpg" alt="" width="400px" style="cursor:pointer" @click="toxiangmu">
+        <img src="/static/img/chenweizhuanjia.jpg" alt="" class="flr" width="400px" style="cursor:pointer" @click="tozhuanjia">
+      </div>
     </div>
   </div>
 </template>
@@ -334,6 +341,45 @@ export default {
       });
       window.open(href, '_blank');
     },
+    tozijin(){
+      if(Cookies.get('userKey')){
+        let {href} = this.$router.resolve({
+            name: "myMoney",
+        });
+        window.open(href, '_blank');
+      } else {
+        let {href} = this.$router.resolve({
+          name: "login",
+        });
+        window.open(href, '_blank');
+      }
+    },
+    toxiangmu(){
+      if(Cookies.get('userKey')){
+        let {href} = this.$router.resolve({
+            name: "myProject",
+        });
+        window.open(href, '_blank');
+      } else {
+        let {href} = this.$router.resolve({
+          name: "login",
+        });
+        window.open(href, '_blank');
+      }  
+    },
+    tozhuanjia(){
+      if(Cookies.get('userKey')){
+        let {href} = this.$router.resolve({
+            name: "memberAttest",
+        });
+        window.open(href, '_blank');
+      } else {
+        let {href} = this.$router.resolve({
+          name: "login",
+        });
+        window.open(href, '_blank');
+      }
+    }
   },
   created(){
     this.getData()
@@ -354,8 +400,10 @@ export default {
 .swiper-bottom {
     position: relative;
 }
+
 @media screen and (max-width: 1640px) {
   .home-swiper {
+    min-width: 1200px;
     width: 100%;
     height: 475px;
   }
@@ -516,6 +564,7 @@ export default {
 .bg-f2f2f3 {
   background: #f2f2f3;
   width: 100%;
+  min-width: 1200px;
   height: 700px;
 }
 .invest-title {
@@ -658,5 +707,12 @@ export default {
 }
 .mes-text:hover {
   color: rgb(0, 89, 130);
+}
+
+.enter {
+  width: 100%;
+  min-width: 1200px;
+  padding: 90px 0;
+  background-color: #f2f2f3;
 }
 </style>

@@ -29,8 +29,8 @@
           <!-- <span class="flr" :class="item.check == 0 ? ' already':'' + item.check == 1 ? ' being':'' + item.check == 2 ? ' not':'' + item.check == 3 ? ' fail':''">{{item.check == 0 ? '已发布':'' + item.check == 1 ? '审核中':'' + item.check == 2 ? '未发布':''}}</span> -->
           <span class="flr not" v-if="item.status == '0'">未发布</span>
           <span class="flr" v-else :class="item.status  == '5' ? ' being':'' + item.status == '10' ? ' already':'' + item.status == '15'? ' fail':''">{{item.status  == '5' ? '审核中':'' + item.status == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
-          <el-button type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini"></el-button>
-          <el-button type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini"></el-button>
+          <el-button type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>
         <p v-show="pageList.length == 0" class="noAtt">
           你没有任何项目哦~
@@ -127,12 +127,31 @@ export default {
           this.$message.info('项目尚未发布成功')
         }
     },
+    amend(id){
+      let {href} = this.$router.resolve({
+              name: "applyProject",
+              query: {id}
+          });
+          window.open(href, '_blank');
+    },
     applyProject(){
       let {href} = this.$router.resolve({
               name: "applyProject",
           });
       window.open(href, '_blank');
     },
+    delete_item(id,index){
+      this.$confirm("即将删除项目, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(()=> {
+        this.$axios.get(`/jsp/wap/center/do/doDelProject.jsp?id=${id}`).then(res => {
+          this.pageList.splice(index,1)
+          this.count -= 1
+        })
+      })
+    }
   },
   created(){
     this.getData()

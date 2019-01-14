@@ -14,9 +14,7 @@
         <router-link to="/callUs">
           <img src="/static/img/about-2.png" alt class="about-2">
         </router-link>
-        <router-link to>
-          <img src="/static/img/about-3.png" alt class="about-3">
-        </router-link>
+          <img src="/static/img/about-3.png" alt class="about-3" @click="tokefu">
       </div>
       <div class="two-code flr clearfix">
         <img src="/static/img/twoCode-1.png" alt class="twoCode-1 flr">
@@ -27,15 +25,15 @@
     <div class="end">
       <span class="end-content">投融资讯平台 版权所有 copyright@2018 xxx Corporation, All Rights Reserve</span>
       <router-link to>
-        <span class="clause-1">服务条款</span>
+        <span class="clause-1" @click="toFuwu">服务条款</span>
       </router-link>
       <span class="cl-137">|</span>
       <router-link to>
-        <span class="clause-2">隐私条款</span>
+        <span class="clause-2" @click="toYinsi">隐私条款</span>
       </router-link>
       <span class="cl-137">|</span>
       <router-link to>
-        <span class="clause-2">风险提示</span>
+        <span class="clause-2" @click="toMianze">免责声明</span>
       </router-link>
     </div>
   </div>
@@ -46,11 +44,34 @@ export default {
   data() {
     return {
       contactData: {
-        phone: "13141100137",
+        phone: "010-82033116",
         address: "北京市西城区裕民东路3号京版信息港8层",
         eMail: "kefu@zqcmlink.com"
       }
     };
+  },
+  methods:{
+    tokefu(){
+        window.open('https://tb.53kf.com/code/client/10193554/1','_blank')
+      },
+    toFuwu(){
+      let {href} = this.$router.resolve({
+            name: "seriver",
+          });
+        window.open(href, '_blank');
+    },
+    toYinsi(){
+      let {href} = this.$router.resolve({
+            name: "yinsi",
+          });
+        window.open(href, '_blank');
+    },
+    toMianze(){
+      let {href} = this.$router.resolve({
+            name: "mianze",
+          });
+        window.open(href, '_blank');
+    },
   }
 };
 </script>
@@ -58,6 +79,7 @@ export default {
 <style scoped lang="scss">
 .bg-413d3c {
   width: 100%;
+  min-width: 1200px;
   height: 300px;
   background-color: #413d3c;
 }
@@ -78,6 +100,9 @@ export default {
   .about-2 {
     padding: 0 55px;
   }
+  .about-3 {
+    cursor: pointer;
+  }
 }
 .two-code {
   padding-top: 30px;
@@ -92,6 +117,7 @@ export default {
 .line {
   display: block;
   width: 100%;
+  min-width: 1200px;
   height: 1px;
   margin: 25px 0;
   background: url(/static/img/line-1.png) no-repeat;
