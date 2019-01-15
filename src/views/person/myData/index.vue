@@ -78,7 +78,7 @@
           <el-input v-model="formData.email"></el-input>
         </el-form-item>
         <el-form-item>
-          <button class="subBtn" @click="submitForm('ruleForm')">提交</button>
+          <div class="subBtn" @click="submitForm('ruleForm')">提交</div>
         </el-form-item>
       </el-form>
     </div>

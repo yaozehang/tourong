@@ -19,7 +19,7 @@
           <span class="pro_template">参考模板</span>
         </el-tooltip>
       </p>
-      <el-form ref="form" :model="formData" label-width="150px">
+      <el-form ref="formData" :model="formData" label-width="150px" :rules="rules">
         <el-form-item label="项目名称" style="width:600px">
           <el-input v-model="formData.title"></el-input>
         </el-form-item>
@@ -71,16 +71,25 @@
         <el-form-item label="详细地址" style="width:600px">
           <el-input v-model="formData.address"></el-input>
         </el-form-item>
-        <el-form-item label="注册资本" class="w350">
+        <el-form-item label="注册资本" class="w350" prop="registeredCapital">
           <el-input v-model="formData.registeredCapital">
             <span slot="append">万元</span>
           </el-input>
         </el-form-item>
         <el-form-item label="股权结构" class="w180">
-          <el-upload class="upload-demo" action :http-request="uploadImg"
-            :show-file-list="false">
-            <el-button size="small" type="primary" class="fll" style="margin-bottom:10px;" :loading="loading">上传股权架构图</el-button>
-            <img v-if="formData.stockStructureImgPath" :src="formData.stockStructureImgPath" style="max-width:500px;">
+          <el-upload class="upload-demo" action :http-request="uploadImg" :show-file-list="false">
+            <el-button
+              size="small"
+              type="primary"
+              class="fll"
+              style="margin-bottom:10px;"
+              :loading="loading"
+            >上传股权架构图</el-button>
+            <img
+              v-if="formData.stockStructureImgPath"
+              :src="formData.stockStructureImgPath"
+              style="max-width:500px;"
+            >
           </el-upload>
         </el-form-item>
         <el-form-item label="实际控制人" class="w180">
@@ -105,7 +114,7 @@
         <el-form-item label="3-5年盈利预测" style="width:600px">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.profitForecast"></el-input>
         </el-form-item>
-        <el-form-item label="团队平均年龄" class="w350">
+        <el-form-item label="团队平均年龄" class="w350" prop="averageAge">
           <el-input v-model="formData.averageAge"></el-input>
         </el-form-item>
         <el-form-item label="企业网址" class="w350">
@@ -119,8 +128,8 @@
             value-format="yyyy-MM-dd"
             v-model="formData.companyFoundTimeStr"
             type="date"
-            placeholder="选择日期">
-          </el-date-picker>
+            placeholder="选择日期"
+          ></el-date-picker>
         </el-form-item>
         <p>
           <span class="item_title">项目融资信息</span>
@@ -135,17 +144,17 @@
           >{{item.dataName}}</div>
         </el-form-item>
         <div style="background:#f2f2f2;padding:10px 0;margin-bottom:20px;">
-          <el-form-item label="注册资本" class="w350">
+          <el-form-item label="注册资本" class="w350" prop="registeredCapital">
             <el-input v-model="formData.registeredCapital">
               <span slot="append">万元</span>
             </el-input>
           </el-form-item>
-          <el-form-item label="市盈率（P/E）" class="w350">
+          <el-form-item label="市盈率（P/E）" class="w350" prop="pe">
             <el-input v-model="formData.pe">
               <span slot="append">万元</span>
             </el-input>
           </el-form-item>
-          <el-form-item label="市净率（P/B）" class="w350">
+          <el-form-item label="市净率（P/B）" class="w350" prop="pb">
             <el-input v-model="formData.pb">
               <span slot="append">万元</span>
             </el-input>
@@ -162,11 +171,21 @@
           </el-form-item>
           <el-form-item label="有效期限">
             <div style="width:28.16667%" class="fll">
-              <el-date-picker value-format="yyyy-MM-dd" type="date" placeholder="选择日期" v-model="formData.expiryDateStartTimeStr"></el-date-picker>
+              <el-date-picker
+                value-format="yyyy-MM-dd"
+                type="date"
+                placeholder="选择日期"
+                v-model="formData.expiryDateStartTimeStr"
+              ></el-date-picker>
             </div>
             <el-col class="line" :span="1" style="text-align:center;">~</el-col>
             <el-col :span="7">
-              <el-date-picker value-format="yyyy-MM-dd" type="date" placeholder="选择日期" v-model="formData.expiryDateEndTimeStr"></el-date-picker>
+              <el-date-picker
+                value-format="yyyy-MM-dd"
+                type="date"
+                placeholder="选择日期"
+                v-model="formData.expiryDateEndTimeStr"
+              ></el-date-picker>
             </el-col>
           </el-form-item>
           <el-form-item label="保障措施" style="width:600px">
@@ -196,10 +215,10 @@
         <el-form-item label="职务" class="w350">
           <el-input v-model="formData.directorJob"></el-input>
         </el-form-item>
-        <el-form-item label="年龄" class="w350">
+        <el-form-item label="年龄" class="w350" prop="directorAge">
           <el-input v-model="formData.directorAge"></el-input>
         </el-form-item>
-        <el-form-item label="电话" class="w350">
+        <el-form-item label="电话" class="w350" prop="directorPhone">
           <el-input v-model="formData.directorPhone"></el-input>
         </el-form-item>
         <el-form-item label="Email" class="w350">
@@ -248,7 +267,7 @@
         </el-form-item>
         <el-form-item>
           <div class="subBtn" @click="onSave" style="margin-right:20px;">保存</div>
-          <div class="subBtn" @click="onSubmit(5)">提交</div>
+          <div class="subBtn" @click="onSubmit(5,'formData')">提交</div>
         </el-form-item>
       </el-form>
     </div>
@@ -262,8 +281,51 @@ import qs from "qs";
 export default {
   components: { VDistpicker },
   data() {
+    var checkPhone = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("联系人手机号不能为空"));
+      } else {
+        callback();
+      }
+      if (!/^1[34578]\d{9}$/.test(value)) {
+        callback("手机号码有误，请重填");
+      } else {
+        callback();
+      }
+    };
+    var checkNumber = (rule, value, callback) => {
+      var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+      if (!re.test(value)) {
+        callback(new Error("请输入数字值"));
+      } else {
+        callback();
+      }
+    };
+    var checkAge = (rule, value, callback) => {
+      var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+      if (!value) {
+        return callback(new Error("年龄不能为空"));
+      }
+      if (!re.test(value)) {
+        callback(new Error("请输入数字值"));
+      } else {
+        if (value < 18) {
+          callback(new Error("必须年满18岁"));
+        } else {
+          callback();
+        }
+      }
+    };
     return {
-      loading:false,
+      rules: {
+        registeredCapital: [{ validator: checkNumber, trigger: "blur" }],
+        pe: [{ validator: checkNumber, trigger: "blur" }],
+        pb: [{ validator: checkNumber, trigger: "blur" }],
+        directorPhone: [{ validator: checkPhone, trigger: "blur" }],
+        directorAge: [{ validator: checkAge, trigger: "blur" }],
+        averageAge: [{ validator: checkAge, trigger: "blur" }]
+      },
+      loading: false,
       templateData: "<p>lalala</p>",
       countyStr: "昌平区",
       provinceStr: "北京市",
@@ -304,11 +366,10 @@ export default {
         regionProvinceId: "",
         regionCityId: "",
         regionCountyId: "",
-        financingWay:"",
-        stage:"",
-        industryName:"",
-        paymentTypeName:"",
-        stockStructureImgPath:"",
+        financingWay: "",
+        stage: "",
+        industryName: "",
+        stockStructureImgPath: ""
       },
       financeBodyList: [],
       stageList: [],
@@ -345,6 +406,7 @@ export default {
       this.$axios
         .get(`/jsp/wap/center/ctrl/jsonProjectDetail.jsp?id=${id}`)
         .then(res => {
+          console.log(res.data.project);
           this.formData = res.data.project;
           let project = res.data.project;
           if (project.regionNameStr != "") {
@@ -367,78 +429,80 @@ export default {
           this.industryList = res.data.industryList;
           this.paymentTypeList = res.data.paymentTypeList;
           var stageList = res.data.stageList;
-          if(this.formData.stage == ''){
+          if (this.formData.stage == "") {
             stageList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            this.stageList = stageList
-          } else if (this.formData.stage == '67') {
+              this.$set(item, "checked", false);
+            });
+            this.stageList = stageList;
+          } else if (this.formData.stage == "67") {
             stageList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            stageList[0].checked = true
-            this.stageList = stageList            
-          } else if (this.formData.stage == '68') {
+              this.$set(item, "checked", false);
+            });
+            stageList[0].checked = true;
+            this.stageList = stageList;
+          } else if (this.formData.stage == "68") {
             stageList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            stageList[1].checked = true
-            this.stageList = stageList            
-          } else if (this.formData.stage == '69') {
+              this.$set(item, "checked", false);
+            });
+            stageList[1].checked = true;
+            this.stageList = stageList;
+          } else if (this.formData.stage == "69") {
             stageList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            stageList[2].checked = true
-            this.stageList = stageList            
-          } else if (this.formData.stage == '70') {
+              this.$set(item, "checked", false);
+            });
+            stageList[2].checked = true;
+            this.stageList = stageList;
+          } else if (this.formData.stage == "70") {
             stageList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            stageList[3].checked = true
-            this.stageList = stageList            
-          } else if (this.formData.stage == '71') {
+              this.$set(item, "checked", false);
+            });
+            stageList[3].checked = true;
+            this.stageList = stageList;
+          } else if (this.formData.stage == "71") {
             stageList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            stageList[4].checked = true
-            this.stageList = stageList            
-          } else if (this.formData.stage == '72') {
+              this.$set(item, "checked", false);
+            });
+            stageList[4].checked = true;
+            this.stageList = stageList;
+          } else if (this.formData.stage == "72") {
             stageList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            stageList[5].checked = true
-            this.stageList = stageList            
-          } 
-          var financingWayList = res.data.financingWayList;
-          if(this.formData.financingWay == ''){
-            financingWayList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            this.financingWayList = financingWayList
-          } else if (this.formData.financingWay == '61') {
-            financingWayList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            financingWayList[0].checked = true
-            this.financingWayList = financingWayList
-          } else if (this.formData.financingWay == '62') {
-            financingWayList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            financingWayList[1].checked = true
-            this.financingWayList = financingWayList
-          } else if (this.formData.financingWay == '63') {
-            financingWayList.forEach(item => {
-              this.$set(item , 'checked', false)
-            })
-            financingWayList[2].checked = true
-            this.financingWayList = financingWayList
+              this.$set(item, "checked", false);
+            });
+            stageList[5].checked = true;
+            this.stageList = stageList;
           }
-          if (res.data.project.industryName != ''){
+          var financingWayList = res.data.financingWayList;
+          if (this.formData.financingWay == "") {
+            financingWayList.forEach(item => {
+              this.$set(item, "checked", false);
+            });
+            this.financingWayList = financingWayList;
+          } else if (this.formData.financingWay == "61") {
+            financingWayList.forEach(item => {
+              this.$set(item, "checked", false);
+            });
+            financingWayList[0].checked = true;
+            this.financingWayList = financingWayList;
+          } else if (this.formData.financingWay == "62") {
+            financingWayList.forEach(item => {
+              this.$set(item, "checked", false);
+            });
+            financingWayList[1].checked = true;
+            this.financingWayList = financingWayList;
+          } else if (this.formData.financingWay == "63") {
+            financingWayList.forEach(item => {
+              this.$set(item, "checked", false);
+            });
+            financingWayList[2].checked = true;
+            this.financingWayList = financingWayList;
+          }
+          if (res.data.project.industryName != "") {
             this.industys = res.data.project.industryName.split(",");
           }
-          if (res.data.project.paymentTypeName != ''){
-            this.paymentTypes = res.data.project.paymentTypeName.split(",");
+          if (res.data.project.paymentType != "") {
+            this.paymentTypes = res.data.project.paymentType
+              .replace(/[\[\]]/g, "")
+              .split(",");
           }
           var file = {};
           var fileList = [];
@@ -452,39 +516,37 @@ export default {
           }
         });
     },
-    get_type(index,dataValue) {
-      if(this.stageList[index].checked == true) {
-          this.stageList[index].checked = false
-          this.formData.stage = ''
+    get_type(index, dataValue) {
+      if (this.stageList[index].checked == true) {
+        this.stageList[index].checked = false;
+        this.formData.stage = "";
       } else {
-          this.stageList.forEach(item => {
-          item.checked = false
-        })
-        this.stageList[index].checked = true
-        this.formData.stage = dataValue
+        this.stageList.forEach(item => {
+          item.checked = false;
+        });
+        this.stageList[index].checked = true;
+        this.formData.stage = dataValue;
       }
     },
-    get_type1(index,dataValue) {
-      if(this.financingWayList[index].checked == true) {
-          this.financingWayList[index].checked = false
-          this.formData.financingWay = ''
+    get_type1(index, dataValue) {
+      if (this.financingWayList[index].checked == true) {
+        this.financingWayList[index].checked = false;
+        this.formData.financingWay = "";
       } else {
-          this.financingWayList.forEach(item => {
-          item.checked = false
-        })
-        this.financingWayList[index].checked = true
-        this.formData.financingWay = dataValue
+        this.financingWayList.forEach(item => {
+          item.checked = false;
+        });
+        this.financingWayList[index].checked = true;
+        this.formData.financingWay = dataValue;
       }
     },
     onSave() {
-      this.$notify({
-        title: "成功",
-        message: "保存成功",
-        type: "success"
-      });
+      this.onSubmit(0,formName);
     },
-    onSubmit(status) {
-       this.$confirm("即将提交项目, 是否继续?", "提示", {
+    onSubmit(status, formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$confirm("即将提交项目, 是否继续?", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
@@ -532,14 +594,14 @@ export default {
                 regionProvinceId: this.formData.regionProvinceId,
                 regionCityId: this.formData.regionCityId,
                 regionCountyId: this.formData.regionCountyId,
-                financingWay:this.formData.financingWay,
-                stage:this.formData.stage,
-                stockStructureImgPath:this.formData.stockStructureImgPath,
+                financingWay: this.formData.financingWay,
+                stage: this.formData.stage,
+                stockStructureImgPath: this.formData.stockStructureImgPath,
                 industys,
                 paymentTypes,
                 fileNames,
                 filePaths,
-                status,
+                status
               };
             } else {
               var params = {
@@ -578,14 +640,14 @@ export default {
                 regionProvinceId: this.formData.regionProvinceId,
                 regionCityId: this.formData.regionCityId,
                 regionCountyId: this.formData.regionCountyId,
-                financingWay:this.formData.financingWay,
-                stage:this.formData.stage,
-                stockStructureImgPath:this.formData.stockStructureImgPath,
+                financingWay: this.formData.financingWay,
+                stage: this.formData.stage,
+                stockStructureImgPath: this.formData.stockStructureImgPath,
                 industys,
                 paymentTypes,
                 fileNames,
                 filePaths,
-                status,
+                status
               };
             }
             this.$axios
@@ -595,13 +657,24 @@ export default {
               )
               .then(res => {
                 if (res.success == "true") {
-                  this.$message.success("上传项目成功");
+                  if(status == 0){
+                    this.$message.success("保存成功")
+                    this.$router.push("/person/myMoney");
+                  } else {
+                    this.$message.success("上传项目成功");
                   this.$router.push("/person/myProject");
+                  }
                 } else {
-                  this.$message.error("上传项目失败，请完善项目信息或检查网络");
+                  this.$message.error("上传资金失败，请完善资金信息或检查网络");
                 }
               });
           });
+        } else {
+          console.log("error submit!!");
+          this.$message.error("请完善信息");
+          return false;
+        }
+      });
     },
     selected(e) {
       this.formData.regionProvinceId = e.province.code;
@@ -609,7 +682,7 @@ export default {
       this.formData.regionCountyId = e.area.code;
     },
     uploadImg(f) {
-      this.loading = true
+      this.loading = true;
       let param = new FormData(); //创建form对象
       param.append("file", f.file); //通过append向form对象添加数据
       let config = {

@@ -189,7 +189,7 @@ export default {
     }
     .username {
       text-align: center;
-      margin-left: 18px;
+      margin-right: 18px;
       position: relative;
       i {
         display: inline-block;
@@ -197,9 +197,9 @@ export default {
         height: 15px;
         background: url(/static/img/ren.png) no-repeat center;
         background-size: contain;
-        position: absolute;
-        top: 1px;
-        left: 45px;
+        // position: absolute;
+        // top: 1px;
+        // left: 60px;
       }
     }
     .company {

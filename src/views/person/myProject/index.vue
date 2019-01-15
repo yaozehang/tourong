@@ -2,7 +2,7 @@
   <div class="fll">
     <div class="person_content">
       <p class="clearfix">
-        <span class="mine_money fll">我发布的项目/我关注的项目</span>
+        <span class="mine_money fll">我发布的项目</span>
         <span class="flr clearfix">
           <button class="noLikeBtn" @click="applyProject">
             <i></i>添加项目
@@ -29,6 +29,7 @@
           <!-- <span class="flr" :class="item.check == 0 ? ' already':'' + item.check == 1 ? ' being':'' + item.check == 2 ? ' not':'' + item.check == 3 ? ' fail':''">{{item.check == 0 ? '已发布':'' + item.check == 1 ? '审核中':'' + item.check == 2 ? '未发布':''}}</span> -->
           <span class="flr not" v-if="item.status == '0'">未发布</span>
           <span class="flr" v-else :class="item.status  == '5' ? ' being':'' + item.status == '10' ? ' already':'' + item.status == '15'? ' fail':''">{{item.status  == '5' ? '审核中':'' + item.status == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
+          <el-button class="flr" size="mini">动态管理</el-button>
           <el-button type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button>
           <el-button type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>

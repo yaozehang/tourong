@@ -8,7 +8,7 @@
     </div>
     <div class="login">
       <div class="w1200 clearfix">
-        <div class="login-box flr">
+        <div class="login-box flr" v-show="!forget">
           <div class="login-box_header">
             <span class="login_span" :class="login_show ? 'border' : '' " @click="login_show = true">登录</span>
             <span class="register_span" :class="!login_show ? 'border' : '' " @click="login_show = false">注册</span>
@@ -25,7 +25,7 @@
               </div>
               <div class="clearfix">
                 <el-checkbox v-model="login_checked" class="fll" @click="!login_checked">两周内自动登录</el-checkbox>
-                <span class="flr forget" style="display:none">忘记密码？</span>
+                <span class="flr forget" @click="forget = true">忘记密码？</span>
               </div>
             </div>
             <div v-show="!login_show">
@@ -65,8 +65,51 @@
                 <input type="password" placeholder="请确认密码" :value="loginData.password">
               </div>
             </div> -->
-            <el-checkbox v-model="register_checked" class="fll">我已阅读并同意《投融资讯平台服务协议》</el-checkbox>
+            <el-checkbox v-model="register_checked" class="fll"><span @click="toFuwu">我已阅读并同意《投融资讯平台服务协议》</span></el-checkbox>
             </div>
+            <div class="btn" v-if="login_show" @click="login">登录</div>
+            <div class="btn" v-else @click="register">注册</div>
+          </div>
+        </div>
+        <div class="login-box flr" v-show="forget">
+          <div class="login-box_header">
+            <span class="forget_span">忘记密码</span>
+          </div>
+          <div class="login-box_body">
+              <p class="email_login" @click="forget = false;login_show = true">返回登录</p>
+                <div class="inputBox">
+                  <i class="phone"></i>
+                  <input type="text" placeholder="请输入手机号码" v-model="forgetData.mobile">
+                </div>
+                <div class="inputBox_code">
+                  <i class="code"></i>
+                  <input type="text" placeholder="请输入验证码" v-model="forgetData.code">
+                </div>
+                <span v-show="code_show" @click="getCode" class="count">获取验证码</span>
+                <span v-show="!code_show" class="count">{{count}}s</span>
+                <div class="inputBox">
+                <i class="lock"></i>
+                <input type="text" placeholder="设置新密码" v-model="forgetData.pwd">
+              </div>
+                <div class="inputBox">
+                  <i class="lock"></i>
+                  <input type="password" placeholder="确认新密码" v-model="forgetData.pwd2">
+                </div>
+            <!-- <div v-show="email_show">
+              <p class="email_login" @click="email_show = false">返回手机注册</p>
+              <div class="inputBox">
+                <i class="phone"></i>
+                <input type="text" placeholder="请输入邮箱" :value="loginData.email">
+              </div>
+              <div class="inputBox">
+                <i class="lock"></i>
+                <input type="password" placeholder="请输入密码" :value="loginData.password">
+              </div>
+              <div class="inputBox">
+                <i class="lock"></i>
+                <input type="password" placeholder="请确认密码" :value="loginData.password">
+              </div>
+            </div> -->
             <div class="btn" v-if="login_show" @click="login">登录</div>
             <div class="btn" v-else @click="register">注册</div>
           </div>
@@ -104,8 +147,15 @@ import qs from "qs"
           pwd:"",
           email_:""
         },
+        forgetData: {
+          mobile:"",
+          code:"",
+          pwd:"",
+          pwd2:""
+        },
         count: '',
         timer: null,
+        forget:false,
       }
     },
     methods:{
@@ -195,6 +245,12 @@ import qs from "qs"
           });
         }
       })
+    },
+    toFuwu(){
+      let {href} = this.$router.resolve({
+            name: "seriver",
+          });
+        window.open(href, '_blank');
     }
    }  
   }
@@ -251,6 +307,10 @@ import qs from "qs"
         margin-left: 100px;
         box-sizing: border-box;
         cursor: pointer;
+      }
+      .forget_span {
+        margin: 160px;
+        color: #000;
       }
       //点击变化
       .border {
@@ -320,6 +380,10 @@ import qs from "qs"
       font-family: "SimSun";
       color: rgb( 153, 153, 153 );
       line-height: 1.708;
+      cursor: pointer;
+    }
+    .forget:hover {
+      color: #000;
     }
     .btn {
       width: 100%;
@@ -380,6 +444,9 @@ import qs from "qs"
       margin-top: 0;
       color: rgb( 153, 153, 153 );
       cursor: pointer;
+    }
+    .email_login:hover {
+      color: #000;
     }
     .count {
       display: inline-block;
