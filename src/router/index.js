@@ -32,8 +32,12 @@ const components = {
   myDemand: () => import('@/views/person/myDemand'), //我的需求
   myMoney: () => import('@/views/person/myMoney'), //我的资金
   applyMoney: () => import('@/views/person/myMoney/apply'), //发布资金
+  uploadApplyMoney: () => import('@/views/person/myMoney/uploadApply'),//上传资金
   myProject: () => import('@/views/person/myProject'), //我的项目
   applyProject: () => import('@/views/person/myProject/apply'), //发布项目
+  manageProject: () => import('@/views/person/myProject/manage'), //动态管理
+  uploadApplyProject: () => import('@/views/person/myProject/uploadApply'),//上传资金
+  addDynamic: () => import('@/views/person/myProject/addDynamic'), //添加动态
   inform: () => import('@/views/person/inform'),//消息中心
   informDetail: () => import('@/views/person/inform/detail'),//消息内容
   search: () => import('@/views/search'), //搜索列表
@@ -353,7 +357,23 @@ const router = new Router({
               name:'applyMoney',
               component:components.applyMoney,
               meta:{
-                title:'发布资金'
+                title:'我的资金 > 发布资金'
+              }
+            },
+            {
+              path:'uploadApplyMoney',
+              name:'uploadApplyMoney',
+              component:components.uploadApplyMoney,
+              meta:{
+                title:'我的资金 > 上传资金'
+              }
+            },
+            {
+              path:'uploadApplyProject',
+              name:'uploadApplyProject',
+              component:components.uploadApplyProject,
+              meta:{
+                title:'我的项目 > 上传项目'
               }
             },
             {
@@ -369,7 +389,15 @@ const router = new Router({
               name:'applyProject',
               component:components.applyProject,
               meta:{
-                title:'发布项目'
+                title:'我的项目 > 发布项目'
+              }
+            },
+            {
+              path:'manageProject',
+              name:'manageProject',
+              component:components.manageProject,
+              meta:{
+                title:'我的项目 > 动态管理'
               }
             },
             {

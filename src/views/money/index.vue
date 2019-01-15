@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="clearfix">
-      <div class="pd-15 fll">
+      <div class="pd-15 fll industy">
         <span class="act_type fll">投资行业：</span>
         <div class="titleRight fll">
           <template>
@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="pd-15">
-      <span class="act_type">资金类型：</span>
+      <span class="act_type">投资类型：</span>
       <span
         class="type_item"
         v-for="(item , index) in investTypeList"
@@ -260,8 +260,8 @@
         <button class="subBtn" @click="dialogFormVisible = true">投递项目</button>
       </div>
       </div>
-      <div class="load_more" @click="more" v-if="this.totalCount > this.pageList.length">加载更多...</div>
-      <p style="color:#999;" v-else>-------------------------------------------------没有更多资金了----------------------------------------------------</p>
+      <div class="load_more" @click="morePage" v-show="more">加载更多...</div>
+      <p style="color:#999;" v-show="noMore">-------------------------------------------------没有更多资金了----------------------------------------------------</p>
     </div>
     <div class="w360 flr mes_list clearfix">
       <img src="/static/img/money_list.jpg" alt class="act_timelist" @click="toMymoney">
@@ -307,6 +307,8 @@ export default {
       loading:false,
       newsloading:false,
       dialogFormVisible: false,
+      more:false,
+      noMore:false,
       actType: [
         "股权投资",
         "债权投资",
@@ -498,21 +500,25 @@ export default {
           investIndustryList.forEach(item => {
             this.$set(item, 'checked', false)
           });
+          investIndustryList.unshift({dataName:'不限'})
           this.investIndustryList = investIndustryList;
           let investRegionList = res.data.investRegionList
           investRegionList.forEach(item => {
             this.$set(item, 'checked', false)
           });
+          investRegionList.unshift({dataName:'不限'})
           this.investRegionList = investRegionList;
           let investTypeList = res.data.investTypeList
           investTypeList.forEach(item => {
             this.$set(item, 'checked', false)
           });
+          investTypeList.unshift({dataName:'不限'})
           this.investTypeList = investTypeList;
           let regionList = res.data.regionList
           regionList.forEach(item => {
             this.$set(item, 'checked', false)
           });
+          regionList.unshift({dataName:'不限'})
           this.regionList = regionList;
         }
       });
@@ -528,6 +534,13 @@ export default {
             this.pageList = res.data.pageList;
             this.totalCount = res.data.pagination.totalCount;
             this.pn = 1;
+            if(this.totalCount > this.pageList.length) {
+              this.more = true
+            } else {
+              setTimeout(()=> {
+                this.noMore = true
+              },2000)
+            }
             this.loading = false;
           }
         });
@@ -543,7 +556,7 @@ export default {
           }
         });
     },
-    more() {
+    morePage() {
       this.pn += 1;
       this.loading = true;
       this.$axios
@@ -832,7 +845,7 @@ export default {
   cursor: pointer;
   // padding-right: 45px;
   display: inline-block;
-  width: 96px;
+  width: 103px;
 } //活动列表
 .act_list {
   cursor: pointer;
@@ -1015,11 +1028,11 @@ export default {
 .load_more {
   width: 810px;
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
   font-family: "Microsoft YaHei";
   color: rgb(153, 153, 153);
   line-height: 1.333;
-  padding: 20px 0;
+  padding: 15px 0;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   margin: 40px 0 75px;
@@ -1124,11 +1137,15 @@ export default {
 
 /deep/ {
   .el-checkbox{
-    width:102px!important;
+    width:110px!important;
     padding-bottom: 3.1px!important;
   }
   .el-checkbox + .el-checkbox {
     margin-left: 0;
+  }
+  .industy .el-checkbox {
+    width: auto !important;
+    margin-right: 50px;
   }
 }
 
@@ -1137,13 +1154,16 @@ export default {
   font-weight: 700;  
 }
 
-.titleRight .type_item:nth-child(25){
-  padding-right: 20px;
-}
-.titleRight .type_item:nth-child(15){
-  padding-right: 20px;
-}
-.titleRight .type_item:nth-child(5){
-  padding-right: 20px;
-}
+// .titleRight .type_item:nth-child(31){
+//   margin-right: 20px;
+// }
+// .titleRight .type_item:nth-child(21){
+//   margin-right: 20px;
+// }
+// .titleRight .type_item:nth-child(11){
+//   margin-right: 20px;
+// }
+// .titleRight .type_item:nth-child(1){
+//   margin-right: 20px;
+// }
 </style>

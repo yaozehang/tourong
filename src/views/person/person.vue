@@ -117,6 +117,9 @@
     color: rgb( 153, 153, 153 );
     cursor: pointer;
   }
+  .project_more:hover {
+    color: #000;
+  }
 }
   .project_list {
     padding: 20px 0;

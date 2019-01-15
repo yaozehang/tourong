@@ -344,7 +344,7 @@ export default {
     tozijin(){
       if(Cookies.get('userKey')){
         let {href} = this.$router.resolve({
-            name: "myMoney",
+            name: "applyMoney",
         });
         window.open(href, '_blank');
       } else {
@@ -357,7 +357,7 @@ export default {
     toxiangmu(){
       if(Cookies.get('userKey')){
         let {href} = this.$router.resolve({
-            name: "myProject",
+            name: "applyProject",
         });
         window.open(href, '_blank');
       } else {

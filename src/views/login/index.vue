@@ -204,6 +204,11 @@ import qs from "qs"
           title: '错误',
           message: '请输入验证码'
         });
+      } else if (this.registerData.email_ == ''){
+        this.$notify.error({
+          title: '错误',
+          message: '请输入邮箱'
+        });
       } else if (this.registerData.pwd.length < 6){
         this.$notify.error({
           title: '错误',
@@ -216,16 +221,23 @@ import qs from "qs"
           } else {
             Cookies.set("userKey", res.data,{ expires: 3 });
           }
-          this.$axios.post('/jsp/wap/login/do/doLogin.jsp',qs.stringify({mobile:this.registerData.mobile,pwd:this.registerData.pwd,loginType:this.loginData.loginType})).then(res => {
-            if(res.success == "true"){
-              this.$router.push({name:'home'})
-            } else {
-              this.$notify.error({
+          if(res.success == "true") {
+            this.$axios.post('/jsp/wap/login/do/doLogin.jsp',qs.stringify({mobile:this.registerData.mobile,pwd:this.registerData.pwd,loginType:this.loginData.loginType})).then(res => {
+              if(res.success == "true"){
+                this.$router.push({name:'home'})
+              } else {
+                this.$notify.error({
+                  title: '错误',
+                  message: res.message
+                });
+              }
+            })
+          } else {
+            this.$notify.error({
                 title: '错误',
                 message: res.message
-              });
-            }
-          })
+            });
+          }
         })
       }
     },

@@ -20,6 +20,8 @@
               <p class="title">{{item.title}}</p>
               <div class="clearfix">
                 <span class="fll time">发布时间；{{item.publishTimeStr}}</span>
+                <span class="fll time" style="margin-left:20px">来源：{{item.source}}</span>
+                <span class="fll time" style="margin-left:20px">作者：{{item.author}}</span>
                 <span class="flr num">浏览：{{item.readNum}}次</span>
               </div>
               <p class="content">{{item.brief}}</p>

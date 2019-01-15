@@ -13,7 +13,7 @@
       <h2 class="fll" style="margin-left:135px">人才招聘邮箱：</h2> <p class="text">hr@zqcmlink.com</p>
     </div>
     <div class="clearfix">
-      <h2 class="fll">新浪微博：</h2> <p class="text">证券传媒投融连线</p>
+      <h2 class="fll">新浪微博：</h2> <p class="text"> <a href="https://weibo.com/u/6914234011?is_hot=1" style="color:#000">证券传媒投融连线</a></p>
     </div>
   </div>
 </template>

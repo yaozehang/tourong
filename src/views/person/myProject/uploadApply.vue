@@ -1,60 +1,47 @@
 <template>
   <div class="fll">
     <div class="person_content">
-      <p class="clearfix">
-        <span class="mine_money fll">我发布的投资</span>
-        <span class="flr clearfix">
-          <button class="noLikeBtn" @click="applyMoney">
-            <i></i>添加投资
-          </button>
-          <button class="likeBtn flr" @click="uploadMoney">
-            <i></i>快速上传
-          </button>
-        </span>
-      </p>
       <p class="project_title">
-        <span class="project_">投资信息</span>
+        <span class="project_">上传项目信息</span>
       </p>
-      <div class="invest-menu clearfix">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+        <el-form-item label="项目标题" prop="applyTitle">
+          <el-input
+            placeholder="请输入内容"
+            v-model="ruleForm.applyTitle"
+            clearable style="width:400px;">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="上传文件" style="margin-left:5px;">
+            <el-upload
+            class="upload-demo"
+            action=""
+            :http-request="uploadFlie" 
+            :file-list="fileList"
+            >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item>
+          <div class="subBtn" @click="onSave" style="margin-right:20px; margin-left:70px;">保存</div>
+          <div class="subBtn" @click="onSubmit(5)">提交</div>
+        </el-form-item>
+      </el-form>
+      <div class="invest-menu clearfix" style="border-top: 1px solid #ededed;">
         <div v-for="(item , index) in pageList" :key="index" class="invest-item fll clearfix">
           <div class="invest-text fll">
-            <p class="invest-item-title" @click="toMoneyDetailPage(item.id,item.status)">{{item.title}}</p>
-            <p class="invest-item-list">
-              投资资金：
-              <span class="invest-money">{{item.investAmount}}</span>
-            </p>
-            <p class="invest-item-list w230 inb">
-              投资方式：
-              <span class="invest-content">{{item.investCase}}</span>
-            </p>
-            <p class="invest-item-list inb">
-              资金类型：
-              <span class="invest-content">{{item.investTypeName}}</span>
-            </p>
-            <p class="invest-item-list w230 inb">
-              投资地区：
-              <span class="invest-content">{{item.investRegionNameStr}}</span>
-            </p>
-            <p class="invest-item-list inb">
-              投资行业：
-              <span class="invest-content">{{item.investIndustryName}}</span>
-            </p>
-            <p class="invest-item-list w230 inb">
-              投资类型：
-              <span class="invest-content">{{item.investTypeName}}</span>
-            </p>
-            <p class="invest-item-list inb">
-              投资阶段：
-              <span class="invest-content">{{item.investStageName}}</span>
+            <p class="invest-item-list">{{item.applyTimeStr}}</p>
+            <p class="invest-item-title" style="margin-top:20px;">
+              <span class="invest-money" @click="toMoneyDetailPage(item.id,item.applyStatus)">{{item.applyTitle}}</span>
             </p>
           </div>
           <!-- <span class="flr" :class="item.check == 0 ? ' already':'' + item.check == 1 ? ' being':'' + item.check == 2 ? ' not':'' + item.check == 3 ? ' fail':''">{{item.check == 0 ? '已发布':'' + item.check == 1 ? '审核中':'' + item.check == 2 ? '未发布':''}}</span> -->
-          <span class="flr not" v-if="item.status == '0'">未发布</span>
-          <span class="flr" v-else :class="item.status  == '5' ? ' being':'' + item.status == '10' ? ' already':'' + item.status == '15'? ' fail':''">{{item.status  == '5' ? '审核中':'' + item.status == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
-          <el-button type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button>
+          <span class="flr not" v-if="item.applyStatus == '0'">未发布</span>
+          <span class="flr" v-else :class="item.applyStatus  == '5' ? ' being':'' + item.applyStatus == '10' ? ' already':'' + item.applyStatus == '15'? ' fail':''">{{item.applyStatus  == '5' ? '审核中':'' + item.applyStatus == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
+          <!-- <el-button type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button> -->
           <el-button type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>
-        <p v-show="pageList.length == 0" class="noAtt">你没有任何资金哦~</p>
+        <p v-show="pageList.length == 0" class="noAtt">你没有使用过上传项目哦~</p>
       </div>
       <div class="mes_page">
         <el-pagination
@@ -69,76 +56,87 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      investData: [
-        {
-          img: "/static/img/touzi-1.png",
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期",
-          check:0
-        },
-        {
-          img: "/static/img/touzi-1.png",
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期",
-          check:1
+import qs from 'qs' 
 
+  export default {
+    data(){
+      return {
+        pageList:[],
+        count:1,
+        fileList:[],
+        applyTitle:'',
+        fileNames:[],
+        filePaths:[],
+        ruleForm:{
+          applyTitle:'',
         },
-        {
-          img: "/static/img/touzi-1.png",
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期",
-          check:2
-
-        },
-        {
-          img: "/static/img/touzi-1.png",
-          title:
-            "北京某企资金1000万-9亿元寻求全国优质实体 项目合作项目合作项目合作项目合作项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期",
-          check:3
+        rules:{
+          applyTitle:{ required: true, message: '请输入项目名称', trigger: 'blur' },
         }
-      ],
-      pageList:[],
-      count:1,
-    };
-  },
-  methods: {
-    getData(pageNumber){
-        this.$axios.get('/jsp/wap/center/ctrl/jsonMyCapitalList.jsp',{params:{pageNumber}}).then(res => {
+      }
+    },
+    methods:{
+      getData(){
+        this.$axios.get('/jsp/wap/center/ctrl/jsonProjectApplyList.jsp').then(res => {
           if(res.success == 'true'){
             this.pageList = res.data.pageList
             this.count = Number(res.data.pagination.totalCount)
           }
         })
       },
-      handleCurrentChange(val) {
+      onSave() {
+        this.onSubmit(0);
+      },
+      onSubmit(applyStatus) {
+          this.$confirm("即将提交项目, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            var fileNames = this.fileNames.join(";=;");
+            var filePaths = this.filePaths.join(",");
+            var params = {
+                applyTitle:this.ruleForm.applyTitle,
+                fileNames,
+                filePaths,
+                applyStatus,
+            };
+            this.$axios
+              .post(
+                "/jsp/wap/center/do/doProjectDatumApply.jsp",
+                qs.stringify(params)
+              )
+              .then(res => {
+                if (res.success == "true") {
+                  if(applyStatus == 0){
+                    this.$message.success("保存成功")
+                  } else {
+                    this.$message.success("上传项目成功");
+                  }
+                } else {
+                  this.$message.error("上传项目失败，请完善资金信息或检查网络");
+                }
+              });
+          })
+      },
+      uploadFlie(f) {
+        let param = new FormData(); //创建form对象
+        param.append("file", f.file); //通过append向form对象添加数据
+        let config = {
+          headers: { "content-type": "multipart/form-data" }
+        }; //添加请求头
+        this.$axios
+          .post("/component/trUpload2/uploadify", param, config)
+          .then(res => {
+            if (res.success == true) {
+              this.fileNames.push(res.data.originalName);
+              this.filePaths.push(res.data.relativePath);
+            } else {
+              this.$message.error("上传失败，请检查网络");
+            }
+          });
+      },
+       handleCurrentChange(val) {
         this.getData(val)
       },
       toMoneyDetailPage(id,status){
@@ -149,7 +147,7 @@ export default {
           });
           window.open(href, '_blank');
         } else {
-          this.$message.info('资金尚未通过审核')
+          this.$message.info('项目尚未通过审核')
         }
       },
     amend(id){
@@ -159,35 +157,23 @@ export default {
           });
           window.open(href, '_blank');
     },
-    applyMoney(){
-      let {href} = this.$router.resolve({
-              name: "applyMoney",
-          });
-      window.open(href, '_blank');
-    },
-    uploadMoney(){
-      let {href} = this.$router.resolve({
-              name: "uploadApplyMoney",
-          });
-      window.open(href, '_blank');
-    },
     delete_item(id,index){
-      this.$confirm("即将删除资金, 是否继续?", "提示", {
+      this.$confirm("即将删除项目, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(()=> {
-        this.$axios.get(`/jsp/wap/center/do/doDelCapital.jsp?id=${id}`).then(res => {
+        this.$axios.get(`/jsp/wap/center/do/doDelDatumApply.jsp?id=${id}`).then(res => {
           this.pageList.splice(index,1)
           this.count -= 1
         })
       })
     }
-  },
-  created(){
-    this.getData()
+    },
+    created(){
+      this.getData()
+    }
   }
-};
 </script>
 
 <style scoped lang="scss">
@@ -198,7 +184,7 @@ export default {
 }
 .invest-item {
   width: 100%;
-  height: 180px;
+  height: 90px;
   margin-top: 20px;
   border-bottom: 1px solid #cdcdcd;
   position: relative;
@@ -275,7 +261,7 @@ export default {
 }
 
 .project_title {
-  margin-top: 40px;
+  // margin-top: 40px;
   font-size: 18px;
   font-family: "Microsoft YaHei";
   color: rgb(0, 83, 133);
@@ -367,19 +353,19 @@ export default {
 
   //提醒样式
   .already {
-    margin-top: 60px;
+    margin-top: 20px;
     margin-right: 7px;
     font-size: 18px;
     color: #999;
   }
   .being {
-    margin-top: 60px;
+    margin-top: 20px;
     margin-right: 7px;
     font-size: 18px;
     color: #fc7f7f;
   }
   .not {
-    margin-top: 60px;
+    margin-top: 20px;
     margin-right: 7px;
     font-size: 18px;
     color: #faa251;
@@ -407,6 +393,44 @@ export default {
       border: 1px solid #d9d9d9 !important;
       font-weight: 400;
     }
+  }
+}
+
+.upload-demo {
+  width: 400px;
+}
+
+.el-form {
+  width: 500px;
+}
+.subBtn {
+  width: 80px;
+  height: 35px;
+  color: #fff;
+  line-height: 0.425;
+  display: inline-block;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #005982;
+  border: 1px solid #dcdfe6;
+  border-color: #dcdfe6;
+  -webkit-appearance: none;
+  text-align: center;
+  box-sizing: border-box;
+  outline: none;
+  margin: 0;
+  transition: 0.1s;
+  font-weight: 500;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+}
+
+/deep/ {
+  .el-form-item__error {
+    margin-left: 80px!important;
   }
 }
 </style>

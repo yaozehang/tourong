@@ -17,6 +17,9 @@ import store from './store'
 import "normalize.css/normalize.css"
 import "./style/index.scss"
 
+import Share from 'vue-social-share'
+import 'vue-social-share/dist/client.css';
+Vue.use(Share)
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false

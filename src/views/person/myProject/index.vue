@@ -7,14 +7,9 @@
           <button class="noLikeBtn" @click="applyProject">
             <i></i>添加项目
           </button>
-          <el-upload
-            class="upload-demo flr"
-            action=""
-            >
-          <div class="likeBtn">
+          <div class="likeBtn flr" @click="uploadProject">
             <i></i>快速上传
           </div>
-          </el-upload>
         </span>
       </p>
       <p class="project_title">
@@ -29,9 +24,9 @@
           <!-- <span class="flr" :class="item.check == 0 ? ' already':'' + item.check == 1 ? ' being':'' + item.check == 2 ? ' not':'' + item.check == 3 ? ' fail':''">{{item.check == 0 ? '已发布':'' + item.check == 1 ? '审核中':'' + item.check == 2 ? '未发布':''}}</span> -->
           <span class="flr not" v-if="item.status == '0'">未发布</span>
           <span class="flr" v-else :class="item.status  == '5' ? ' being':'' + item.status == '10' ? ' already':'' + item.status == '15'? ' fail':''">{{item.status  == '5' ? '审核中':'' + item.status == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
-          <el-button class="flr" size="mini">动态管理</el-button>
-          <el-button type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button>
-          <el-button type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini" @click="delete_item(item.id,index)"></el-button>
+          <!-- <el-button title="动态管理"  class="flr manage" icon="el-icon-edit-outline" circle size="mini" @click="manage(item.id)"></el-button> -->
+          <el-button title="修改" type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button>
+          <el-button title="删除" type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>
         <p v-show="pageList.length == 0" class="noAtt">
           你没有任何项目哦~
@@ -125,8 +120,15 @@ export default {
           });
           window.open(href, '_blank');
         } else {
-          this.$message.info('项目尚未发布成功')
+          this.$message.info('项目尚未通过审核')
         }
+    },
+    manage(id){
+      let {href} = this.$router.resolve({
+              name: "manageProject",
+              query: {id}
+          });
+          window.open(href, '_blank');
     },
     amend(id){
       let {href} = this.$router.resolve({
@@ -152,7 +154,13 @@ export default {
           this.count -= 1
         })
       })
-    }
+    },
+    uploadProject(){
+      let {href} = this.$router.resolve({
+              name: "uploadApplyProject",
+          });
+      window.open(href, '_blank');
+    },
   },
   created(){
     this.getData()
@@ -214,6 +222,12 @@ export default {
     background: -moz-linear-gradient(right, transparent, #fff 55%);
     background: linear-gradient(to right, transparent, #fff 55%);
   }
+}
+
+.manage {
+  position: absolute;
+  right: 80px;
+  bottom: 9px;
 }
 
 .cancel1 {

@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="clearfix">
-      <div class="pd-15 fll">
+      <div class="pd-15 fll industy">
         <span class="act_type fll">所属行业：</span>
         <div class="titleRight fll">
           <template>
@@ -136,21 +136,21 @@
       </div>
       <div v-loading="loading">
       <div class="act_list clearfix" v-for="(item, index) in pageList" :key="index">
-        <div @click="toProjectDetailPage(item.id)">
+        <div @click="toProjectDetailPage(item.id)" class="clearfix">
           <div class="clearfix">
             <span class="list-title fll">{{item.title}}</span>
           </div>
           <div class="clearfix">
-            <div class="title_time flr">{{item.addTimeStr.slice(0,10)}}</div>
-            <div class="focusNum fll">{{item.followNum}}人关注</div>
+            <div class="focusNum flr">{{item.followNum}}人关注</div>
           </div>
           <div class="listContent">{{item.brief}}</div>
+          <div class="title_time flr">{{item.addTimeStr.slice(0,10)}}</div>
          </div>
         <button class="subBtn" @click="dialogFormVisible = true">约见项目</button>
       </div>
       </div>
-      <div class="load_more" @click="more" v-if="this.totalCount > this.pageList.length">加载更多...</div>
-      <p style="color:#999;" v-else>-------------------------------------------------没有更多项目了----------------------------------------------------</p>
+      <div class="load_more" @click="morePage" v-if="more">加载更多...</div>
+      <p style="color:#999;" v-show="noMore">-------------------------------------------------没有更多项目了----------------------------------------------------</p>
     </div>
     <div class="w360 flr mes_list clearfix">
       <img src="/static/img/project_list.jpg" alt class="act_timelist" @click="toMyproject">
@@ -185,6 +185,8 @@
 </template>
 
 <script>
+import * as Cookies from 'js-cookie'
+
 export default {
   data() {
     return {
@@ -193,6 +195,8 @@ export default {
       isCheck: false,
       newsloading:false,
       dialogFormVisible: false,
+      more:false,
+      noMore:false,
       actType: ["不限", "债券融资", "股权融资", "整体转让", "其他融资"],
       moneyType: [
         "个人资金",
@@ -355,21 +359,25 @@ export default {
           financingWayList.forEach(item => {
             this.$set(item, 'checked', false)
           });
+          financingWayList.unshift({dataName:'不限'})
           this.financingWayList = financingWayList;
           let industryList = res.data.industryList
           industryList.forEach(item => {
             this.$set(item, 'checked', false)
           });
+          industryList.unshift({dataName:'不限'})
           this.industryList = industryList;
           let financingMoneyList = res.data.financingMoneyList
           financingMoneyList.forEach(item => {
             this.$set(item, 'checked', false)
           });
+          financingMoneyList.unshift({dataName:'不限'})
           this.financingMoneyList = financingMoneyList;
           let regionList = res.data.regionList
           regionList.forEach(item => {
             this.$set(item, 'checked', false)
           });
+          regionList.unshift({dataName:'不限'})
           this.regionList = regionList;
         }
       });
@@ -385,6 +393,13 @@ export default {
             this.pageList = res.data.pageList;
             this.totalCount = res.data.pagination.totalCount;
             this.pn = 1;
+            if(this.totalCount > this.pageList.length) {
+              this.more = true
+            } else {
+              setTimeout(()=> {
+                this.noMore = true
+              },2000)
+            }
             this.loading = false;
           }
         });
@@ -400,7 +415,7 @@ export default {
           }
         });
   },
-  more() {
+  morePage() {
       this.pn += 1;
       this.loading = true;
       this.$axios
@@ -644,7 +659,7 @@ export default {
   cursor: pointer;
   // padding-right: 45px;
   display: inline-block;
-  width: 96px;
+  width: 103px;
 } //活动列表
 .act_list {
   cursor: pointer;
@@ -836,11 +851,11 @@ export default {
 .load_more {
   width: 810px;
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
   font-family: "Microsoft YaHei";
   color: rgb(153, 153, 153);
   line-height: 1.333;
-  padding: 20px 0;
+  padding: 15px 0;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   margin: 40px 0 75px;
@@ -944,7 +959,7 @@ export default {
 
 /deep/ {
   .el-checkbox{
-    width:102px!important;
+    width:110px!important;
     padding-bottom: 3.1px!important;
   }
   .el-checkbox + .el-checkbox {
@@ -957,29 +972,29 @@ export default {
   font-weight: 700;  
 }
 
-.titleRight .type_item:nth-child(25){
-  padding-right: 20px;
-}
-.titleRight .type_item:nth-child(15){
-  padding-right: 20px;
-}
-.titleRight .type_item:nth-child(5){
-  padding-right: 20px;
-}
+// .titleRight .type_item:nth-child(25){
+//   padding-right: 20px;
+// }
+// .titleRight .type_item:nth-child(15){
+//   padding-right: 20px;
+// }
+// .titleRight .type_item:nth-child(5){
+//   padding-right: 20px;
+// }
 
 // .titleRight .type_item:nth-child(17){
-//   padding-right: 80px;
+//   margin-right: 80px;
 // }
 // .titleRight .type_item:nth-child(20){
-//   padding-right: 10px;
+//   margin-right: 10px;
 // }
 // .titleRight .type_item:nth-child(26){
-//   padding-right: 21px;
+//   margin-right: 21px;
 // }
 // .titleRight .type_item:nth-child(29){
-//   padding-right: 80px;
+//   margin-right: 80px;
 // }
 // .titleRight .type_item:nth-child(30){
-//   padding-right: 77px;
+//   margin-right: 77px;
 // }
 </style>

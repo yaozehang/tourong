@@ -14,7 +14,7 @@
         <p class="title">{{mesDetailData.title}}</p>
         <p class="about">
           <span class="about_item">活动开始时间：{{mesDetailData.startTimeStr}}</span>
-          <span class="about_item">主办方：{{mesDetailData.speaker}}</span>
+          <span class="about_item">主办：{{mesDetailData.speaker}}</span>
           <span class="about_item">地址：{{mesDetailData.address}}</span>
           <span class="about_item">类型：{{mesDetailData.categoryName}}</span>
           <i class="zone"></i>

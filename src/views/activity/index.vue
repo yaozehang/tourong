@@ -47,7 +47,7 @@
             </p>
             <p class="list-content2">
               <i class="time"></i>
-              报名时间：{{item.regStartTimeStr}} 至 {{item.regEndTimeStr}}
+              活动时间：{{item.startTimeStr}} 至 {{item.endTimeStr}}
             </p>
           </div>
           </div>
@@ -338,7 +338,6 @@ export default {
   margin: 10px 0 25px;
 }
 .list-title:hover {
-  font-weight: 700;
   color:#005385;
 }
 .list-content {

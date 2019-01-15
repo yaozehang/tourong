@@ -23,7 +23,7 @@
     </div>
     <i class="line"></i>
     <div class="end">
-      <span class="end-content">投融资讯平台 版权所有 copyright@2018 xxx Corporation, All Rights Reserve</span>
+      <span class="end-content">证券传媒投融资讯平台 版权所有 copyright@2019 Corporation, All Rights Reserve</span>
       <router-link to>
         <span class="clause-1" @click="toFuwu">服务条款</span>
       </router-link>
