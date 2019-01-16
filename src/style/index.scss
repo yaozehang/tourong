@@ -84,3 +84,26 @@ a{
   ._666 {
     color:#999;
   }
+
+  .toast_success{
+    background: url(/static/img/success.png) no-repeat center;
+    background-size: contain;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+  }
+  .toast_error{
+    background: url(/static/img/error.png) no-repeat center;
+    background-size: contain;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+  }
+  .toast_title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .toast_content {
+    text-align: center;
+  }

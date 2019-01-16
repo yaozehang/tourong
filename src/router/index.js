@@ -55,6 +55,7 @@ const router = new Router({
   routes: [
     {
       path:'/login',
+      name:'login',
       component: components.login,
       meta:{
         title:'投融连线-登录'

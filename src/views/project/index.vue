@@ -146,10 +146,10 @@
           <div class="listContent">{{item.brief}}</div>
           <div class="title_time flr">{{item.addTimeStr.slice(0,10)}}</div>
          </div>
-        <button class="subBtn" @click="dialogFormVisible = true">约见项目</button>
+        <button class="subBtn" @click="apply_project">约见项目</button>
       </div>
       </div>
-      <div class="load_more" @click="morePage" v-if="more">加载更多...</div>
+      <div class="load_more" @click="morePage" v-show="more">加载更多...</div>
       <p style="color:#999;" v-show="noMore">-------------------------------------------------没有更多项目了----------------------------------------------------</p>
     </div>
     <div class="w360 flr mes_list clearfix">
@@ -181,6 +181,17 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+    :visible.sync="toast_show"
+    width="30%"
+    center>
+    <div class="toast_success" v-if="success"></div>
+    <div class="toast_error" v-else></div>
+    <div v-if="success" class="toast_title">成功</div>
+    <div v-else class="toast_title">失败</div>
+    <p class="toast_content">{{hint}}</p>
+  </el-dialog>
   </div>
 </template>
 
@@ -348,6 +359,9 @@ export default {
         money:[]
       },
       title:"",
+      hint:"",
+      success:false,
+      toast_show:false,
     };
   },
   methods: {
@@ -396,6 +410,7 @@ export default {
             if(this.totalCount > this.pageList.length) {
               this.more = true
             } else {
+              this.more = false
               setTimeout(()=> {
                 this.noMore = true
               },2000)
@@ -432,6 +447,14 @@ export default {
           if (res.success == "true") {
             this.pageList = [...this.pageList, ...res.data.pageList];
             this.totalCount = res.data.pagination.totalCount;
+            if(this.totalCount > this.pageList.length) {
+              this.more = true
+            } else {
+              this.more = false
+              setTimeout(()=> {
+                this.noMore = true
+              },2000)
+            }
             this.loading = false;
           }
         });
@@ -566,8 +589,9 @@ export default {
         }
       },
     apply_project(){
-      this.dialogFormVisible = false
-      this.$message.success('提交成功')
+      this.success = true
+      this.hint = '约见项目成功，平台会尽快为您安排'
+      this.toast_show = true
     }
   },
   created(){

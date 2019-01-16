@@ -266,7 +266,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item>
-          <div class="subBtn" @click="onSave" style="margin-right:20px;">保存</div>
+          <div class="subBtn" @click="onSave('formData')" style="margin-right:20px;">保存</div>
           <div class="subBtn" @click="onSubmit(5,'formData')">提交</div>
         </el-form-item>
       </el-form>
@@ -540,7 +540,7 @@ export default {
         this.formData.financingWay = dataValue;
       }
     },
-    onSave() {
+    onSave(formName) {
       this.onSubmit(0,formName);
     },
     onSubmit(status, formName) {

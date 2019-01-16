@@ -1,6 +1,6 @@
 <template>
   <div>
-  <div style="min-height:500px;" v-loading="loading">
+  <div v-loading="loading">
         <div v-for="(item , index) in messageData" :key="index" style="cursor:pointer;" class="mg-20" @click="toMessageDetailPage(item.id)">
           <div v-if="item.imgPath" class="clearfix">
             <img :src="$url + item.imgPath" alt class="fll" width="152px" height="101px">
@@ -25,15 +25,16 @@
           </div>
         </div>
       </div>
-      <div class="mes_page">
+      <div class="mes_page" v-if="this.count > this.messageData.length">
         <el-pagination
           background
           @current-change="handleCurrentChange"
-          :page-size="15"
+          :page-size="10"
           layout="total, prev, pager, next, jumper"
           :total="count"
         ></el-pagination>
       </div>
+      <p v-else style="color:#999;">-------------------------------------------------没有更多资讯了----------------------------------------------------</p>
   </div>
 </template>
 

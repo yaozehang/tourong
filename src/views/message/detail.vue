@@ -198,6 +198,12 @@ export default {
           }
         });
     },
+    getCommonData(){
+      let id = this.$route.query.id
+      this.$axios.get(`/jsp/wap/trNews/ctrl/jsonCommentPage.jsp?id=${id}`).then(res => {
+        console.log(res);
+      })
+    },
     toMessagePage(){
       let {href} = this.$router.resolve({
           name: "message",
@@ -215,6 +221,7 @@ export default {
   created(){
     this.getData()
     this.getNewsList()
+    this.getCommonData()
   }
 };
 </script>

@@ -1,4 +1,15 @@
 <template>
+<div>
+  <el-dialog
+    :visible.sync="toast_show"
+    width="30%"
+    center>
+    <div class="toast_success" v-if="success"></div>
+    <div class="toast_error" v-else></div>
+    <div v-if="success" class="toast_title">成功</div>
+    <div v-else class="toast_title">失败</div>
+    <p class="toast_content">{{hint}}</p>
+  </el-dialog>
   <div class="w1200 clearfix">
     <div class="clearfix bread_search">
       <div class="bread fll">
@@ -257,7 +268,7 @@
             </div>
           </div>
           </div>
-        <button class="subBtn" @click="dialogFormVisible = true">投递项目</button>
+        <button class="subBtn" @click="applyPoject">投递项目</button>
       </div>
       </div>
       <div class="load_more" @click="morePage" v-show="more">加载更多...</div>
@@ -286,10 +297,11 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="apply_money">确认投递</el-button>
+        <el-button type="info" @click="applyPoject">确认投递</el-button>
         <el-button @click="dialogFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
+  </div>
   </div>
 </template>
 
@@ -484,7 +496,10 @@ export default {
       projectForm:{
         project:[]
       },
-      title:""
+      title:"",
+      toast_show:false,
+      success:true,
+      hint:'项目投递失败，请检查网络'
     };
   },
   methods: {
@@ -537,6 +552,7 @@ export default {
             if(this.totalCount > this.pageList.length) {
               this.more = true
             } else {
+              this.more = false
               setTimeout(()=> {
                 this.noMore = true
               },2000)
@@ -574,6 +590,14 @@ export default {
           if (res.success == "true") {
             this.pageList = [...this.pageList, ...res.data.pageList];
             this.totalCount = res.data.pagination.totalCount;
+            if(this.totalCount > this.pageList.length) {
+              this.more = true
+            } else {
+              this.more = false
+              setTimeout(()=> {
+                this.noMore = true
+              },2000)
+            }
             this.loading = false;
           }
         });
@@ -754,16 +778,18 @@ export default {
           this.$router.push('/login')
         }
       },
-    apply_money(){
-      this.dialogFormVisible = false
-      this.$message.success('投递成功')
+    applyPoject(){
+      // this.dialogFormVisible = false
+      this.success = true
+      this.hint = '项目投递成功，平台会尽快为您安排'
+      this.toast_show = true
     }
   },
   created() {
     this.getTypeData();
     this.getActData()
     this.getNewsList()
-  }
+  },
 };
 </script>
 
@@ -898,6 +924,11 @@ export default {
   color: rgb(26, 26, 26);
   line-height: 1.333;
   margin: 10px 0;
+  display: inline-block;
+  width: 700px;
+  overflow: hidden; /*超出部分隐藏*/
+  white-space: nowrap; /*不换行*/
+  text-overflow: ellipsis;
 }
 
 .list-contentName {

@@ -1,7 +1,14 @@
 <template>
   <div>
+    <el-dialog :visible.sync="toast_show" width="30%" center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
+    </el-dialog>
     <div class="w1200 clearfix">
-      <img src="/static/img/logo-1.png" alt="" class="logo-1" @click="$router.push('/home')">
+      <img src="/static/img/logo-1.png" alt class="logo-1" @click="$router.push('/home')">
       <router-link to="/home">
         <span class="flr toHome">返回首页</span>
       </router-link>
@@ -10,8 +17,16 @@
       <div class="w1200 clearfix">
         <div class="login-box flr" v-show="!forget">
           <div class="login-box_header">
-            <span class="login_span" :class="login_show ? 'border' : '' " @click="login_show = true">登录</span>
-            <span class="register_span" :class="!login_show ? 'border' : '' " @click="login_show = false">注册</span>
+            <span
+              class="login_span"
+              :class="login_show ? 'border' : '' "
+              @click="login_show = true"
+            >登录</span>
+            <span
+              class="register_span"
+              :class="!login_show ? 'border' : '' "
+              @click="login_show = false"
+            >注册</span>
           </div>
           <div class="login-box_body">
             <div v-show="login_show">
@@ -30,7 +45,7 @@
             </div>
             <div v-show="!login_show">
               <div v-show="!email_show">
-              <!-- <p class="email_login" @click="email_show = true">我要使用邮箱注册</p> -->
+                <!-- <p class="email_login" @click="email_show = true">我要使用邮箱注册</p> -->
                 <div class="inputBox">
                   <i class="phone"></i>
                   <input type="text" placeholder="请输入手机号码" v-model="registerData.mobile">
@@ -39,18 +54,23 @@
                   <i class="code"></i>
                   <input type="text" placeholder="请输入验证码" v-model="registerData.code">
                 </div>
-                <span v-show="code_show" @click="getCode" class="count">获取验证码</span>
+                <span v-show="code_show" @click="getCode(registerData.mobile)" class="count">获取验证码</span>
                 <span v-show="!code_show" class="count">{{count}}s</span>
                 <div class="inputBox">
-                <i class="email"></i>
-                <input type="text" placeholder="请输入邮箱" v-model="registerData.email">
-              </div>
+                  <i class="email"></i>
+                  <input type="text" placeholder="请输入邮箱" v-model="registerData.email_">
+                </div>
                 <div class="inputBox">
                   <i class="lock"></i>
-                  <input type="password" placeholder="请输入密码" v-model="registerData.pwd" @keyup.enter="login">
+                  <input
+                    type="password"
+                    placeholder="请输入密码"
+                    v-model="registerData.pwd"
+                    @keyup.enter="login"
+                  >
                 </div>
-            </div>
-            <!-- <div v-show="email_show">
+              </div>
+              <!-- <div v-show="email_show">
               <p class="email_login" @click="email_show = false">返回手机注册</p>
               <div class="inputBox">
                 <i class="phone"></i>
@@ -64,8 +84,10 @@
                 <i class="lock"></i>
                 <input type="password" placeholder="请确认密码" :value="loginData.password">
               </div>
-            </div> -->
-            <el-checkbox v-model="register_checked" class="fll"><span @click="toFuwu">我已阅读并同意《投融资讯平台服务协议》</span></el-checkbox>
+              </div>-->
+              <el-checkbox v-model="register_checked" class="fll">
+                <span @click="toFuwu">我已阅读并同意《投融资讯平台服务协议》</span>
+              </el-checkbox>
             </div>
             <div class="btn" v-if="login_show" @click="login">登录</div>
             <div class="btn" v-else @click="register">注册</div>
@@ -76,25 +98,25 @@
             <span class="forget_span">忘记密码</span>
           </div>
           <div class="login-box_body">
-              <p class="email_login" @click="forget = false;login_show = true">返回登录</p>
-                <div class="inputBox">
-                  <i class="phone"></i>
-                  <input type="text" placeholder="请输入手机号码" v-model="forgetData.mobile">
-                </div>
-                <div class="inputBox_code">
-                  <i class="code"></i>
-                  <input type="text" placeholder="请输入验证码" v-model="forgetData.code">
-                </div>
-                <span v-show="code_show" @click="getCode" class="count">获取验证码</span>
-                <span v-show="!code_show" class="count">{{count}}s</span>
-                <div class="inputBox">
-                <i class="lock"></i>
-                <input type="text" placeholder="设置新密码" v-model="forgetData.pwd">
-              </div>
-                <div class="inputBox">
-                  <i class="lock"></i>
-                  <input type="password" placeholder="确认新密码" v-model="forgetData.pwd2">
-                </div>
+            <p class="email_login" @click="forget = false;login_show = true">返回登录</p>
+            <div class="inputBox">
+              <i class="phone"></i>
+              <input type="text" placeholder="请输入手机号码" v-model="forgetData.mobile">
+            </div>
+            <div class="inputBox_code">
+              <i class="code"></i>
+              <input type="text" placeholder="请输入验证码" v-model="forgetData.code">
+            </div>
+            <span v-show="code_show" @click="getCode(forgetData.mobile)" class="count">获取验证码</span>
+            <span v-show="!code_show" class="count">{{count}}s</span>
+            <div class="inputBox">
+              <i class="lock"></i>
+              <input type="password" placeholder="设置新密码" v-model="forgetData.newPwd">
+            </div>
+            <div class="inputBox">
+              <i class="lock"></i>
+              <input type="password" placeholder="确认新密码" v-model="forgetData.reNewPwd ">
+            </div>
             <!-- <div v-show="email_show">
               <p class="email_login" @click="email_show = false">返回手机注册</p>
               <div class="inputBox">
@@ -109,9 +131,8 @@
                 <i class="lock"></i>
                 <input type="password" placeholder="请确认密码" :value="loginData.password">
               </div>
-            </div> -->
-            <div class="btn" v-if="login_show" @click="login">登录</div>
-            <div class="btn" v-else @click="register">注册</div>
+            </div>-->
+            <div class="btn" @click="change_pwd">提交</div>
           </div>
         </div>
       </div>
@@ -121,151 +142,235 @@
 </template>
 
 <script>
-import Bottom from '@/components/Bottom.vue'
-import * as Cookies from 'js-cookie'
-import qs from "qs"
+import Bottom from "@/components/Bottom.vue";
+import * as Cookies from "js-cookie";
+import qs from "qs";
 
-  export default {
-    components:{
-      Bottom
-    },
-    data(){
-      return {
-        login_show:true,
-        code_show:true,
-        email_show:false,
-        login_checked:false,
-        register_checked:true,
-        loginData:{
-          mobile:"",
-          pwd:"",
-          loginType:"account_pwd"
-        },
-        registerData:{
-          mobile:"",
-          code:"",
-          pwd:"",
-          email_:""
-        },
-        forgetData: {
-          mobile:"",
-          code:"",
-          pwd:"",
-          pwd2:""
-        },
-        count: '',
-        timer: null,
-        forget:false,
-      }
-    },
-    methods:{
-    getCode(){
+export default {
+  components: {
+    Bottom
+  },
+  data() {
+    return {
+      login_show: true,
+      code_show: true,
+      email_show: false,
+      login_checked: false,
+      register_checked: true,
+      loginData: {
+        mobile: "",
+        pwd: "",
+        loginType: "account_pwd"
+      },
+      registerData: {
+        mobile: "",
+        code: "",
+        pwd: "",
+        email_: ""
+      },
+      forgetData: {
+        mobile: "",
+        code: "",
+        newPwd : "",
+        reNewPwd: ""
+      },
+      count: "",
+      timer: null,
+      forget: false,
+      toast_show: false,
+      success: false,
+      hint: ""
+    };
+  },
+  methods: {
+    getCode(mobile) {
       const TIME_COUNT = 60;
       if (!this.timer) {
         this.count = TIME_COUNT;
         this.code_show = false;
         this.timer = setInterval(() => {
-        if (this.count > 0 && this.count <= TIME_COUNT) {
-          this.count--;
+          if (this.count > 0 && this.count <= TIME_COUNT) {
+            this.count--;
           } else {
-          this.code_show = true;
-          clearInterval(this.timer);
-          this.timer = null;
+            this.code_show = true;
+            clearInterval(this.timer);
+            this.timer = null;
           }
-        }, 1000)
+        }, 1000);
       }
-      this.$axios.get('/jsp/common/baseUser/ctrl/ajaxSendMobileValidCode.jsp',{params:{mobile:this.registerData.mobile}}).then(res => {
-        if(res.success == "true"){
-          this.$notify.success({
-            title: '成功',
-            message: '发送成功'
-          });
-        } else {
-          this.$notify.error({
-            title: '错误',
-            message: res.message
-          });
-        }
-      })
-    },
-    register(){
-      if(this.registerData.mobile == ''){
-        this.$notify.error({
-          title: '错误',
-          message: '请输入手机号'
-        });
-      } else if (this.registerData.mobile.length < 11){
-        this.$notify.error({
-          title: '错误',
-          message: '手机号不得少于11位'
-        });
-      } else if (this.registerData.code == ''){
-        this.$notify.error({
-          title: '错误',
-          message: '请输入验证码'
-        });
-      } else if (this.registerData.email_ == ''){
-        this.$notify.error({
-          title: '错误',
-          message: '请输入邮箱'
-        });
-      } else if (this.registerData.pwd.length < 6){
-        this.$notify.error({
-          title: '错误',
-          message: '密码不能少于6位'
-        });
-      } else {
-        this.$axios.get('/jsp/wap/login/do/doRegister.jsp',{params:{code:this.registerData.code,mobile:this.registerData.mobile,pwd:this.registerData.pwd,email_:this.registerData.email_}}).then(res => {
-          if(this.login_checked){
-            Cookies.set("userKey", res.data,{ expires: 14 });
+      this.$axios
+        .get("/jsp/common/baseUser/ctrl/ajaxSendMobileValidCode.jsp", {
+          params: { mobile }
+        })
+        .then(res => {
+          if (res.success == "true") {
+            // this.$notify.success({
+            //   title: '成功',
+            //   message: '发送成功'
+            // });
           } else {
-            Cookies.set("userKey", res.data,{ expires: 3 });
+            // this.$notify.error({
+            //   title: '错误',
+            //   message: res.message
+            // });
+            this.success = false;
+            this.hint = res.message;
+            this.toast_show = true;
           }
-          if(res.success == "true") {
-            this.$axios.post('/jsp/wap/login/do/doLogin.jsp',qs.stringify({mobile:this.registerData.mobile,pwd:this.registerData.pwd,loginType:this.loginData.loginType})).then(res => {
-              if(res.success == "true"){
-                this.$router.push({name:'home'})
-              } else {
-                this.$notify.error({
-                  title: '错误',
-                  message: res.message
+        });
+    },
+    register() {
+      if (this.registerData.mobile == "") {
+        // this.$notify.error({
+        //   title: '错误',
+        //   message: '请输入手机号'
+        // });
+        this.success = false;
+        this.hint = "请输入手机号";
+        this.toast_show = true;
+      } else if (this.registerData.mobile.length < 11) {
+        // this.$notify.error({
+        //   title: '错误',
+        //   message: '手机号不得少于11位'
+        // });
+        this.success = false;
+        this.hint = "手机号不得少于11位";
+        this.toast_show = true;
+      } else if (this.registerData.code == "") {
+        // this.$notify.error({
+        //   title: '错误',
+        //   message: '请输入验证码'
+        // });
+        this.success = false;
+        this.hint = "请输入验证码";
+        this.toast_show = true;
+      } else if (this.registerData.email_ == "") {
+        // this.$notify.error({
+        //   title: '错误',
+        //   message: '请输入邮箱'
+        // });
+        this.success = false;
+        this.hint = "请输入邮箱";
+        this.toast_show = true;
+      } else if (this.registerData.pwd.length < 6) {
+        // this.$notify.error({
+        //   title: '错误',
+        //   message: '密码不能少于6位'
+        // });
+        this.success = false;
+        this.hint = "密码不能少于6位";
+        this.toast_show = true;
+      } else {
+        this.$axios
+          .get("/jsp/wap/login/do/doRegister.jsp", {
+            params: {
+              code: this.registerData.code,
+              mobile: this.registerData.mobile,
+              pwd: this.registerData.pwd,
+              email_: this.registerData.email_
+            }
+          })
+          .then(res => {
+            if (this.login_checked) {
+              Cookies.set("userKey", res.data, { expires: 14 });
+            } else {
+              Cookies.set("userKey", res.data, { expires: 3 });
+            }
+            if (res.success == "true") {
+              this.$axios
+                .post(
+                  "/jsp/wap/login/do/doLogin.jsp",
+                  qs.stringify({
+                    mobile: this.registerData.mobile,
+                    pwd: this.registerData.pwd,
+                    loginType: this.loginData.loginType
+                  })
+                )
+                .then(res => {
+                  if (res.success == "true") {
+                    this.$router.push({ name: "home" });
+                  } else {
+                    // this.$notify.error({
+                    //   title: '错误',
+                    //   message: res.message
+                    // });
+                    this.success = false;
+                    this.hint = res.message;
+                    this.toast_show = true;
+                  }
                 });
-              }
-            })
+            } else {
+              // this.$notify.error({
+              //     title: '错误',
+              //     message: res.message
+              // });
+              this.success = false;
+              this.hint = res.message;
+              this.toast_show = true;
+            }
+          });
+      }
+    },
+    login() {
+      this.$axios
+        .post("/jsp/wap/login/do/doLogin.jsp", qs.stringify(this.loginData))
+        .then(res => {
+          if (res.success == "true") {
+            if (this.login_checked) {
+              Cookies.set("userKey", res.data, { expires: 14 });
+            } else {
+              Cookies.set("userKey", res.data, { expires: 3 });
+            }
+            this.$router.push({ name: "home" });
           } else {
-            this.$notify.error({
-                title: '错误',
-                message: res.message
-            });
+            // this.$notify.error({
+            //   title: '错误',
+            //   message: res.message
+            // });
+            this.success = false;
+            this.hint = res.message;
+            this.toast_show = true;
+          }
+        });
+    },
+    change_pwd() {
+      this.$axios
+        .get("/jsp/wap/login/do/doEditPwd.jsp", {
+          params: {
+            code: this.forgetData.code,
+            mobile: this.forgetData.mobile,
+            newPwd : this.forgetData.newPwd ,
+            reNewPwd: this.forgetData.reNewPwd
           }
         })
-      }
-    },
-    login(){
-      this.$axios.post('/jsp/wap/login/do/doLogin.jsp',qs.stringify(this.loginData)).then(res => {
-        if(res.success == "true"){
-          if(this.login_checked){
-            Cookies.set("userKey", res.data,{ expires: 14 });
+        .then(res => {
+          if (res.success == "true") {
+            this.success = true;
+            this.hint = res.message;
+            this.toast_show = true;
+            setTimeout(()=> {
+              this.toast_show = false;
+              this.login_show = true;
+            },1000)
           } else {
-            Cookies.set("userKey", res.data,{ expires: 3 });
+            // this.$notify.error({
+            //   title: '错误',
+            //   message: res.message
+            // });
+            this.success = false;
+            this.hint = res.message;
+            this.toast_show = true;
           }
-          this.$router.push({name:'home'})
-        } else {
-          this.$notify.error({
-            title: '错误',
-            message: res.message
-          });
-        }
-      })
+        });
     },
-    toFuwu(){
-      let {href} = this.$router.resolve({
-            name: "seriver",
-          });
-        window.open(href, '_blank');
+    toFuwu() {
+      let { href } = this.$router.resolve({
+        name: "seriver"
+      });
+      window.open(href, "_blank");
     }
-   }  
   }
+};
 </script>
 
 <style scoped lang="scss">
@@ -279,7 +384,7 @@ import qs from "qs"
   color: #000;
 }
 .toHome:hover {
-  color:rgb(0, 89, 130);
+  color: rgb(0, 89, 130);
 }
 //登录
 .login {
@@ -298,8 +403,8 @@ import qs from "qs"
     background-color: #fff;
     overflow: hidden;
     color: #303133;
-    transition: .3s;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    transition: 0.3s;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     //头
     .login-box_header {
       padding: 18px 0;
@@ -307,8 +412,8 @@ import qs from "qs"
       box-sizing: border-box;
       font-size: 20px;
       font-family: "Microsoft YaHei";
-      color: rgb( 153, 153, 153 );
-      .login_span{
+      color: rgb(153, 153, 153);
+      .login_span {
         padding: 18px 10px;
         margin-left: 90px;
         box-sizing: border-box;
@@ -335,12 +440,12 @@ import qs from "qs"
       padding: 30px;
     }
     input {
-        outline: none;
-        border: 0;
-        width: 260px;
-        height: 30px;
-        margin-left: 60px;
-        padding:15px;
+      outline: none;
+      border: 0;
+      width: 260px;
+      height: 30px;
+      margin-left: 60px;
+      padding: 15px;
     }
     .inputBox {
       width: 350px;
@@ -383,14 +488,14 @@ import qs from "qs"
       .el-checkbox__label {
         font-size: 12px !important;
         font-family: "SimSun";
-        color: rgb( 204, 204, 204 );
+        color: rgb(204, 204, 204);
         line-height: 0.708 !important;
       }
     }
     .forget {
       font-size: 12px;
       font-family: "SimSun";
-      color: rgb( 153, 153, 153 );
+      color: rgb(153, 153, 153);
       line-height: 1.708;
       cursor: pointer;
     }
@@ -401,7 +506,7 @@ import qs from "qs"
       width: 100%;
       font-size: 20px;
       font-family: "Microsoft YaHei";
-      color: rgb( 255, 255, 255 );
+      color: rgb(255, 255, 255);
       line-height: 0.425;
       display: inline-block;
       line-height: 1;
@@ -416,7 +521,7 @@ import qs from "qs"
       outline: none;
       margin: 0;
       margin-top: 40px;
-      transition: .1s;
+      transition: 0.1s;
       font-weight: 500;
       -moz-user-select: none;
       -webkit-user-select: none;
@@ -425,20 +530,20 @@ import qs from "qs"
       border-radius: 2px;
     }
     // 注册
-      .inputBox_code {
-        display: inline-block;
-        width: 230px;
-        height: 60px;
-        border: 1px solid #ebeef5;
-        margin-bottom: 20px;
-        position: relative;
-        input {
-          outline: none;
-          border: 0;
-          width: 140px !important;
-          height: 30px;
-          margin-left: 60px;
-          padding:15px;
+    .inputBox_code {
+      display: inline-block;
+      width: 230px;
+      height: 60px;
+      border: 1px solid #ebeef5;
+      margin-bottom: 20px;
+      position: relative;
+      input {
+        outline: none;
+        border: 0;
+        width: 140px !important;
+        height: 30px;
+        margin-left: 60px;
+        padding: 15px;
       }
       .code {
         display: inline-block;
@@ -454,7 +559,7 @@ import qs from "qs"
     .email_login {
       text-align: right;
       margin-top: 0;
-      color: rgb( 153, 153, 153 );
+      color: rgb(153, 153, 153);
       cursor: pointer;
     }
     .email_login:hover {

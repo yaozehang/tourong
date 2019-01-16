@@ -17,40 +17,38 @@
           <span class="about_item">主办：{{mesDetailData.speaker}}</span>
           <span class="about_item">地址：{{mesDetailData.address}}</span>
           <span class="about_item">类型：{{mesDetailData.categoryName}}</span>
-          <i class="zone"></i>
-          <i class="microblog"></i>
-          <i class="weixin"></i>
-          <i class="add"></i>
+          <share :config="config" class="share_mes"></share>
         </p>
         <p class="contentHtml" v-html="mesDetailData.content"></p>
-        <button class="moreBtn" @click="showApply = true" v-show="mesDetailData.status == 1">
-          报名参加
-        </button>
+        <button class="moreBtn" @click="showApply = true" v-show="mesDetailData.status == 1">报名参加</button>
       </div>
       <div class="w300 clearfix mes_list flr">
-        <p class="mes">热门资讯
-        <span class="mes_more flr" @click="toMessagePage">更多></span>
+        <p class="mes">
+          热门资讯
+          <span class="mes_more flr" @click="toMessagePage">更多></span>
         </p>
         <div class="mes_title" v-loading="newsloading">
-          <div v-for="(item , index) in mesData" :key="index" class="mes_content" @click="toMessageDetailPage(item.id)">
-              <span class="cl-0">
-                <span class="count" :class=" index <= 2 ? 'hot' : '' ">{{index + 1}}</span>
-                  {{item.title}}
-                </span>
+          <div
+            v-for="(item , index) in mesData"
+            :key="index"
+            class="mes_content"
+            @click="toMessageDetailPage(item.id)"
+          >
+            <span class="cl-0">
+              <span class="count" :class=" index <= 2 ? 'hot' : '' ">{{index + 1}}</span>
+              {{item.title}}
+            </span>
           </div>
         </div>
       </div>
     </div>
-    <el-dialog
-      title="报名信息"
-      :visible.sync="showApply"
-      width="30%">
+    <el-dialog title="报名信息" :visible.sync="showApply" width="30%">
       <el-form :model="appleform">
         <el-form-item label="姓名：">
-          <el-input v-model="appleform.name" autocomplete="off"></el-input>
+          <el-input v-model="appleform.memberName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号：">
-          <el-input v-model="appleform.phone" autocomplete="off"></el-input>
+          <el-input v-model="appleform.memberMobile" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="备注：">
           <el-input v-model="appleform.remark" autocomplete="off"></el-input>
@@ -61,14 +59,25 @@
         <button class="cancle" @click="showApply = false">取 消</button>
       </span>
     </el-dialog>
+
+    <el-dialog
+    :visible.sync="toast_show"
+    width="30%"
+    center>
+    <div class="toast_success" v-if="success"></div>
+    <div class="toast_error" v-else></div>
+    <div v-if="success" class="toast_title">成功</div>
+    <div v-else class="toast_title">失败</div>
+    <p class="toast_content">{{hint}}</p>
+  </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
-  data(){
+  data() {
     return {
-      mesDetailData:{
+      mesDetailData: {
         // title:'最新中国联通微博关注领取500M手机流量奖励 非秒到',
         // time:'2018-12-28 10:50:53',
         // weixin:'创业智库',
@@ -118,53 +127,71 @@ export default {
             "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
         }
       ],
-      commonData:[
+      commonData: [
         {
-          avatar:'/static/img/avatar-1.png',
-          username:'投融网友',
-          location:'陕西省西安市',
-          beforeTime:'10分钟前',
-          content:'谢谢习主席',
-          from:'投融连线平台',
-          good:1,
+          avatar: "/static/img/avatar-1.png",
+          username: "投融网友",
+          location: "陕西省西安市",
+          beforeTime: "10分钟前",
+          content: "谢谢习主席",
+          from: "投融连线平台",
+          good: 1
         },
         {
-          avatar:'/static/img/avatar-1.png',
-          username:'投融网友',
-          location:'陕西省西安市',
-          beforeTime:'10分钟前',
-          content:'谢谢习主席',
-          from:'投融连线平台',
-          good:1,
+          avatar: "/static/img/avatar-1.png",
+          username: "投融网友",
+          location: "陕西省西安市",
+          beforeTime: "10分钟前",
+          content: "谢谢习主席",
+          from: "投融连线平台",
+          good: 1
         },
         {
-          avatar:'/static/img/avatar-1.png',
-          username:'投融网友',
-          location:'陕西省西安市',
-          beforeTime:'10分钟前',
-          content:'谢谢习主席',
-          from:'投融连线平台',
-          good:1,
-        },
+          avatar: "/static/img/avatar-1.png",
+          username: "投融网友",
+          location: "陕西省西安市",
+          beforeTime: "10分钟前",
+          content: "谢谢习主席",
+          from: "投融连线平台",
+          good: 1
+        }
       ],
-      appleform:{
-        name:'',
-        phone:"",
-        remark:"",
+      appleform: {
+        memberName: "",
+        memberMobile: "",
+        remark: ""
       },
-      showApply:false,
-      loading:false,
-      newsloading:false,
-    }
+      showApply: false,
+      loading: false,
+      newsloading: false,
+      config: {
+        // url                 : '', // 网址，默认使用 window.location.href
+        // source              : '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
+        // title               : '', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
+        // description         : '', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
+        // image               : '', // 图片, 默认取网页中第一个img标签
+        sites: ["qzone", "qq", "weibo", "wechat"], // 启用的站点
+        // disabled            : ['google', 'facebook', 'twitter','douban], // 禁用的站点
+        wechatQrcodeTitle: "微信扫一扫：分享", // 微信二维码提示文字
+        wechatQrcodeHelper:
+          "<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>"
+      },
+      hint:'',
+      success:false,
+      toast_show:false,
+    };
   },
-  methods:{
-    getData(){
-      let id = this.$route.query.id
-      this.loading = true
-      this.$axios.get(`/jsp/wap/trActivity/ctrl/jsonActivityDetail.jsp?id=${id}`).then(res => {
-        this.mesDetailData = res.data
-        this.loading = false
-      })
+  methods: {
+    getData() {
+      let id = this.$route.query.id;
+      this.loading = true;
+      this.$axios
+        .get(`/jsp/wap/trActivity/ctrl/jsonActivityDetail.jsp?id=${id}`)
+        .then(res => {
+          this.mesDetailData = res.data;
+          document.title = res.data.title
+          this.loading = false;
+        });
     },
     // apply(e,id) {
     //   if(e == 0){
@@ -182,41 +209,61 @@ export default {
     //     });
     //   }
     // },
-    getNewsList(){
+    getNewsList() {
       this.newsloading = true;
+      this.$axios.get("/jsp/wap/trNews/ctrl/jsonHotNewsList.jsp").then(res => {
+        if (res.success == "true") {
+          this.mesData = res.data;
+          this.newsloading = false;
+        }
+      });
+    },
+    sub_apply() {
+      let activityId = this.$route.query.id;
       this.$axios
-        .get("/jsp/wap/trNews/ctrl/jsonHotNewsList.jsp",)
-        .then(res => {
-          if (res.success == "true") {
-            this.mesData = res.data
-            this.newsloading = false;
+        .get("/jsp/wap/trActivity/do/doSignUp.jsp", {
+          params: {
+            activityId,
+            memberName: this.appleform.memberName,
+            memberMobile: this.appleform.memberName,
+            remark: this.appleform.remark
           }
+        })
+        .then(res => {
+          console.log(res);
+          if(res.succsee == 'true'){
+            this.showApply = false
+            setTimeout(() => {
+            this.success = true
+            this.hint = '报名成功！当前已有' + res.data + '人报名参加'
+            this.toast_show = true
+            },1000)
+          } else {
+            this.success = false
+            this.hint = res.message
+            this.toast_show = true
+          }
+
         });
+      // this.showApply = false
     },
-    sub_apply(){
-      this.showApply = false
-      this.$notify.success({
-          title: "成功",
-          message: "报名成功"
-        });
-    },
-    toMessagePage(){
-      let {href} = this.$router.resolve({
-          name: "message",
+    toMessagePage() {
+      let { href } = this.$router.resolve({
+        name: "message"
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    toMessageDetailPage(id){
-      let {href} = this.$router.resolve({
-          name: "messageDetail",
-          query: {id}
+    toMessageDetailPage(id) {
+      let { href } = this.$router.resolve({
+        name: "messageDetail",
+        query: { id }
       });
-      window.open(href, '_blank');
-    },
+      window.open(href, "_blank");
+    }
   },
-  created(){
-    this.getData()
-    this.getNewsList()
+  created() {
+    this.getData();
+    this.getNewsList();
   }
 };
 </script>
@@ -229,15 +276,16 @@ export default {
   background: #fff;
   box-sizing: border-box;
   .title {
-  font-size: 30px;
-  font-family: "Microsoft YaHei";
-  color: rgb( 51, 51, 51 );
-  line-height: 0.8;
-  margin: 0 0 40px;
+    font-size: 30px;
+    font-family: "Microsoft YaHei";
+    color: rgb(51, 51, 51);
+    line-height: 0.8;
+    margin: 0 0 40px;
   }
   .about {
     font-size: 14px;
     color: #999;
+    position: relative;
     .about_item {
       padding-right: 15px;
     }
@@ -275,14 +323,13 @@ export default {
       -webkit-user-select: none;
       -ms-user-select: none;
     }
-    .mes_more:hover{
+    .mes_more:hover {
       color: #005385;
     }
   }
 }
 .mes_title {
   border-top: 1px dashed #d9d9d9;
-
 }
 .mes_content {
   cursor: pointer;
@@ -290,9 +337,9 @@ export default {
   padding: 20px 0;
   border-bottom: 1px solid #d9d9d9;
   color: #d9d9d9;
-  overflow: hidden;/*超出部分隐藏*/
-  white-space: nowrap;/*不换行*/
-  text-overflow:ellipsis;
+  overflow: hidden; /*超出部分隐藏*/
+  white-space: nowrap; /*不换行*/
+  text-overflow: ellipsis;
   .count {
     display: inline-block;
     width: 20px;
@@ -334,18 +381,18 @@ export default {
     -moz-outline: none;
     appearance: none;
     border: 0;
-    resize:none;
-    overflow:hidden;
+    resize: none;
+    overflow: hidden;
     position: absolute;
-    left:20px;
+    left: 20px;
     top: 55px;
   }
   .login {
     font-size: 14px;
     font-family: "Microsoft YaHei";
-    color: rgb( 0, 89, 130 );
+    color: rgb(0, 89, 130);
     position: absolute;
-    left:16px;
+    left: 16px;
     top: 2px;
     cursor: pointer;
     color: #005982;
@@ -419,7 +466,7 @@ export default {
     .location {
       font-size: 14px;
       line-height: 1.4;
-      color:#ccc;
+      color: #ccc;
     }
     .beforeTime {
       color: #ccc;
@@ -427,7 +474,7 @@ export default {
       line-height: 1.4;
     }
     .content {
-    font-family: "Microsoft YaHei";
+      font-family: "Microsoft YaHei";
     }
     .from {
       color: #ccc;
@@ -441,11 +488,11 @@ export default {
   }
 }
 .moreBtn {
-  display:block;
-  margin:0 auto;
+  display: block;
+  margin: 0 auto;
   width: 190px;
   height: 50px;
-  text-align:center;
+  text-align: center;
   font-size: 18px;
   font-family: "Microsoft YaHei";
   color: #005982;
@@ -458,7 +505,7 @@ export default {
   -webkit-user-select: none;
   -ms-user-select: none;
   background: #fff;
-  outline:none
+  outline: none;
 }
 .moreBtn:active {
   background: #fff;
@@ -467,7 +514,7 @@ export default {
 }
 
 .contentHtml {
-  min-height:450px;
+  min-height: 450px;
 }
 
 .applyBtn {
@@ -521,5 +568,10 @@ export default {
 .cancle:hover {
   border-color: #409eff;
   color: #409eff;
+}
+.share_mes {
+  position: absolute;
+  right: 0;
+  top: -45px;
 }
 </style>

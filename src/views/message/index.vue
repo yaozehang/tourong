@@ -12,7 +12,7 @@
           style="cursor:pointer">{{item.dataName}}</span>
         </p>
       </div>
-      <div style="min-height:500px;" v-loading="loading">
+      <div style="min-height:1200px;" v-loading="loading">
         <div v-for="(item , index) in messageData" :key="index" style="cursor:pointer;" class="mg-20" @click="toMessageDetailPage(item.id)">
           <div v-if="item.imgPath" class="clearfix">
             <img :src="$url + item.imgPath" alt class="fll" width="152px" height="101px">
@@ -44,7 +44,7 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-size="15"
+          :page-size="10"
           layout="total, prev, pager, next, jumper"
           :total="count"
         ></el-pagination>

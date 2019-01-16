@@ -8,12 +8,8 @@
         <p class="contact-item">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：{{contactData.eMail}}</p>
       </div>
       <div class="about fll">
-        <router-link to="/aboutUs">
-          <img src="/static/img/about-1.png" alt class="about-1">
-        </router-link>
-        <router-link to="/callUs">
-          <img src="/static/img/about-2.png" alt class="about-2">
-        </router-link>
+          <img src="/static/img/about-1.png" alt class="about-1" @click="toguanyu">
+          <img src="/static/img/about-2.png" alt class="about-2" @click="tolianxi">
           <img src="/static/img/about-3.png" alt class="about-3" @click="tokefu">
       </div>
       <div class="two-code flr clearfix">
@@ -72,6 +68,18 @@ export default {
           });
         window.open(href, '_blank');
     },
+    toguanyu(){
+      let {href} = this.$router.resolve({
+            name: "aboutUs",
+          });
+        window.open(href, '_blank');
+    },
+    tolianxi(){
+      let {href} = this.$router.resolve({
+            name: "callUs",
+          });
+        window.open(href, '_blank');
+    }
   }
 };
 </script>
@@ -96,8 +104,10 @@ export default {
   padding-top: 55px;
   .about-1 {
     padding-left: 110px;
+    cursor: pointer;
   }
   .about-2 {
+    cursor: pointer;
     padding: 0 55px;
   }
   .about-3 {

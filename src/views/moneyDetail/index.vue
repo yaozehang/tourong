@@ -20,7 +20,7 @@
                     <div class="clearfix">
                         <div class="fll company"><span>{{money.linkmanName}}</span></div>
                         <div class="flr">
-                            <el-button class="sendBtn">投递项目</el-button>
+                            <el-button class="sendBtn" @click="applyPoject">投递项目</el-button>
                             <el-button v-if="follow" class="sendBtn" @click="nofollow">已关注</el-button>
                             <el-button plain v-else class="focus" @click="gofollow">关注</el-button>
                         </div>
@@ -55,7 +55,7 @@
                         <div class="fll">
                             <div class="box_content">
                                 <span class="list-contentName">资金类型：</span>
-                                <span class="list-content">{{money.capitalBodyName}}</span>
+                                <span class="list-content">{{money.pawnTypeName}}</span>
                             </div>
                             <div class="box_content">
                                 <span class="list-contentName">投资行业：</span>
@@ -123,9 +123,9 @@
                 <p><span class="_666">企业名称：</span><span>北京开拓明天股份有限公司</span></p>
                 <p><span class="_666">所属行业：</span><span>互联网</span></p>
                 <p><span class="_666">关注行业：</span><span>互联网、金融、节能环保</span></p>
-                <div class="lookBtnBox">
+                <!-- <div class="lookBtnBox">
                     <el-button class="lookBtn" @click="$router.push('/money/moneyDetail/investors')">查看联系方式</el-button>          
-                </div>
+                </div> -->
             </el-card>
             <p class="mes">他的更多资金</p>
             <ul class="mes_title">
@@ -141,6 +141,16 @@
                 </router-link>
             </ul>
         </div>
+        <el-dialog
+            :visible.sync="toast_show"
+            width="30%"
+            center>
+            <div class="toast_success" v-if="success"></div>
+            <div class="toast_error" v-else></div>
+            <div v-if="success" class="toast_title">成功</div>
+            <div v-else class="toast_title">失败</div>
+            <p class="toast_content">{{hint}}</p>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -190,7 +200,10 @@
                 ],
                 money:{},
                 follow:0,
-                id:""
+                id:"",
+                success:true,
+                hint:'',
+                toast_show:false,
             };
         },
         methods: {
@@ -212,11 +225,14 @@
             gofollow(){
                 this.$axios.get(`/jsp/wap/trCapital/do/doFollow.jsp?id=${this.id}`).then(res => {
                     if(res.success == "true"){
-                        this.follow = 1                         
+                        this.follow = 1   
+                        this.success = true
+                        this.hint = '关注成功'
+                        this.toast_show = true                      
                     } else {
-                        this.$notify.error({
-                            message: '关注失败'
-                        });
+                        this.success = false
+                        this.hint = '关注失败'
+                        this.toast_show = true
                     }
                 })
             },
@@ -224,13 +240,22 @@
             nofollow(){
                 this.$axios.get(`/jsp/wap/trCapital/do/doUnfollow.jsp?id=${this.id}`).then(res => {
                     if(res.success == "true"){
-                        this.follow = 0                         
+                        this.follow = 0 
+                        this.success = true
+                        this.hint = '取消成功'
+                        this.toast_show = true                          
                     } else {
-                        this.$notify.error({
-                            message: '取消失败'
-                        });
+                        this.success = false
+                        this.hint = '取消失败'
+                        this.toast_show = true
                     }
                 })
+            },
+            applyPoject(){
+            // this.dialogFormVisible = false
+            this.success = true
+            this.hint = '项目投递成功，平台会尽快为您安排'
+            this.toast_show = true
             }
         },
         created(){

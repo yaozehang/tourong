@@ -439,7 +439,7 @@ export default {
     }
     .swiper-button-next {
       top: calc(100% - 30px) !important;
-      left: calc(75% + 150px) !important;
+      left: calc(75% + 162px) !important;
     }
   }
 }
@@ -479,7 +479,7 @@ export default {
     }
     .swiper-button-next {
       top: calc(100% - 30px) !important;
-      left: calc(75% + 150px) !important;
+      left: calc(75% + 162px) !important;
     }
   }
 }

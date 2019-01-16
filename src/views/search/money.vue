@@ -53,8 +53,8 @@
         <button class="subBtn" @click="dialogFormVisible = true">投递项目</button>
       </div>
       </div>
-      <div class="load_more" @click="more" v-if="this.totalCount > this.pageList.length">加载更多...</div>
-      <p v-else>-------------------------------------------------没有更多资金了----------------------------------------------------</p>
+      <div class="load_more"  @click="morePage" v-show="more">加载更多...</div>
+      <p style="color:#999;"  v-show="noMore">-------------------------------------------------没有更多资金了----------------------------------------------------</p>
       <el-dialog title="选择投递项目" :visible.sync="dialogFormVisible" width="30%">
         <el-form :model="projectForm">
           <el-form-item label="项目" label-width="100">
@@ -78,6 +78,8 @@
       return {
         loading:false,
         dialogFormVisible:false,
+        more:false,
+        noMore:false,
         pageList:[],
         totalCount:[],
         pn:1,
@@ -95,10 +97,17 @@
             this.pageList = res.data.pageList;
             this.totalCount = res.data.pagination.totalCount;
             this.pn = 1;
+            if(this.totalCount > this.pageList.length) {
+              this.more = true
+            } else {
+              setTimeout(()=> {
+                this.noMore = true
+              },2000)
+            }
             this.loading = false;
           });
       },
-       more() {
+       morePage() {
         this.pn += 1;
         this.loading = true;
         this.$axios

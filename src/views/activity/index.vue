@@ -45,9 +45,13 @@
               <i class="num"></i>
               报名人数：{{item.applyNumStr}}
             </p>
-            <p class="list-content2">
+            <!-- <p class="list-content2">
               <i class="time"></i>
               活动时间：{{item.startTimeStr}} 至 {{item.endTimeStr}}
+            </p> -->
+            <p class="list-content2">
+              <i class="time"></i>
+              报名时间：{{item.regStartTimeStr}} 至 {{item.regEndTimeStr}}
             </p>
           </div>
           </div>

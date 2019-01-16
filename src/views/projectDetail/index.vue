@@ -72,7 +72,7 @@
                             </div>
                         </div>
                         <div class="flr">
-                            <el-button class="sendBtn">我要约谈</el-button>
+                            <el-button class="sendBtn" @click="applyPoject">我要约谈</el-button>
                             <el-button v-if="follow" class="sendBtn" @click="nofollow">已关注</el-button>
                             <el-button plain v-else class="focus" @click="gofollow">关注</el-button>
                         </div>
@@ -247,6 +247,16 @@
                 </router-link>
             </ul>
         </div>
+        <el-dialog
+            :visible.sync="toast_show"
+            width="30%"
+            center>
+            <div class="toast_success" v-if="success"></div>
+            <div class="toast_error" v-else></div>
+            <div v-if="success" class="toast_title">成功</div>
+            <div v-else class="toast_title">失败</div>
+            <p class="toast_content">{{hint}}</p>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -335,7 +345,10 @@
                     addTimeStr:'2018-01-07'
                 },
                 follow:0,
-                id:""
+                id:"",
+                hint:"",
+                success:false,
+                toast_show:false,
             };
         },
         methods: {
@@ -357,11 +370,14 @@
             gofollow(){
                 this.$axios.get(`/jsp/wap/trProject/do/doFollow.jsp?id=${this.id}`).then(res => {
                     if(res.success == "true"){
-                        this.follow = 1                         
+                        this.follow = 1 
+                        this.success = true
+                        this.hint = '关注成功'
+                        this.toast_show = true                           
                     } else {
-                        this.$notify.error({
-                            message: '关注失败'
-                        });
+                        this.success = false
+                        this.hint = '关注失败'
+                        this.toast_show = false  
                     }
                 })
             },
@@ -369,13 +385,22 @@
             nofollow(){
                 this.$axios.get(`/jsp/wap/trProject/do/doUnfollow.jsp?id=${this.id}`).then(res => {
                     if(res.success == "true"){
-                        this.follow = 0                         
+                        this.follow = 0    
+                        this.success = true
+                        this.hint = '取消成功'
+                        this.toast_show = true                       
                     } else {
-                        this.$notify.error({
-                            message: '取消失败'
-                        });
+                        this.success = false
+                        this.hint = '取消失败'
+                        this.toast_show = false  
                     }
                 })
+            },
+            applyPoject(){
+                // this.dialogFormVisible = false
+                this.success = true
+                this.hint = '约谈项目成功，平台会尽快为您安排'
+                this.toast_show = true
             }
         },
         created(){
