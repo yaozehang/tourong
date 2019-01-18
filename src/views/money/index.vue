@@ -1,312 +1,351 @@
 <template>
-<div>
-  <el-dialog
-    :visible.sync="toast_show"
-    width="30%"
-    center>
-    <div class="toast_success" v-if="success"></div>
-    <div class="toast_error" v-else></div>
-    <div v-if="success" class="toast_title">成功</div>
-    <div v-else class="toast_title">失败</div>
-    <p class="toast_content">{{hint}}</p>
-  </el-dialog>
-  <div class="w1200 clearfix">
-    <div class="clearfix bread_search">
-      <div class="bread fll">
-        <span>
-          <router-link to="/home">首页 ></router-link>
-        </span>
-        <span>{{$route.meta.title}}</span>
-      </div>
-      <div class="flr search">
-        <input type="text" placeholder="请输入关键字" v-model="title" @keyup.enter="search">
-        <i @click="search"></i>
-      </div>
-    </div>
-    <div class="clearfix">
-      <div class="pd-15 fll industy">
-        <span class="act_type fll">投资行业：</span>
-        <div class="titleRight fll">
-          <template>
-            <el-checkbox-group
-              v-if="!isShow"
-              style="word-wrap: break-word;word-break: break-all;overflow: hidden;"
-              v-model="checkIndustry"
-              @change="investIndustryChange"
-            >
-              <el-checkbox
-                v-for="(item,index) in investIndustryList.slice(0,9)"
-                :key="index"
-                :label="item"
-              >{{item.dataName}}</el-checkbox>
-            </el-checkbox-group>
-            <el-checkbox-group v-else v-model="investIndustryList" @change="investIndustryChange">
-              <el-checkbox
-                v-for="(item,index) in investIndustryList"
-                :key="index"
-                :label="item.dataName"
-              >{{item.dataName}}</el-checkbox>
-            </el-checkbox-group>
-          </template>
-        </div>
-      </div>
-      <div v-show="investIndustryList.length > 15">
-        <div class="moreTitle flr" @click="handleclick" v-if="!isShow">
-          更多
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </div>
-        <div class="moreTitle flr" @click="handleclick2" v-else>
-          收起
-          <i class="el-icon-arrow-up el-icon--right"></i>
-        </div>
-      </div>
-    </div>
-    <div class="pd-15">
-      <span class="act_type">投资类型：</span>
-      <span
-        class="type_item"
-        v-for="(item , index) in investTypeList"
-        :key="index"
-        @click="getInvestTypeStatus(item.dataValue,index)"
-        :class="{active:item.checked}"
-      >{{item.dataName}}</span>
-    </div>
-    <div class="clearfix" style="position:relative;">
-      <div class="pd-15 fll" v-if="!isCheck">
-        <span class="act_type fll" style="margin-right:5px;">所属地区：</span>
-        <div class="titleRight fll" v-if="!isShowArea">
-          <span
-            class="type_item"
-            v-for="(item , index) in regionList.slice(0,9)"
-            :key="index"
-            @click="getRegionStatus(item.dataValue,index)"
-            :class="{active:item.checked}"
-          >{{item.dataName}}</span>
-        </div>
-        <div class="titleRight fll" v-else>
-          <span
-            class="type_item"
-            v-for="(item , index) in regionList"
-            :key="index"
-            @click="getRegionStatus(item.dataValue,index)"
-            :class="{active:item.checked}"
-          >{{item.dataName}}</span>
-        </div>
-      </div>
-      <div class="pd-15 fll" v-else>
-        <span class="act_type fll">所属地区：</span>
-        <div class="titleRight fll">
-          <template>
-            <el-checkbox-group
-              v-if="!isShowArea"
-              style="word-wrap: break-word;word-break: break-all;overflow: hidden;"
-              v-model="checkArea"
-              @change="regionChange"
-            >
-              <el-checkbox
-                v-for="(item,index) in regionList.slice(0,9)"
-                :key="index"
-                :label="item"
-              >{{item.dataName}}</el-checkbox>
-            </el-checkbox-group>
-            <el-checkbox-group v-else v-model="checkArea" 
-                @change="regionChange">
-              <el-checkbox
-                v-for="(item,index) in regionList"
-                :key="index"
-                :label="item"
-              >{{item.dataName}}</el-checkbox>
-            </el-checkbox-group>
-          </template>
-        </div>
-      </div>
-      <div>
-        <div class="moreTitle flr" @click="handleAreaDown" v-if="!isShowArea">
-          更多
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </div>
-        <div class="moreTitle flr" @click="handleAreaUp" v-else>
-          收起
-          <i class="el-icon-arrow-up el-icon--right"></i>
-        </div>
-      </div>
-
-      <div class="flr checkBoxBtn" @click="handleCheck" v-if="!isShowArea">
-        多选
-        <i class="el-icon-plus"></i>
-      </div>
-      <div class="flr checkBoxBtn2" @click="handleCheck" v-else>
-        多选
-        <i class="el-icon-plus"></i>
-      </div>
-    </div>
-    <div class="clearfix" style="position:relative;">
-      <div class="pd-15 fll" v-if="!isCheck1">
-        <span class="act_type fll" style="margin-right:5px;">投资地区：</span>
-        <div class="titleRight fll" v-if="!isShowArea1">
-          <span
-            class="type_item"
-            v-for="(item , index) in investRegionList.slice(0,9)"
-            :key="index"
-            @click="getInvestRegionStatus(item.dataValue,index)"
-            :class="{active:item.checked}"
-          >{{item.dataName}}</span>
-        </div>
-        <div class="titleRight fll" v-else>
-          <span
-            class="type_item"
-            v-for="(item , index) in investRegionList"
-            :key="index"
-            @click="getInvestRegionStatus(item.dataValue,index)"
-            :class="{active:item.checked}"
-          >{{item.dataName}}</span>
-        </div>
-      </div>
-      <div class="pd-15 fll" v-else>
-        <span class="act_type fll">投资地区：</span>
-        <div class="titleRight fll">
-          <template>
-            <el-checkbox-group
-              v-if="!isShowArea1"
-              style="word-wrap: break-word;word-break: break-all;overflow: hidden;"
-              v-model="checkInvestArea"
-              @change="investRegionChange"
-            >
-              <el-checkbox
-                v-for="(item,index) in investRegionList.slice(0,9)"
-                :key="index"
-                :label="item"
-              >{{item.dataName}}</el-checkbox>
-            </el-checkbox-group>
-            <el-checkbox-group v-else v-model="checkInvestArea" @change="investRegionChange">
-              <el-checkbox
-                v-for="(item,index) in investRegionList"
-                :key="index"
-                :label="item"
-              >{{item.dataName}}</el-checkbox>
-            </el-checkbox-group>
-          </template>
-        </div>
-      </div>
-      <div>
-        <div class="moreTitle flr" @click="handleAreaDown1" v-if="!isShowArea1">
-          更多
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </div>
-        <div class="moreTitle flr" @click="handleAreaUp1" v-else>
-          收起
-          <i class="el-icon-arrow-up el-icon--right"></i>
-        </div>
-      </div>
-
-      <div class="flr checkBoxBtn" @click="handleCheck1" v-if="!isShowArea1">
-        多选
-        <i class="el-icon-plus"></i>
-      </div>
-      <div class="flr checkBoxBtn2" @click="handleCheck1" v-else>
-        多选
-        <i class="el-icon-plus"></i>
-      </div>
-    </div>
-
-    <div class="pd-15">
-      <span class="act_type">投资金额：</span>
-      <span
-        class="type_item"
-        v-for="(item , index) in investAmountList"
-        :key="index"
-        @click="getInvestAmountStatus(item.dataValue,index)"
-        :class="{active:item.checked}"
-      >{{item.dataName}}</span>
-    </div>
-    <div class="w840 fll">
-      <div class="mes_list listbottom">
-        <p class="mes">投资信息列表</p>
-      </div>
-      <div v-loading="loading">
-      <div class="act_list clearfix" v-for="(item, index) in pageList" :key="index">
-        <div @click="toMoneyDetailPage(item.id)">
-          <div class="clearfix">
-            <span class="list-title fll" v-if="item&&item.title">{{item.title}}</span>
-            <span class="title_time flr" v-if="item&&item.addTimeStr">{{item.addTimeStr.slice(0,10)}}</span>
-          </div>
-          <div class="clearfix">
-            <div class="fll box_content">
-              <span class="list-contentName">投资资金：</span>
-              <span class="current" v-if="item&&item.investAmountName">{{item.investAmountName}}</span>
-            </div>
-            <div class="focusNum flr" v-if="item&&item.followNum">{{item.followNum}}人关注</div>
-          </div>
-          <div class="clearfix">
-            <div class="fll">
-              <div class="box_content">
-                <span class="list-contentName">投资方式：</span>
-                <span class="list-content" v-if="item&&item.investCase">{{item.investCase}}</span>
-              </div>
-              <div class="box_content">
-                <span class="list-contentName">投资地区：</span>
-                <span class="list-content" v-if="item&&item.investRegionNameStr">{{item.investRegionNameStr}}</span>
-              </div>
-              <div class="box_content">
-                <span class="list-contentName">投资类型：</span>
-                <span class="list-content" v-if="item&&item.investTypeName">{{item.investTypeName}}</span>
-              </div>
-            </div>
-            <div class="fll">
-              <div class="box_content">
-                <span class="list-contentName">资金类型：</span>
-                <span class="list-content" v-if="item&&item.pawnTypeName">{{item.pawnTypeName}}</span>
-              </div>
-              <div class="box_content">
-                <span class="list-contentName">投资行业：</span>
-                <span class="list-content" v-if="item&&item.investIndustryName">{{item.investIndustryName}}</span>
-              </div>
-              <div class="box_content">
-                <span class="list-contentName">投资阶段：</span>
-                <span class="list-content" v-if="item&&item.investStageName">{{item.investStageName}}</span>
-              </div>
-            </div>
-          </div>
-          </div>
-        <button class="subBtn" @click="applyPoject">投递项目</button>
-      </div>
-      </div>
-      <div class="load_more" @click="morePage" v-show="more">加载更多...</div>
-      <p style="color:#999;" v-show="noMore">-------------------------------------------------没有更多资金了----------------------------------------------------</p>
-    </div>
-    <div class="w360 flr mes_list clearfix">
-      <img src="/static/img/money_list.jpg" alt class="act_timelist" @click="toMymoney">
-      <p class="mes">
-        热门资讯
-        <span class="mes_more flr" @click="toMessagePage">更多></span>
-      </p>
-      <ul class="mes_title" v-loading="newsloading">
-          <li v-for="(item,index) in mesData" :key="index" class="mes_content" @click="toMessageDetailPage(item.id)">
-              <span class="cl-0">{{item.title}}</span>
-          </li>
-      </ul>
-      <img src="/static/img/bg-3.jpg" alt width="360px" height="350px" style="margin-bottom:75px">
-    </div>
-    <el-dialog title="选择投递项目" :visible.sync="dialogFormVisible" width="30%">
-      <el-form :model="projectForm">
-        <el-form-item label="项目" label-width="100">
-          <el-select v-model="projectForm.project" placeholder="请选择项目">
-            <el-option label="项目一" value="shanghai"></el-option>
-            <el-option label="项目二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="applyPoject">确认投递</el-button>
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-      </div>
+  <div>
+    <el-dialog :visible.sync="toast_show" width="30%" center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
     </el-dialog>
-  </div>
+    <div class="w1200 clearfix">
+      <div class="clearfix bread_search">
+        <div class="bread fll">
+          <span>
+            <router-link to="/home">首页 ></router-link>
+          </span>
+          <span>{{$route.meta.title}}</span>
+        </div>
+        <div class="flr search">
+          <input type="text" placeholder="请输入关键字" v-model="title" @keyup.enter="search">
+          <i @click="search"></i>
+        </div>
+      </div>
+      <div class="clearfix">
+        <div class="pd-15 fll industy">
+          <span class="act_type fll">投资行业：</span>
+          <div class="titleRight fll">
+            <template>
+              <el-checkbox-group
+                v-if="!isShow"
+                style="word-wrap: break-word;word-break: break-all;overflow: hidden;"
+                v-model="checkIndustry"
+                @change="investIndustryChange"
+              >
+                <el-checkbox
+                  v-for="(item,index) in investIndustryList.slice(0,9)"
+                  :key="index"
+                  :label="item"
+                >{{item.dataName}}</el-checkbox>
+              </el-checkbox-group>
+              <el-checkbox-group v-else v-model="investIndustryList" @change="investIndustryChange">
+                <el-checkbox
+                  v-for="(item,index) in investIndustryList"
+                  :key="index"
+                  :label="item.dataName"
+                >{{item.dataName}}</el-checkbox>
+              </el-checkbox-group>
+            </template>
+          </div>
+        </div>
+        <div v-show="investIndustryList.length > 15">
+          <div class="moreTitle flr" @click="handleclick" v-if="!isShow">
+            更多
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </div>
+          <div class="moreTitle flr" @click="handleclick2" v-else>
+            收起
+            <i class="el-icon-arrow-up el-icon--right"></i>
+          </div>
+        </div>
+      </div>
+      <div class="pd-15">
+        <span class="act_type">投资类型：</span>
+        <span
+          class="type_item"
+          v-for="(item , index) in investTypeList"
+          :key="index"
+          @click="getInvestTypeStatus(item.dataValue,index)"
+          :class="{active:item.checked}"
+        >{{item.dataName}}</span>
+      </div>
+      <div class="clearfix" style="position:relative;">
+        <div class="pd-15 fll" v-if="!isCheck">
+          <span class="act_type fll" style="margin-right:5px;">所属地区：</span>
+          <div class="titleRight fll" v-if="!isShowArea">
+            <span
+              class="type_item"
+              v-for="(item , index) in regionList.slice(0,9)"
+              :key="index"
+              @click="getRegionStatus(item.dataValue,index)"
+              :class="{active:item.checked}"
+            >{{item.dataName}}</span>
+          </div>
+          <div class="titleRight fll" v-else>
+            <span
+              class="type_item"
+              v-for="(item , index) in regionList"
+              :key="index"
+              @click="getRegionStatus(item.dataValue,index)"
+              :class="{active:item.checked}"
+            >{{item.dataName}}</span>
+          </div>
+        </div>
+        <div class="pd-15 fll" v-else>
+          <span class="act_type fll">所属地区：</span>
+          <div class="titleRight fll">
+            <template>
+              <el-checkbox-group
+                v-if="!isShowArea"
+                style="word-wrap: break-word;word-break: break-all;overflow: hidden;"
+                v-model="checkArea"
+                @change="regionChange"
+              >
+                <el-checkbox
+                  v-for="(item,index) in regionList.slice(0,9)"
+                  :key="index"
+                  :label="item"
+                >{{item.dataName}}</el-checkbox>
+              </el-checkbox-group>
+              <el-checkbox-group v-else v-model="checkArea" @change="regionChange">
+                <el-checkbox
+                  v-for="(item,index) in regionList"
+                  :key="index"
+                  :label="item"
+                >{{item.dataName}}</el-checkbox>
+              </el-checkbox-group>
+            </template>
+          </div>
+        </div>
+        <div>
+          <div class="moreTitle flr" @click="handleAreaDown" v-if="!isShowArea">
+            更多
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </div>
+          <div class="moreTitle flr" @click="handleAreaUp" v-else>
+            收起
+            <i class="el-icon-arrow-up el-icon--right"></i>
+          </div>
+        </div>
+
+        <div class="flr checkBoxBtn" @click="handleCheck" v-if="!isShowArea">
+          多选
+          <i class="el-icon-plus"></i>
+        </div>
+        <div class="flr checkBoxBtn2" @click="handleCheck" v-else>
+          多选
+          <i class="el-icon-plus"></i>
+        </div>
+      </div>
+      <div class="clearfix" style="position:relative;">
+        <div class="pd-15 fll" v-if="!isCheck1">
+          <span class="act_type fll" style="margin-right:5px;">投资地区：</span>
+          <div class="titleRight fll" v-if="!isShowArea1">
+            <span
+              class="type_item"
+              v-for="(item , index) in investRegionList.slice(0,9)"
+              :key="index"
+              @click="getInvestRegionStatus(item.dataValue,index)"
+              :class="{active:item.checked}"
+            >{{item.dataName}}</span>
+          </div>
+          <div class="titleRight fll" v-else>
+            <span
+              class="type_item"
+              v-for="(item , index) in investRegionList"
+              :key="index"
+              @click="getInvestRegionStatus(item.dataValue,index)"
+              :class="{active:item.checked}"
+            >{{item.dataName}}</span>
+          </div>
+        </div>
+        <div class="pd-15 fll" v-else>
+          <span class="act_type fll">投资地区：</span>
+          <div class="titleRight fll">
+            <template>
+              <el-checkbox-group
+                v-if="!isShowArea1"
+                style="word-wrap: break-word;word-break: break-all;overflow: hidden;"
+                v-model="checkInvestArea"
+                @change="investRegionChange"
+              >
+                <el-checkbox
+                  v-for="(item,index) in investRegionList.slice(0,9)"
+                  :key="index"
+                  :label="item"
+                >{{item.dataName}}</el-checkbox>
+              </el-checkbox-group>
+              <el-checkbox-group v-else v-model="checkInvestArea" @change="investRegionChange">
+                <el-checkbox
+                  v-for="(item,index) in investRegionList"
+                  :key="index"
+                  :label="item"
+                >{{item.dataName}}</el-checkbox>
+              </el-checkbox-group>
+            </template>
+          </div>
+        </div>
+        <div>
+          <div class="moreTitle flr" @click="handleAreaDown1" v-if="!isShowArea1">
+            更多
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </div>
+          <div class="moreTitle flr" @click="handleAreaUp1" v-else>
+            收起
+            <i class="el-icon-arrow-up el-icon--right"></i>
+          </div>
+        </div>
+
+        <div class="flr checkBoxBtn" @click="handleCheck1" v-if="!isShowArea1">
+          多选
+          <i class="el-icon-plus"></i>
+        </div>
+        <div class="flr checkBoxBtn2" @click="handleCheck1" v-else>
+          多选
+          <i class="el-icon-plus"></i>
+        </div>
+      </div>
+
+      <div class="pd-15">
+        <span class="act_type">投资金额：</span>
+        <span
+          class="type_item"
+          v-for="(item , index) in investAmountList"
+          :key="index"
+          @click="getInvestAmountStatus(item.dataValue,index)"
+          :class="{active:item.checked}"
+        >{{item.dataName}}</span>
+      </div>
+      <div class="w840 fll">
+        <div class="mes_list listbottom">
+          <p class="mes">投资信息列表</p>
+        </div>
+        <div v-loading="loading">
+          <div class="act_list clearfix" v-for="(item, index) in pageList" :key="index">
+            <div @click="toMoneyDetailPage(item.id)">
+              <div class="clearfix">
+                <span class="list-title fll" v-if="item&&item.title">{{item.title}}</span>
+                <span
+                  class="title_time flr"
+                  v-if="item&&item.addTimeStr"
+                >{{item.addTimeStr.slice(0,10)}}</span>
+              </div>
+              <div class="clearfix">
+                <div class="fll box_content">
+                  <span class="list-contentName">投资资金：</span>
+                  <span class="current" v-if="item&&item.investAmountName">{{item.investAmountName}}</span>
+                </div>
+                <div class="focusNum flr" v-if="item&&item.followNum">{{item.followNum}}人关注</div>
+              </div>
+              <div class="clearfix">
+                <div class="fll">
+                  <div class="box_content">
+                    <span class="list-contentName">投资方式：</span>
+                    <span class="list-content" v-if="item&&item.investCase">{{item.investCase}}</span>
+                  </div>
+                  <div class="box_content">
+                    <span class="list-contentName">投资地区：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investRegionNameStr"
+                    >{{item.investRegionNameStr}}</span>
+                  </div>
+                  <div class="box_content">
+                    <span class="list-contentName">投资类型：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investTypeName"
+                    >{{item.investTypeName}}</span>
+                  </div>
+                </div>
+                <div class="fll">
+                  <div class="box_content">
+                    <span class="list-contentName">资金类型：</span>
+                    <span class="list-content" v-if="item&&item.pawnTypeName">{{item.pawnTypeName}}</span>
+                  </div>
+                  <div class="box_content">
+                    <span class="list-contentName">投资行业：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investIndustryName"
+                    >{{item.investIndustryName}}</span>
+                  </div>
+                  <div class="box_content">
+                    <span class="list-contentName">投资阶段：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investStageName"
+                    >{{item.investStageName}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="subBtn" @click="applyPoject(item.id)">投递项目</button>
+          </div>
+        </div>
+        <div class="load_more" @click="morePage" v-show="more">加载更多...</div>
+        <p
+          style="color:#999;"
+          v-show="noMore"
+        >-------------------------------------------------没有更多资金了----------------------------------------------------</p>
+      </div>
+      <div class="w360 flr mes_list clearfix">
+        <img src="/static/img/money_list.jpg" alt class="act_timelist" @click="toMymoney">
+        <p class="mes">
+          热门资讯
+          <span class="mes_more flr" @click="toMessagePage">更多></span>
+        </p>
+        <ul class="mes_title" v-loading="newsloading">
+          <li
+            v-for="(item,index) in mesData"
+            :key="index"
+            class="mes_content"
+            @click="toMessageDetailPage(item.id)"
+          >
+            <span class="cl-0">{{item.title}}</span>
+          </li>
+        </ul>
+        <img src="/static/img/bg-3.jpg" alt width="360px" height="350px" style="margin-bottom:75px">
+      </div>
+      <el-dialog title="选择投递项目" :visible.sync="dialogFormVisible" width="30%" :before-close ="before_close">
+        <div v-if="sub_project"> 
+            <el-form>
+                <el-form-item label="项目" label-width="100">
+                    <el-select v-model="projectId" placeholder="请选择项目">
+                    <el-option
+                        v-for="item in myProject"
+                        :key="item.id"
+                        :label="item.title"
+                        :value="item.id"
+                    ></el-option>
+                    <el-pagination
+                        v-show="myProject_pagination"
+                        small
+                        @current-change="handleCurrentChange"
+                        layout="total, prev, pager, next"
+                        :total="myProject_Count"
+                    ></el-pagination>
+                    </el-select>
+                </el-form-item>
+                </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="info" @click="apply">确认投递</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">取 消</el-button>
+            </div>
+        </div>
+        <div v-else>
+            <div class="toast_success" v-if="success"></div>
+            <div class="toast_error" v-else></div>
+            <div v-if="success" class="toast_title">成功</div>
+            <div v-else class="toast_title">失败</div>
+            <p class="toast_content">{{hint}}</p>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
-import * as Cookies from 'js-cookie'
+import * as Cookies from "js-cookie";
 
 export default {
   data() {
@@ -316,11 +355,11 @@ export default {
       isShowArea1: false,
       isCheck: false,
       isCheck1: false,
-      loading:false,
-      newsloading:false,
+      loading: false,
+      newsloading: false,
       dialogFormVisible: false,
-      more:false,
-      noMore:false,
+      more: false,
+      noMore: false,
       actType: [
         "股权投资",
         "债权投资",
@@ -477,7 +516,7 @@ export default {
             "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
         }
       ],
-      checkIndustry:[],
+      checkIndustry: [],
       checkArea: [],
       checkInvestArea: [],
       investAmountList: [],
@@ -485,90 +524,112 @@ export default {
       investRegionList: [],
       investTypeList: [],
       regionList: [],
-      pageList:[],
-      totalCount:[],
-      pn:1,
-      investIndustrys:"",
-      investTypes:"",
-      regions:"",
-      investRegions:"",
-      investAmounts:"",
-      projectForm:{
-        project:[]
-      },
-      title:"",
-      toast_show:false,
-      success:true,
-      hint:'项目投递失败，请检查网络'
+      pageList: [],
+      totalCount: '',
+      pn: 1,
+      investIndustrys: "",
+      investTypes: "",
+      regions: "",
+      investRegions: "",
+      investAmounts: "",
+      title: "",
+      toast_show: false,
+      success: true,
+      hint: "项目投递失败，请检查网络",
+      myProject: [],
+      projectId: "",
+      moneyId: "",
+      myProject_Count: 0,
+      myProject_pagination: false,
+      sub_project:true,
     };
   },
   methods: {
     getTypeData() {
-      this.$axios.get("/jsp/wap/trCapital/ctrl/jsonCategoryList.jsp").then(res => {
-        if (res.success == "true") {
-          let investAmountList = res.data.investAmountList
-          investAmountList.forEach(item => {
-            this.$set(item, 'checked', false)
-          });
-          this.investAmountList = investAmountList;
-          let investIndustryList = res.data.investIndustryList
-          investIndustryList.forEach(item => {
-            this.$set(item, 'checked', false)
-          });
-          investIndustryList.unshift({dataName:'不限'})
-          this.investIndustryList = investIndustryList;
-          let investRegionList = res.data.investRegionList
-          investRegionList.forEach(item => {
-            this.$set(item, 'checked', false)
-          });
-          investRegionList.unshift({dataName:'不限'})
-          this.investRegionList = investRegionList;
-          let investTypeList = res.data.investTypeList
-          investTypeList.forEach(item => {
-            this.$set(item, 'checked', false)
-          });
-          investTypeList.unshift({dataName:'不限'})
-          this.investTypeList = investTypeList;
-          let regionList = res.data.regionList
-          regionList.forEach(item => {
-            this.$set(item, 'checked', false)
-          });
-          regionList.unshift({dataName:'不限'})
-          this.regionList = regionList;
-        }
-      });
+      this.$axios
+        .get("/jsp/wap/trCapital/ctrl/jsonCategoryList.jsp")
+        .then(res => {
+          if (res.success == "true") {
+            let investAmountList = res.data.investAmountList;
+            investAmountList.forEach(item => {
+              this.$set(item, "checked", false);
+            });
+            this.investAmountList = investAmountList;
+            let investIndustryList = res.data.investIndustryList;
+            investIndustryList.forEach(item => {
+              this.$set(item, "checked", false);
+            });
+            investIndustryList.unshift({ dataName: "不限" });
+            this.investIndustryList = investIndustryList;
+            let investRegionList = res.data.investRegionList;
+            investRegionList.forEach(item => {
+              this.$set(item, "checked", false);
+            });
+            investRegionList.unshift({ dataName: "不限" });
+            this.investRegionList = investRegionList;
+            let investTypeList = res.data.investTypeList;
+            investTypeList.forEach(item => {
+              this.$set(item, "checked", false);
+            });
+            investTypeList.unshift({ dataName: "不限" });
+            this.investTypeList = investTypeList;
+            let regionList = res.data.regionList;
+            regionList.forEach(item => {
+              this.$set(item, "checked", false);
+            });
+            regionList.unshift({ dataName: "不限" });
+            this.regionList = regionList;
+          }
+        });
     },
     getActData(investIndustrys,investTypes,regions,investRegions,investAmounts) {
       this.loading = true;
       this.$axios
         .get("/jsp/wap/trCapital/ctrl/jsonCapitalPage.jsp", {
-          params: { investIndustrys,investTypes,regions,investRegions,investAmounts}
+          params: {
+            investIndustrys,
+            investTypes,
+            regions,
+            investRegions,
+            investAmounts
+          }
         })
         .then(res => {
           if (res.success == "true") {
             this.pageList = res.data.pageList;
             this.totalCount = res.data.pagination.totalCount;
             this.pn = 1;
-            if(this.totalCount > this.pageList.length) {
-              this.more = true
+            if (this.totalCount > this.pageList.length) {
+              this.more = true;
+              this.noMore = false
             } else {
-              this.more = false
-              setTimeout(()=> {
-                this.noMore = true
-              },2000)
+              this.more = false;
+              this.noMore = true;
             }
+            this.pn = 1
             this.loading = false;
           }
         });
     },
-    getNewsList(){
+    getNewsList() {
       this.newsloading = true;
+      this.$axios.get("/jsp/wap/trNews/ctrl/jsonHotNewsList.jsp").then(res => {
+        if (res.success == "true") {
+          this.mesData = res.data;
+          this.newsloading = false;
+        }
+      });
+    },
+    getMyProject(pn) {
       this.$axios
-        .get("/jsp/wap/trNews/ctrl/jsonHotNewsList.jsp",)
+        .get("/jsp/wap/center/ctrl/jsonIssueProjectList.jsp", {
+          params: { pageNumber: pn }
+        })
         .then(res => {
-          if (res.success == "true") {
-            this.mesData = res.data
-            this.newsloading = false;
+          this.myProject = res.data.pageList;
+          this.myProject_Count = Number(res.data.pagination.totalCount);
+          if (this.myProject_Count > 10) {
+            this.myProject_pagination = true;
           }
         });
     },
@@ -578,11 +639,11 @@ export default {
       this.$axios
         .get("/jsp/wap/trCapital/ctrl/jsonCapitalPage.jsp", {
           params: {
-            investIndustrys:this.investIndustrys,
-            investTypes:this.investTypes,
-            regions:this.regions,
-            investRegions:this.investRegions,
-            investAmounts:this.investAmounts,
+            investIndustrys: this.investIndustrys,
+            investTypes: this.investTypes,
+            regions: this.regions,
+            investRegions: this.investRegions,
+            investAmounts: this.investAmounts,
             pageNumber: this.pn
           }
         })
@@ -590,100 +651,144 @@ export default {
           if (res.success == "true") {
             this.pageList = [...this.pageList, ...res.data.pageList];
             this.totalCount = res.data.pagination.totalCount;
-            if(this.totalCount > this.pageList.length) {
-              this.more = true
+            if (this.totalCount > this.pageList.length) {
+              this.more = true;
+              this.noMore = false
             } else {
-              this.more = false
-              setTimeout(()=> {
-                this.noMore = true
-              },2000)
+              this.more = false;
+              this.noMore = true;
             }
             this.loading = false;
           }
         });
     },
-  getInvestTypeStatus(e,index){
-    this.investTypes = e
-      if(this.investTypeList[index].checked){
-        this.investTypeList[index].checked = !this.investTypeList[index].checked
-        this.investTypes = ''
+    getInvestTypeStatus(e, index) {
+      this.investTypes = e;
+      if (this.investTypeList[index].checked) {
+        this.investTypeList[index].checked = !this.investTypeList[index]
+          .checked;
+        this.investTypes = "";
       } else {
-          this.investTypeList.forEach(item => {
-              item.checked = false
+        this.investTypeList.forEach(item => {
+          item.checked = false;
         });
-        this.investTypeList[index].checked = true
+        this.investTypeList[index].checked = true;
       }
-      this.getActData(this.investIndustrys,this.investTypes,this.regions,this.investRegions,this.investAmounts)
-  },
-  getRegionStatus(e,index){
-    this.regions = e
-      if(this.regionList[index].checked){
-        this.regionList[index].checked = !this.regionList[index].checked
-        this.regions = ''
+      this.getActData(
+        this.investIndustrys,
+        this.investTypes,
+        this.regions,
+        this.investRegions,
+        this.investAmounts
+      );
+    },
+    getRegionStatus(e, index) {
+      this.regions = e;
+      if (this.regionList[index].checked) {
+        this.regionList[index].checked = !this.regionList[index].checked;
+        this.regions = "";
       } else {
-          this.regionList.forEach(item => {
-              item.checked = false
+        this.regionList.forEach(item => {
+          item.checked = false;
         });
-        this.regionList[index].checked = true
+        this.regionList[index].checked = true;
       }
-      this.getActData(this.investIndustrys,this.investTypes,this.regions,this.investRegions,this.investAmounts)
-  },
-  getInvestRegionStatus(e,index){
-    this.investRegions = e
-      if(this.investRegionList[index].checked){
-        this.investRegionList[index].checked = !this.investRegionList[index].checked
-        this.investRegions = ''
+      this.getActData(
+        this.investIndustrys,
+        this.investTypes,
+        this.regions,
+        this.investRegions,
+        this.investAmounts
+      );
+    },
+    getInvestRegionStatus(e, index) {
+      this.investRegions = e;
+      if (this.investRegionList[index].checked) {
+        this.investRegionList[index].checked = !this.investRegionList[index]
+          .checked;
+        this.investRegions = "";
       } else {
-          this.investRegionList.forEach(item => {
-              item.checked = false
+        this.investRegionList.forEach(item => {
+          item.checked = false;
         });
-        this.investRegionList[index].checked = true
+        this.investRegionList[index].checked = true;
       }
-      this.getActData(this.investIndustrys,this.investTypes,this.regions,this.investRegions,this.investAmounts)
-  },
-  getInvestAmountStatus(e,index){
-    this.investAmounts = e
-    if(this.investAmountList[index].checked){
-        this.investAmountList[index].checked = !this.investAmountList[index].checked
-        this.investAmounts = ''
+      this.getActData(
+        this.investIndustrys,
+        this.investTypes,
+        this.regions,
+        this.investRegions,
+        this.investAmounts
+      );
+    },
+    getInvestAmountStatus(e, index) {
+      this.investAmounts = e;
+      if (this.investAmountList[index].checked) {
+        this.investAmountList[index].checked = !this.investAmountList[index]
+          .checked;
+        this.investAmounts = "";
       } else {
-          this.investAmountList.forEach(item => {
-              item.checked = false
+        this.investAmountList.forEach(item => {
+          item.checked = false;
         });
-        this.investAmountList[index].checked = true
+        this.investAmountList[index].checked = true;
       }
-      this.getActData(this.investIndustrys,this.investTypes,this.regions,this.investRegions,this.investAmounts)
-  },
-  investIndustryChange(val){
-    let investIndustryList = []
-    val.forEach(item => {
-      investIndustryList.push(item.dataValue)
-    })
-    this.investIndustrys = investIndustryList.join(',')
-    this.getActData(this.investIndustrys,this.investTypes,this.regions,this.investRegions,this.investAmounts)
-  },
-  regionChange(val){
-    let regionList = []
-    val.forEach(item => {
-      regionList.push(item.dataValue)
-    })
-    this.regions = regionList.join(',')
-    this.getActData(this.investIndustrys,this.investTypes,this.regions,this.investRegions,this.investAmounts)
-  },
-  investRegionChange(val){
-    let investRegionList = []
-    val.forEach(item => {
-      investRegionList.push(item.dataValue)
-    })
-    this.investRegions = investRegionList.join(',')
-    this.getActData(this.investIndustrys,this.investTypes,this.regions,this.investRegions,this.investAmounts)
-  },
-  deliver_project(){
-    this.$notify.success({
-      title: "成功",
-      message: "项目投递成功"
-    });
-  },
+      this.getActData(
+        this.investIndustrys,
+        this.investTypes,
+        this.regions,
+        this.investRegions,
+        this.investAmounts
+      );
+    },
+    investIndustryChange(val) {
+      let investIndustryList = [];
+      val.forEach(item => {
+        investIndustryList.push(item.dataValue);
+      });
+      this.investIndustrys = investIndustryList.join(",");
+      this.getActData(
+        this.investIndustrys,
+        this.investTypes,
+        this.regions,
+        this.investRegions,
+        this.investAmounts
+      );
+    },
+    regionChange(val) {
+      let regionList = [];
+      val.forEach(item => {
+        regionList.push(item.dataValue);
+      });
+      this.regions = regionList.join(",");
+      this.getActData(
+        this.investIndustrys,
+        this.investTypes,
+        this.regions,
+        this.investRegions,
+        this.investAmounts
+      );
+    },
+    investRegionChange(val) {
+      let investRegionList = [];
+      val.forEach(item => {
+        investRegionList.push(item.dataValue);
+      });
+      this.investRegions = investRegionList.join(",");
+      this.getActData(
+        this.investIndustrys,
+        this.investTypes,
+        this.regions,
+        this.investRegions,
+        this.investAmounts
+      );
+    },
+    deliver_project() {
+      this.$notify.success({
+        title: "成功",
+        message: "项目投递成功"
+      });
+    },
     //控制更多或多选
     handleTypeDown() {
       if (this.actType.length >= 9) {
@@ -721,43 +826,62 @@ export default {
     },
     handleCheck() {
       this.isCheck = !this.isCheck;
-      if(!this.isCheck){
-        this.regions = ''
-        this.getActData(this.investIndustrys,this.investTypes,this.regions,this.investRegions,this.investAmount)
+      if (!this.isCheck) {
+        this.regions = "";
+        this.getActData(
+          this.investIndustrys,
+          this.investTypes,
+          this.regions,
+          this.investRegions,
+          this.investAmount
+        );
       }
     },
     handleCheck1() {
       this.isCheck1 = !this.isCheck1;
-      if(!this.isCheck1){
-        this.investRegions = ''
-        this.getActData(this.investIndustrys,this.investTypes,this.regions,this.investRegions,this.investAmount)
+      if (!this.isCheck1) {
+        this.investRegions = "";
+        this.getActData(
+          this.investIndustrys,
+          this.investTypes,
+          this.regions,
+          this.investRegions,
+          this.investAmount
+        );
       }
     },
-    toMoneyDetailPage(id){
-      let {href} = this.$router.resolve({
-          name: "moneyDetail",
-          query: {id}
+    toMoneyDetailPage(id) {
+      let { href } = this.$router.resolve({
+        name: "moneyDetail",
+        query: { id }
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    toMessagePage(){
-      let {href} = this.$router.resolve({
-          name: "message",
+    toMessagePage() {
+      let { href } = this.$router.resolve({
+        name: "message"
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    toMessageDetailPage(id){
-      let {href} = this.$router.resolve({
-          name: "messageDetail",
-          query: {id}
+    toMessageDetailPage(id) {
+      let { href } = this.$router.resolve({
+        name: "messageDetail",
+        query: { id }
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    search(){
+    search() {
       this.loading = true;
       this.$axios
         .get("/jsp/wap/trCapital/ctrl/jsonCapitalPage.jsp", {
-          params: { investIndustrys:this.investIndustrys,investTypes:this.investTypes,regions:this.regions,investRegions:this.investRegions,investAmounts:this.investAmounts,title:this.title}
+          params: {
+            investIndustrys: this.investIndustrys,
+            investTypes: this.investTypes,
+            regions: this.regions,
+            investRegions: this.investRegions,
+            investAmounts: this.investAmounts,
+            title: this.title
+          }
         })
         .then(res => {
           if (res.success == "true") {
@@ -768,32 +892,74 @@ export default {
           }
         });
     },
-    toMymoney(){
-        if(Cookies.get('userKey')){
-          let {href} = this.$router.resolve({
-            name: "applyMoney",
-          });
-          window.open(href, '_blank');
+    toMymoney() {
+      if (Cookies.get("userKey")) {
+        let { href } = this.$router.resolve({
+          name: "applyMoney"
+        });
+        window.open(href, "_blank");
+      } else {
+        this.$router.push("/login");
+      }
+    },
+    applyPoject(id) {
+      if (Cookies.get("userKey")) {
+        if (this.myProject.length == 0) {
+          this.success = false;
+          this.hint = "您还没有发布项目，请先发布项目";
+          this.toast_show = true;
         } else {
-          this.$router.push('/login')
+          this.dialogFormVisible = true;
+          this.moneyId = id;
         }
-      },
-    applyPoject(){
-      // this.dialogFormVisible = false
-      this.success = true
-      this.hint = '项目投递成功，平台会尽快为您安排'
-      this.toast_show = true
-    }
+      } else {
+        this.success = false;
+        this.hint = "您未登录，请先登录";
+        this.toast_show = false;
+      }
+    },
+    apply() {
+      this.$axios
+        .get("/jsp/wap/trCapital/do/doDeliver.jsp", {
+          params: { id: this.moneyId, projectId: this.projectId }
+        })
+        .then(res => {
+          if (res.success == "true") {
+            this.success = true;
+            this.hint = "项目投递成功，平台将立刻为您安排";
+            this.sub_project = false;
+            // this.dialogFormVisible = false;
+          } else {
+            this.success = false;
+            this.hint = "项目投递失败，请您检查网络或重试";
+            this.sub_project = false;
+          }
+        });
+    },
+    before_close(){
+        this.dialogFormVisible = false;
+        setTimeout(()=> {
+         this.sub_project = true;
+        },1000)
+    },
+    handleCurrentChange(val) {
+      this.getMyProject(val);
+    },
   },
   created() {
     this.getTypeData();
-    this.getActData()
-    this.getNewsList()
-  },
+    this.getActData();
+    this.getNewsList();
+    this.getMyProject();
+  }
 };
 </script>
 
 <style scoped lang="scss">
+.dialog-footer {
+  width: 200px;
+  margin: 0 auto;
+}
 .bread_search {
   border-bottom: 1px solid #d9d9d9;
   margin-bottom: 10px;
@@ -1059,11 +1225,11 @@ export default {
 .load_more {
   width: 810px;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   font-family: "Microsoft YaHei";
   color: rgb(153, 153, 153);
   line-height: 1.333;
-  padding: 15px 0;
+  padding: 10px 0;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   margin: 40px 0 75px;
@@ -1102,7 +1268,7 @@ export default {
       -webkit-user-select: none;
       -ms-user-select: none;
     }
-    .mes_more:hover{
+    .mes_more:hover {
       color: #005385;
     }
   }
@@ -1167,9 +1333,9 @@ export default {
 }
 
 /deep/ {
-  .el-checkbox{
-    width:110px!important;
-    padding-bottom: 3.1px!important;
+  .el-checkbox {
+    width: 110px !important;
+    padding-bottom: 3.1px !important;
   }
   .el-checkbox + .el-checkbox {
     margin-left: 0;
@@ -1182,7 +1348,7 @@ export default {
 
 .active {
   color: #005982;
-  font-weight: 700;  
+  font-weight: 700;
 }
 
 // .titleRight .type_item:nth-child(31){

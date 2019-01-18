@@ -21,6 +21,8 @@
         </p>
         <p class="contentHtml" v-html="mesDetailData.content"></p>
         <button class="moreBtn" @click="showApply = true" v-show="mesDetailData.status == 1">报名参加</button>
+        <button class="moreBtn1" v-show="mesDetailData.status == 0">活动预告</button>
+        <button class="moreBtn1" v-show="mesDetailData.status == -1">往期回顾</button>
       </div>
       <div class="w300 clearfix mes_list flr">
         <p class="mes">
@@ -511,6 +513,26 @@ export default {
   background: #fff;
   border-color: #409eff;
   color: #409eff;
+}
+
+.moreBtn1 {
+  display: block;
+  margin: 0 auto;
+  width: 190px;
+  height: 50px;
+  text-align: center;
+  font-size: 18px;
+  font-family: "Microsoft YaHei";
+  color: #999;
+  line-height: 1.333;
+  padding: 10px 0;
+  border: 1px solid #999;
+  border-radius: 95px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  background: #fff;
+  outline: none;
 }
 
 .contentHtml {

@@ -146,7 +146,7 @@
           <div class="listContent">{{item.brief}}</div>
           <div class="title_time flr">{{item.addTimeStr.slice(0,10)}}</div>
          </div>
-        <button class="subBtn" @click="apply_project">约见项目</button>
+        <button class="subBtn" @click="applyPoject(item.id)">约见项目</button>
       </div>
       </div>
       <div class="load_more" @click="morePage" v-show="more">加载更多...</div>
@@ -167,31 +167,51 @@
       </ul>
       <img src="/static/img/bg-3.jpg" alt width="360px" height="350px" style="margin-bottom:75px">
     </div>
-    <el-dialog title="选择资金" :visible.sync="dialogFormVisible" width="30%">
-      <el-form :model="moneyForm">
-        <el-form-item label="资金" label-width="100">
-          <el-select v-model="moneyForm.project" placeholder="请选择资金">
-            <el-option label="资金一" value="shanghai"></el-option>
-            <el-option label="资金二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="apply_project">确认投递</el-button>
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-      </div>
-    </el-dialog>
+    <el-dialog title="选择投递资金" :visible.sync="dialogFormVisible" width="30%" :before-close ="before_close">
+        <div v-if="sub_project"> 
+            <el-form>
+                <el-form-item label="资金" label-width="100">
+                    <el-select v-model="projectId" placeholder="请选择资金">
+                    <el-option
+                        v-for="item in myMoney"
+                        :key="item.id"
+                        :label="item.title"
+                        :value="item.id"
+                    ></el-option>
+                    <el-pagination
+                        v-show="myMoney_pagination"
+                        small
+                        @current-change="handleCurrentChange"
+                        layout="total, prev, pager, next"
+                        :total="myMoney_Count"
+                    ></el-pagination>
+                    </el-select>
+                </el-form-item>
+                </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="info" @click="apply">确认投递</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">取 消</el-button>
+            </div>
+        </div>
+        <div v-else>
+            <div class="toast_success" v-if="success"></div>
+            <div class="toast_error" v-else></div>
+            <div v-if="success" class="toast_title">成功</div>
+            <div v-else class="toast_title">失败</div>
+            <p class="toast_content">{{hint}}</p>
+        </div>
+      </el-dialog>
 
     <el-dialog
-    :visible.sync="toast_show"
-    width="30%"
-    center>
-    <div class="toast_success" v-if="success"></div>
-    <div class="toast_error" v-else></div>
-    <div v-if="success" class="toast_title">成功</div>
-    <div v-else class="toast_title">失败</div>
-    <p class="toast_content">{{hint}}</p>
-  </el-dialog>
+      :visible.sync="toast_show"
+      width="30%"
+      center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
@@ -349,19 +369,22 @@ export default {
       industryList: [],
       regionList: [],
       pageList:[],
-      totalCount:[],
+      totalCount:'',
       pn:1,
       industrys:"",
       regions:"",
       financingWays:"",
       financingMoneys:"",
-      moneyForm:{
-        money:[]
-      },
       title:"",
       hint:"",
       success:false,
       toast_show:false,
+      myMoney:[],
+      projectId: "",
+      moneyId: "",
+      myMoney_Count: 0,
+      myMoney_pagination: false,
+      sub_project:true,
     };
   },
   methods: {
@@ -409,12 +432,12 @@ export default {
             this.pn = 1;
             if(this.totalCount > this.pageList.length) {
               this.more = true
+              this.noMore = false
             } else {
               this.more = false
-              setTimeout(()=> {
-                this.noMore = true
-              },2000)
+              this.noMore = true
             }
+            this.pn = 1
             this.loading = false;
           }
         });
@@ -427,6 +450,19 @@ export default {
           if (res.success == "true") {
             this.mesData = res.data
             this.newsloading = false;
+          }
+        });
+  },
+  getMyMoney(pn) {
+      this.$axios
+        .get("/jsp/wap/center/ctrl/jsonIssueProjectList.jsp", {
+          params: { pageNumber: pn }
+        })
+        .then(res => {
+          this.myMoney = res.data.pageList;
+          this.myMoney_Count = Number(res.data.pagination.totalCount);
+          if (this.myMoney_Count > 10) {
+            this.myMoney_pagination = true;
           }
         });
   },
@@ -449,11 +485,10 @@ export default {
             this.totalCount = res.data.pagination.totalCount;
             if(this.totalCount > this.pageList.length) {
               this.more = true
+              this.noMore = false
             } else {
               this.more = false
-              setTimeout(()=> {
-                this.noMore = true
-              },2000)
+              this.noMore = true
             }
             this.loading = false;
           }
@@ -588,16 +623,56 @@ export default {
           this.$router.push('/login')
         }
       },
-    apply_project(){
-      this.success = true
-      this.hint = '约见项目成功，平台会尽快为您安排'
-      this.toast_show = true
-    }
+
+    handleCurrentChange(val) {
+      this.getMyMoney(val);
+    },
+    applyPoject(id) {
+      if (Cookies.get("userKey")) {
+        if (this.myMoney.length == 0) {
+          this.success = false;
+          this.hint = "您还没有发布资金，请先发布资金";
+          this.toast_show = true;
+        } else {
+          this.dialogFormVisible = true;
+          this.projectId = id;
+        }
+      } else {
+        this.success = false;
+        this.hint = "您未登录，请先登录";
+        this.toast_show = false;
+      }
+    },
+    apply() {
+      this.$axios
+        .get("/jsp/wap/trCapital/do/doDeliver.jsp", {
+          params: { id: this.moneyId, projectId: this.projectId }
+        })
+        .then(res => {
+          if (res.success == "true") {
+            this.success = true;
+            this.hint = "项目约谈成功，平台将立刻为您安排";
+            this.sub_project = false;
+            // this.dialogFormVisible = false;
+          } else {
+            this.success = false;
+            this.hint = "项目约谈失败，请您检查网络或重试";
+            this.sub_project = false;
+          }
+        });
+    },
+    before_close(){
+        this.dialogFormVisible = false;
+        setTimeout(()=> {
+         this.sub_project = true;
+        },1000)
+    },
   },
   created(){
     this.getTypeData()
     this.getActData()
     this.getNewsList()
+    // this.getMyMoney()
   }
 };
 </script>
@@ -875,11 +950,11 @@ export default {
 .load_more {
   width: 810px;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   font-family: "Microsoft YaHei";
   color: rgb(153, 153, 153);
   line-height: 1.333;
-  padding: 15px 0;
+  padding: 10px 0;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   margin: 40px 0 75px;

@@ -60,12 +60,12 @@
              <!-- @click="apply(item.status,item.id)" -->
             <button
               :class="item.status == 1 ? 'applyBtn' : 'overBtn'"
-            >{{item.status == 1 ? '我要报名' :'' + item.status == 0 ? '尚未开始':'' + item.status == 3 ? '活动结束' : ''}}</button>
+            >{{item.status == 1 ? '我要报名' :'' + item.status == 0 ? '活动预告':'' + item.status == -1 ? '往期回顾' : ''}}</button>
           </div>
         </div>
       </div>
-      <div class="load_more" @click="more" v-if="this.totalCount > this.pageList.length">加载更多...</div>
-      <p style="color:#999;" v-else>-------------------------------------------------没有更多活动了----------------------------------------------------</p>
+      <div class="load_more" @click="morePage" v-show="more">加载更多...</div>
+      <p style="color:#999;"  v-show="noMore">-------------------------------------------------没有更多活动了----------------------------------------------------</p>
     </div>
     <div class="w360 flr mes_list clearfix">
       <img src="/static/img/list-2.jpg" alt class="act_timelist">
@@ -186,7 +186,9 @@ export default {
       category:'',
       status:'',
       pn:1,
-      totalCount:'',
+      totalCount:0,
+      more:false,
+      noMore:false,
     };
   },
   methods: {
@@ -211,7 +213,14 @@ export default {
       this.$axios.get('/jsp/wap/trActivity/ctrl/jsonActivityPage.jsp',{params:{categorys:category,statuss:status}}).then(res => {
         if(res.success == "true"){
           this.pageList = res.data.pageList
-          this.totalCount = res.data.pagination.totalCount
+          this.totalCount = res.data.pagination.totalCount;
+          if(this.totalCount > this.pageList.length) {
+              this.more = true
+              this.noMore = false
+            } else {
+              this.more = false
+              this.noMore = true
+            }
           this.pn = 1
           this.loading = false
         }
@@ -269,13 +278,20 @@ export default {
         });
       }
     },
-    more(){
+    morePage(){
       this.pn += 1
       this.loading = true
       this.$axios.get('/jsp/wap/trActivity/ctrl/jsonActivityPage.jsp',{params:{categorys:this.category,statuss:this.status,pageNumber:this.pn}}).then(res => {
         if(res.success == "true"){
           this.pageList = [...this.pageList,...res.data.pageList] 
-          this.totalCount = res.data.pagination.totalCount
+          this.totalCount = res.data.pagination.totalCount;
+          if(this.totalCount > this.pageList.length) {
+              this.more = true
+              this.noMore = false
+            } else {
+              this.more = false
+              this.noMore = true
+            }
           this.loading = false
         }
       })
@@ -470,11 +486,11 @@ export default {
 .load_more {
   width: 810px;
   text-align: center;
-  font-size: 18px;
+  font-size: 14px;
   font-family: "Microsoft YaHei";
   color: rgb(153, 153, 153);
   line-height: 1.333;
-  padding: 20px 0;
+  padding: 10px 0;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   margin: 40px 0 75px;

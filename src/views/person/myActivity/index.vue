@@ -197,6 +197,10 @@
   font-family: "Microsoft YaHei";
   color: rgb(51, 51, 51);
   margin: 10px 0 25px;
+  width: 390px;
+  overflow: hidden; /*超出部分隐藏*/
+  white-space: nowrap; /*不换行*/
+  text-overflow: ellipsis;
 }
 .list-title:hover{
   color: rgb(0, 83, 133);

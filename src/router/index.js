@@ -402,6 +402,14 @@ const router = new Router({
               }
             },
             {
+              path:'addDynamic',
+              name:'addDynamic',
+              component:components.addDynamic,
+              meta:{
+                title:'我的项目 > 项目进展'
+              }
+            },
+            {
               path:'inform',
               name:'inform',
               component:components.inform,

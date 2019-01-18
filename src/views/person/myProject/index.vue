@@ -24,7 +24,7 @@
           <!-- <span class="flr" :class="item.check == 0 ? ' already':'' + item.check == 1 ? ' being':'' + item.check == 2 ? ' not':'' + item.check == 3 ? ' fail':''">{{item.check == 0 ? '已发布':'' + item.check == 1 ? '审核中':'' + item.check == 2 ? '未发布':''}}</span> -->
           <span class="flr not" v-if="item.status == '0'">未发布</span>
           <span class="flr" v-else :class="item.status  == '5' ? ' being':'' + item.status == '10' ? ' already':'' + item.status == '15'? ' fail':''">{{item.status  == '5' ? '审核中':'' + item.status == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
-          <!-- <el-button title="动态管理"  class="flr manage" icon="el-icon-edit-outline" circle size="mini" @click="manage(item.id)"></el-button> -->
+          <el-button title="添加进展"  class="flr manage" icon="el-icon-edit-outline" circle size="mini" @click="manage(item.id)"></el-button>
           <el-button title="修改" type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button>
           <el-button title="删除" type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>

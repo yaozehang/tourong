@@ -44,6 +44,7 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
+          :current-page.sync="current_page"
           :page-size="10"
           layout="total, prev, pager, next, jumper"
           :total="count"
@@ -100,7 +101,8 @@ export default {
       loading:false,
       newsloading:false,
       categoryList:[],
-      categorys:''
+      categorys:'',
+      current_page:1
     };
   },
   methods: {
@@ -134,6 +136,7 @@ export default {
           item.checked = false
       });
       this.categoryList[index].checked = true
+      this.current_page = 1
       this.getData(this.categorys)
     },
     getNewsList(){

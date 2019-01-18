@@ -705,7 +705,6 @@ export default {
         .post("/component/trUpload2/uploadify", param, config)
         .then(res => {
           if (res.success == true) {
-            console.log(res);
             this.fileNames.push(res.data.originalName);
             this.filePaths.push(res.data.relativePath);
           } else {

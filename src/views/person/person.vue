@@ -94,6 +94,17 @@
           },
         ]
       }
+    },
+    methods:{
+      getData(){
+        let id = this.$route.query.id
+        this.$axios.get(`/jsp/wap/trProject/ctrl/jsonProjectDynamicList.jsp?id=${id}`).then(res => {
+          console.log(res);
+        })
+      },
+    },
+    created(){
+      this.getData()
     }
   }
 </script>

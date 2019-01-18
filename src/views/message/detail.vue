@@ -20,39 +20,82 @@
           <span class="about_item">来源：{{mesDetailData.source}}</span>
           <span class="about_item">作者：{{mesDetailData.author}}</span>
           <span class="about_item">阅读：{{mesDetailData.readNum}}</span>
+          <i class="like" @click="like" v-show="!like_show"></i>
+          <i class="nolike" @click="nolike" v-show="like_show"></i>
           <share :config="config" class="share_mes"></share>
         </div>
         <p class="contentHtml" v-html="mesDetailData.content"></p>
         <div class="discuss">
           <img :src="$url + avatar" alt="" class="avatar" v-if="avatar != ''">
           <p class="login" @click="$router.push('/login')" v-else>登录</p>
-          <textarea name="" id="" cols="96%" rows="3" placeholder="来说两句吧..."></textarea>
+          <textarea name="" id="" cols="96%" rows="3" placeholder="来说两句吧..." v-model="content"></textarea>
         </div>
         <div class="clearfix">
           <span class="face"></span>
-          <button class="flr submitBtn">发布留言</button>
+          <div class="flr submitBtn" @click="submit_common">发布留言</div>
         </div>
         <div class="common_line">
           <span class="common">评论</span>
         </div>
-        <p class="common_title" v-show="!commonData">最新评论</p>
+        <p class="common_title" v-show="commonData">最新评论</p>
         <div class="common_list clearfix" v-for="(item , index) in commonData" :key="index">
-          <img :src="item.avatar" alt="" class="common_img fll">
+          <img :src="$url + item.headImgPath" alt="" class="common_img fll">
           <div class="fll common_item">
             <div class="clearfix">
-              <span class="username fll">{{item.username}}</span>
-              <span class="location fll ">[{{item.location}}网友]</span>
-              <span class="beforeTime flr">{{item.beforeTime}}</span>
+              <span class="username fll">{{item.memberName}}</span>
+              <span class="location fll ">[{{item.provinceStr}}网友]</span>
+              <span class="beforeTime flr">{{item.beforeTime}}前</span>
             </div>
             <p class="content">{{item.content}}</p>
             <div class="clearfix">
-              <span class="fll from">来自{{item.from}}</span>
-              <span class="flr reply">回复</span>
+              <span class="fll from">{{item.addTimeStr}}</span>
+              <!-- <span class="flr reply" @click="sub_com_com(index)">回复</span> -->
             </div>
           </div>
+          <!-- <div class="common_common fll clearfix" v-for="(common ,ind) in 5" :key="ind">
+            <img :src="avatar" alt="" class="common_common_img fll">
+            <div class="fll common_common_item">
+              <div class="clearfix">
+                <span class="username fll">{{item.memberName}}</span>
+                <span class="location fll ">[{{item.provinceStr}}网友]</span>
+                <span class="content">{{item.content}}</span>
+              </div>
+              <div class="clearfix common_common_time">
+                <span class="fll from">{{item.addTimeStr}}</span>
+                <span class="flr reply" @click="sub_com_com2(index)">回复</span>
+              </div>
+          </div>
+          </div> -->
+          <!-- <div class="fll" style="margin-left:60px;">
+          <el-pagination
+            small
+            layout="total, prev, pager, next"
+            :total="50">
+          </el-pagination>
+          </div> -->
+          <!-- <div class="clearfix fll common_bottom" v-if="comm_input_show && comindex == index">
+            <img :src="$url + avatar" alt="" class="common_img fll" >
+            <div class="com_input fll">
+            <el-input
+              :rows="3"
+              type="textarea"
+              placeholder="请输入内容"
+              v-model="common_content">
+            </el-input>
+            </div>
+            <div class="sub_com_btn fll">发表评论</div>
+          </div> -->
         </div>
-        <button class="moreBtn" v-show="!commonData">查看更多</button>
-        <p v-show="commonData" style="text-align:center;">暂无评论</p>
+        <!-- <button class="moreBtn" v-show="!commonData">查看更多</button> -->
+        <p v-show="com_show" style="text-align:center;">暂无评论</p>
+        <div class="mes_page">
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          layout="total, prev, pager, next, jumper"
+          :total="count"
+        ></el-pagination>
+        </div>
       </div>
       <div class="w300 clearfix mes_list flr">
         <p class="mes">热门资讯
@@ -68,6 +111,16 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      :visible.sync="toast_show"
+      width="30%"
+      center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
@@ -128,6 +181,14 @@ export default {
         }
       ],
       commonData:[],
+      content:"",
+      com_show: false,
+      toast_show:false,
+      success:false,
+      comm_input_show:false,
+      hint:'',
+      comindex:0,
+      like_show:false,
       // commonData:[
       //   {
       //     avatar:'/static/img/avatar-1.png',
@@ -171,7 +232,11 @@ export default {
         // disabled            : ['google', 'facebook', 'twitter','douban], // 禁用的站点
         wechatQrcodeTitle   : '微信扫一扫：分享', // 微信二维码提示文字
         wechatQrcodeHelper  : '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>'
-      }
+      },
+      count:0,
+      memberName:'投融用户',
+      provinceStr:'中国',
+      common_content:''
     }
   },
   methods:{
@@ -186,6 +251,12 @@ export default {
       if(Cookies.get('userKey') && this.$store.state.userinfo.headImgPath != ''){
         this.avatar = this.$store.state.userinfo.headImgPath
       }
+      if(Cookies.get('userKey') && this.$store.state.userinfo.name != ''){
+        this.memberName = this.$store.state.userinfo.name
+      }
+      if(Cookies.get('userKey') && this.$store.state.userinfo.provinceStr != ''){
+        this.provinceStr = this.$store.state.userinfo.provinceStr
+      }
     },
     getNewsList(){
       this.newsloading = true;
@@ -198,12 +269,135 @@ export default {
           }
         });
     },
-    getCommonData(){
+    getCommonData(pn){
       let id = this.$route.query.id
-      this.$axios.get(`/jsp/wap/trNews/ctrl/jsonCommentPage.jsp?id=${id}`).then(res => {
-        console.log(res);
+      this.$axios.get(`/jsp/wap/trNews/ctrl/jsonCommentPage.jsp?id=${id}`,{params:{pageNumber:pn}}).then(res => {
+        if(res.success == "true") {
+          var commonData = res.data.pageList
+          commonData.forEach(item => {
+            var time = (new Date(item.addTimeStr)).valueOf()
+            item.beforeTime = this.get_time_diff(time)
+          })
+          this.commonData = commonData
+          this.count = Number(res.data.pagination.totalCount)
+          if(commonData.length == 0){
+            this.com_show = true
+          }
+        } else {
+            this.com_show = true
+        }
       })
     },
+    submit_common(){
+      if(Cookies.get('userKey')) {
+        if(this.content != ''){
+          let id = this.$route.query.id
+          this.$axios.get('/jsp/wap/trNews/do/doComment.jsp',{params:{id,content:this.content}}).then(res => {
+            if(res.success == 'true'){
+              var newCommon = {
+                beforeTime:'1秒',
+                content:this.content,
+                headImgPath:this.avatar,
+                provinceStr:this.provinceStr,
+                memberName:this.memberName
+              }
+              this.commonData.unshift(newCommon)
+              this.content = ''
+              this.count += 1
+            }
+          })
+        } else {
+          this.success = false;
+          this.hint = '不能发表空评论';
+          this.toast_show = true;
+        }    
+      } else {
+        this.success = false;
+        this.hint = '登录后才能发表评论';
+        this.toast_show = true;
+      }
+    },
+    sub_com_com(index){
+      if(Cookies.get('userKey')) {
+        this.comindex = index
+        this.comm_input_show = !this.comm_input_show
+      } else {
+        this.success = false;
+        this.hint = '登录后才能发表评论';
+        this.toast_show = true;
+      }
+    },
+    sub_com_com2(index){
+      if(Cookies.get('userKey')) {
+        this.comindex = index
+        this.comm_input_show = true
+      } else {
+        this.success = false;
+        this.hint = '登录后才能发表评论';
+        this.toast_show = true;
+      }
+    },
+    handleCurrentChange(val) {
+      this.getCommonData(val)
+    },
+    get_time_diff(time) {
+      var diff = '';
+      var time_diff = new Date().getTime() - time; //时间差的毫秒数 
+      
+      //计算出相差的月数
+      var months = Math.floor(time_diff/(30 * 24 * 3600 * 1000))
+      //计算出相差天数 
+      var days = Math.floor(time_diff / (24 * 3600 * 1000));
+      // if (days > 0) {
+      // diff += days + '天';
+      // }
+      //计算出小时数 
+      var leave1 = time_diff % ( 24 * 3600 * 1000); 
+      var hours = Math.floor(leave1 / (3600 * 1000));
+      // if (hours > 0) {
+      // diff += hours + '小时';
+      // } else {
+      // if (diff !== '') {
+      //   diff += hours + '小时';
+      // }
+      // }
+      //计算相差分钟数 
+      var leave2 =leave1 % (3600 * 1000);
+      var minutes = Math.floor(leave2 / (60 * 1000));
+      // if (minutes > 0) {
+      // diff += minutes + '分';
+      // } else {
+      // if (diff !== '') {
+      //   diff += minutes + '分';
+      // }
+      // }
+      //计算相差秒数 
+      var leave3 = leave2%(60*1000);
+      var seconds = Math.round(leave3/1000);
+      // if (seconds > 0) {
+      // diff += seconds + '秒';
+      // } else {
+      // if (diff !== '') {
+      //   diff += seconds + '秒';
+      // }
+      // }
+      if(months >= 1){
+        diff = months + '月';
+      } else if (days >= 1){
+        diff = days + '天'
+      } else if (hours >= 1){
+        diff = hours + '小时'
+      } else if (minutes >= 1){
+        diff = minutes + '分'
+      } else if (seconds >= 1){
+        diff = seconds + '秒'
+      } else {
+        if (diff !== '') {
+          diff += seconds + '秒';
+        }
+      }
+      return diff;
+      },
     toMessagePage(){
       let {href} = this.$router.resolve({
           name: "message",
@@ -217,6 +411,12 @@ export default {
       });
       window.open(href, '_blank');
     },
+    like(){
+
+    },
+    nolike(){
+
+    }
   },
   created(){
     this.getData()
@@ -436,7 +636,7 @@ export default {
       line-height: 1.4;
     }
     .content {
-    font-family: "Microsoft YaHei";
+      font-family: "Microsoft YaHei";
     }
     .from {
       color: #ccc;
@@ -446,8 +646,68 @@ export default {
       color: #999;
       font-size: 14px;
       cursor: pointer;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
     }
   }
+}
+
+.common_common {
+  width: 750px;
+  height: 50px;
+  margin-left: 60px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.common_common_item {
+  margin-left: 10px;
+  width: 700px;
+  .username {
+      font-size: 16px;
+      color: #005982;
+      margin-right: 10px;
+    }
+    .location {
+      font-size: 14px;
+      line-height: 1.4;
+      color:#ccc;
+    }
+    .beforeTime {
+      color: #ccc;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .content {
+      display: inline-block;
+      width: 500px;
+      margin-left: 20px;
+      font-family: "Microsoft YaHei";
+    }
+    .from {
+      color: #ccc;
+      font-size: 14px;
+    }
+    .reply {
+      color: #999;
+      font-size: 14px;
+      cursor: pointer;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+}
+.common_common_time {
+  width: 250px;
+  margin-top: 10px;
+}
+.common_common_img {
+  display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #f0f0f0;
 }
 .moreBtn {
   display:block;
@@ -486,5 +746,66 @@ export default {
   position: absolute;
   right: 0;
   top: -20px;
+}
+
+.com_input {
+  margin-left: 20px;
+  width: 500px;
+}
+
+.common_bottom {
+  width:750px; 
+  margin-left:60px;
+  padding: 20px;
+}
+
+.sub_com_btn {
+  width: 65px;
+  height: 75px;
+  box-sizing: border-box;
+  padding: 20px 15px;
+  border-radius: 4px;
+  border: 1px solid #005982;
+  background: #005982;
+  color: #f1f1f1;
+  margin-left: 10px;
+  cursor: pointer;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.like {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url(/static/img/zan.png) no-repeat center;
+  background-size: contain;
+}
+
+.nolike {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url(/static/img/zanzan.png) no-repeat center;
+  background-size: contain;
+}
+
+//分页
+.mes_page {
+  margin: 70px 0 60px;
+  padding: 0 60px;
+  /deep/ {
+    .el-pagination.is-background .el-pager li:not(.disabled).active {
+      background: #005983 !important;
+      color: #fff !important;
+    }
+    .el-pagination.is-background .el-pager li {
+      background: #fff !important;
+      color: #000 !important;
+      border: 1px solid #d9d9d9 !important;
+      font-weight: 400;
+    }
+  }
 }
 </style>

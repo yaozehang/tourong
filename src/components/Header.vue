@@ -103,7 +103,10 @@ export default {
     },
     person(){
        if(Cookies.get('userKey')){
-       this.$router.push('/person')
+        let {href} = this.$router.resolve({
+            name: "person",
+          });
+          window.open(href, '_blank');
        } else {
          this.$router.push('/login')
        }
