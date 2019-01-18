@@ -3,12 +3,12 @@
     <div class="bg-89">
       <div class="w1200">
         <span class="txt-202" v-show="login">您好，请
-          <router-link to="/login">登录</router-link>!
+          <span @click="login_in" style="cursor:pointer">登录</span>!
         </span>
         <span class="txt-202" v-show="!login">
           您好，欢迎您
         </span>
-        <span class="txt-202 register" @click="$router.push('/login')"  v-show="login">免费注册</span>
+        <span class="txt-202 register" @click="login_in"  v-show="login">免费注册</span>
         <span class="txt-202 register"  v-show="!login" style="color:#fff;" @click="login_out">退出登录</span>
         <el-dropdown placement="bottom">
           <span class="invest el-dropdown-link">
@@ -64,6 +64,7 @@
               <option value="3" class="option">找资讯</option>
             </select>
             <input type="text" placeholder="输入关键字" class="input" v-model="title" @keyup.enter="search">
+            <input id="hiddenText" type="text" style="display:none" @keyup.enter="search" />
             <img src="/static/img/search.png" alt="" class="search-button" @click="search">
           </form>
           <img src="/static/img/kefu.png" alt="" class="fll" style="margin-left:5px;cursor:pointer;" @click="tokefu">
@@ -98,8 +99,10 @@ export default {
     login_out(){
         Cookies.remove('userKey')
         this.login = false
-        location.reload()
         this.$router.push('/home')
+        setTimeout(()=> {
+          location.reload()
+        },50)
     },
     person(){
        if(Cookies.get('userKey')){
@@ -113,7 +116,7 @@ export default {
      },
       toMymoney(){
         if(Cookies.get('userKey')){
-        this.$router.push('/person/myMoney')
+        this.$router.push('/person/applyMoney')
         } else {
           this.$router.push('/login')
         }
@@ -127,7 +130,7 @@ export default {
       },
       toMyproject(){
         if(Cookies.get('userKey')){
-        this.$router.push('/person/myProject')
+        this.$router.push('/person/applyProject')
         } else {
           this.$router.push('/login')
         }
@@ -137,7 +140,10 @@ export default {
       },
     inform(){
        if(Cookies.get('userKey')){
-       this.$router.push('/person/inform')
+       let {href} = this.$router.resolve({
+            name: "inform",
+          });
+          window.open(href, '_blank');
        } else {
          this.$router.push('/login')
        }
@@ -169,6 +175,12 @@ export default {
           });
         window.open(href, '_blank');
       }
+    },
+    login_in(){
+      let { href } = this.$router.resolve({
+        name: "login"
+      });
+      window.open(href, "_blank");
     }
   },
   created(){

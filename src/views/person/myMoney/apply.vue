@@ -118,13 +118,13 @@
             <el-date-picker
               type="year"
               placeholder="选择日期"
-              v-model="formData.expiryDateStartTimeStr"
+              v-model="formData.validStartTimeStr"
               value-format="yyyy-MM-dd"
             ></el-date-picker>
           </div>
           <el-col class="line" :span="1" style="text-align:center;">~</el-col>
           <el-col :span="7">
-            <el-date-picker value-format="yyyy-MM-dd" type="year" placeholder="选择日期" v-model="formData.expiryDateEndTimeStr"></el-date-picker>
+            <el-date-picker value-format="yyyy-MM-dd" type="year" placeholder="选择日期" v-model="formData.validEndTimeStr"></el-date-picker>
           </el-col>
           <el-col :span="1" style="text-align:center;">年</el-col>
         </el-form-item>
@@ -194,6 +194,16 @@
         </el-form-item>
       </el-form>
     </div>
+    <el-dialog
+      :visible.sync="toast_show"
+      width="30%"
+      center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
@@ -250,8 +260,8 @@ export default {
         investRegionCountyId: "",
         investAmount: "",
         minRepay: "",
-        expiryDateStartTimeStr: "",
-        expiryDateEndTimeStr: "",
+        validStartTimeStr: "",
+        validEndTimeStr: "",
         pawnDiscountRateMin: "",
         pawnDiscountRateMax: "",
         investRequire: "",
@@ -285,7 +295,10 @@ export default {
       pawnTypeList: [],
       pawnTypes: [],
       fileNames: [],
-      filePaths: []
+      filePaths: [],
+      hint:"",
+      success:false,
+      toast_show:false,
     };
   },
   methods: {
@@ -326,8 +339,8 @@ export default {
                 investRegionCountyId: this.formData.investRegionCountyId,
                 investAmount: this.formData.investAmount,
                 minRepay: this.formData.minRepay,
-                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
-                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                validStartTimeStr: this.formData.validStartTimeStr,
+                validEndTimeStr: this.formData.validEndTimeStr,
                 pawnDiscountRateMin: this.formData.pawnDiscountRateMin,
                 pawnDiscountRateMax: this.formData.pawnDiscountRateMax,
                 investRequire: this.formData.investRequire,
@@ -360,8 +373,8 @@ export default {
                 investRegionCountyId: this.formData.investRegionCountyId,
                 investAmount: this.formData.investAmount,
                 minRepay: this.formData.minRepay,
-                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
-                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                validStartTimeStr: this.formData.validStartTimeStr,
+                validEndTimeStr: this.formData.validEndTimeStr,
                 pawnDiscountRateMin: this.formData.pawnDiscountRateMin,
                 pawnDiscountRateMax: this.formData.pawnDiscountRateMax,
                 investRequire: this.formData.investRequire,
@@ -388,14 +401,24 @@ export default {
               .then(res => {
                 if (res.success == "true") {
                   if(status == 0){
-                    this.$message.success("保存成功")
-                    this.$router.push("/person/myMoney");
+                    this.success = true;
+                    this.hint = "保存资金成功";
+                    this.toast_show = true;
+                    setTimeout(()=> {
+                      this.$router.push("/person/myMoney");
+                    },1000)
                   } else {
-                    this.$message.success("上传资金成功");
-                    this.$router.push("/person/myMoney");
+                    this.success = true;
+                    this.hint = "上传资金成功";
+                    this.toast_show = true;
+                    setTimeout(()=> {
+                      this.$router.push("/person/myMoney");
+                    },1000)
                   }
                 } else {
-                  this.$message.error("上传资金失败，请完善资金信息或检查网络");
+                  this.success = false;
+                  this.hint = "提交失败，请检查网络或重试";
+                  this.toast_show = true;
                 }
               });
           });
@@ -441,7 +464,7 @@ export default {
             this.datums = res.data.capital.datumStr.split(",");            
           }
           if (res.data.capital.pawnTypesStr != ''){
-            this.pawnTypes = res.data.capital.pawnTypesStr.split(",");            
+            this.pawnTypes = res.data.capital.pawnTypeStr.split(",");            
           }
           this.capitalBodyList = res.data.capitalBodyList;
           let capital = res.data.capital;
@@ -508,11 +531,12 @@ export default {
         .post("/component/trUpload2/uploadify", param, config)
         .then(res => {
           if (res.success == true) {
-            console.log(res);
             this.fileNames.push(res.data.originalName);
             this.filePaths.push(res.data.relativePath);
           } else {
-            this.$message.error("上传失败，请检查网络");
+            this.success = false;
+            this.hint = "文件上传失败";
+            this.toast_show = true;
           }
         });
     },

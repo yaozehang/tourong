@@ -13,14 +13,17 @@
       <div class="w870 fll mes_card" v-loading="loading">
         <p class="title">{{mesDetailData.title}}</p>
         <p class="about">
-          <span class="about_item">活动开始时间：{{mesDetailData.startTimeStr}}</span>
+          <span class="about_item">活动时间：{{mesDetailData.startTimeStr}} ~ {{mesDetailData.endTimeStr}}</span>
           <span class="about_item">主办：{{mesDetailData.speaker}}</span>
           <span class="about_item">地址：{{mesDetailData.address}}</span>
           <span class="about_item">类型：{{mesDetailData.categoryName}}</span>
+          <i class="like" @click="like" v-show="!like_show"></i>
+          <i class="nolike" @click="nolike" v-show="like_show"></i>
+          {{mesDetailData.greatNum}}
           <share :config="config" class="share_mes"></share>
         </p>
         <p class="contentHtml" v-html="mesDetailData.content"></p>
-        <button class="moreBtn" @click="showApply = true" v-show="mesDetailData.status == 1">报名参加</button>
+        <button class="moreBtn" @click="act_show" v-show="mesDetailData.status == 1">报名参加</button>
         <button class="moreBtn1" v-show="mesDetailData.status == 0">活动预告</button>
         <button class="moreBtn1" v-show="mesDetailData.status == -1">往期回顾</button>
       </div>
@@ -44,12 +47,13 @@
         </div>
       </div>
     </div>
-    <el-dialog title="报名信息" :visible.sync="showApply" width="30%">
-      <el-form :model="appleform">
-        <el-form-item label="姓名：">
+    <el-dialog title="报名信息" :visible.sync="showApply" width="30%" @before_close='before_close'>
+      <div v-if="sub_act">
+      <el-form :model="appleform" ref="appleform" :rules="rule">
+        <el-form-item label="姓名：" prop="memberName">
           <el-input v-model="appleform.memberName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：">
+        <el-form-item label="手机号：" prop="memberMobile">
           <el-input v-model="appleform.memberMobile" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="备注：">
@@ -57,25 +61,32 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <button class="applyBtn" @click="sub_apply">确认报名</button>
-        <button class="cancle" @click="showApply = false">取 消</button>
+        <el-button class="applyBtn" @click="sub_apply('appleform')">确认报名</el-button>
+        <el-button class="cancle" @click="showApply = false">取 消</el-button>
       </span>
+    </div>
+    <div v-else>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
+    </div>
     </el-dialog>
 
-    <el-dialog
-    :visible.sync="toast_show"
-    width="30%"
-    center>
-    <div class="toast_success" v-if="success"></div>
-    <div class="toast_error" v-else></div>
-    <div v-if="success" class="toast_title">成功</div>
-    <div v-else class="toast_title">失败</div>
-    <p class="toast_content">{{hint}}</p>
-  </el-dialog>
+  <el-dialog :visible.sync="toast_show" width="30%" center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import * as Cookies from 'js-cookie'
+
 export default {
   data() {
     return {
@@ -181,6 +192,31 @@ export default {
       hint:'',
       success:false,
       toast_show:false,
+      like_show:true,
+      sub_act:true,
+      rule:{
+        memberName: [
+          { required: true, message: "请输入姓名", trigger: "blur" },
+          { min: 2, message: "长度不少于1个字", trigger: "blur" }
+        ],
+        memberMobile: [
+          {
+            required: true,
+            message: "请输入手机号码",
+            trigger: "blur"
+          },
+          {
+            validator: function(rule, value, callback) {
+              if (/^1[34578]\d{9}$/.test(value) == false) {
+                callback(new Error("请输入正确的手机号"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ],
+      }
     };
   },
   methods: {
@@ -191,6 +227,7 @@ export default {
         .get(`/jsp/wap/trActivity/ctrl/jsonActivityDetail.jsp?id=${id}`)
         .then(res => {
           this.mesDetailData = res.data;
+          this.mesDetailData.greatNum = Number(res.data.greatNum)
           document.title = res.data.title
           this.loading = false;
         });
@@ -220,9 +257,21 @@ export default {
         }
       });
     },
-    sub_apply() {
-      let activityId = this.$route.query.id;
-      this.$axios
+    getLike(){
+      let id = this.$route.query.id
+      this.$axios.get(`/jsp/wap/trActivity/do/isGreat.jsp?id=${id}`).then(res => {
+        if(res.data == '0'){
+          this.like_show = false
+        } else if(res.data == '1'){
+          this.like_show = true
+        }
+      })
+    },
+    sub_apply(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+        let activityId = this.$route.query.id;
+        this.$axios
         .get("/jsp/wap/trActivity/do/doSignUp.jsp", {
           params: {
             activityId,
@@ -232,22 +281,34 @@ export default {
           }
         })
         .then(res => {
-          console.log(res);
           if(res.succsee == 'true'){
             this.showApply = false
             setTimeout(() => {
             this.success = true
             this.hint = '报名成功！当前已有' + res.data + '人报名参加'
-            this.toast_show = true
+            this.sub_act = false;
             },1000)
           } else {
             this.success = false
             this.hint = res.message
-            this.toast_show = true
+            this.sub_act = false;
           }
-
         });
+          } else {
+            return false;
+          }
+        });
+      
       // this.showApply = false
+    },
+    act_show(){
+      if(Cookies.get('userKey')) {
+        this.showApply = true
+      } else {
+        this.success = false;
+        this.hint = '登录后才能报名哦';
+        this.toast_show = true;
+      }
     },
     toMessagePage() {
       let { href } = this.$router.resolve({
@@ -261,11 +322,56 @@ export default {
         query: { id }
       });
       window.open(href, "_blank");
-    }
+    },
+    like(){
+      if(Cookies.get('userKey')) {
+          let id = this.$route.query.id
+          this.$axios.get(`/jsp/wap/trActivity/do/doGreat.jsp?id=${id}`).then(res => {
+            if(res.success == 'true'){
+              this.like_show = true
+              this.mesDetailData.greatNum += 1
+            } else {
+              this.success = false;
+              this.hint = '点赞失败';
+              this.toast_show = true;
+            }
+          })
+        } else {
+        this.success = false;
+        this.hint = '登录后才能点赞哦';
+        this.toast_show = true;
+      }
+    },
+    nolike(){
+        if(Cookies.get('userKey')) {
+          let id = this.$route.query.id
+          this.$axios.get(`/jsp/wap/trActivity/do/cancelGreat.jsp?id=${id}`).then(res => {
+            if(res.success == 'true'){
+              this.like_show = false
+              this.mesDetailData.greatNum -= 1
+            } else {
+              this.success = false;
+              this.hint = '取消失败';
+              this.toast_show = true;
+            }
+          })
+        } else {
+        this.success = false;
+        this.hint = '登录后才能点赞哦';
+        this.toast_show = true;
+      }
+    },
+    before_close(){
+        this.showApply = false;
+        setTimeout(()=> {
+         this.sub_act = true;
+        },1000)
+    },
   },
   created() {
     this.getData();
     this.getNewsList();
+    this.getLike()
   }
 };
 </script>
@@ -543,7 +649,6 @@ export default {
   width: 100px;
   height: 40px;
   color: #fff;
-  line-height: 0.425;
   display: inline-block;
   white-space: nowrap;
   cursor: pointer;
@@ -562,6 +667,7 @@ export default {
   -ms-user-select: none;
   padding: 12px 10px;
   border-radius: 4px;
+  line-height: 1;
 }
 .cancle {
   width: 80px;
@@ -594,6 +700,6 @@ export default {
 .share_mes {
   position: absolute;
   right: 0;
-  top: -45px;
+  top: -70px;
 }
 </style>

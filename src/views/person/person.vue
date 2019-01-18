@@ -1,107 +1,60 @@
 <template>
-<div class="person_content fll">
-    <div class="project">
+  <div class="fll">
+    <div class="person_content">
+      <div class="project">
         <p class="project_title">
-          <span class="project_">项目进展</span>
-          <span class="project_more flr" @click="$router.push('/project')">查看更多></span>
+          <span class="project_">关注的项目进展</span>
+          <span class="project_more flr">
+          <!-- <button class="noLikeBtn" @click="applyDynamic">
+            <i></i>添加进展
+          </button> -->
+          <span class="project_more flr" @click="project">查看更多项目></span>
+          </span>
         </p>
-        <div v-for="(item, index) in projectData.slice(0,3)" :key="index" class="project_list">
+        <div v-for="(item, index) in projectData" :key="index" class="project_list">
           <p class="title">{{item.title}}</p>
           <p class="con clearfix">
             <span class="content fll">{{item.content}}</span>
+            <img :src=" $url + imgPaths" alt="" v-for="(imgPaths,idx) in item.imgPathList" :key="idx" style="max-width:250px;padding-right:10px">
             <span class="time flr">
               <i></i>
-              {{item.time}}
-              <span class="seconed">{{item.seconed}}</span>
+              {{item.addTimeStr.slice(0,10)}}
+              <span class="seconed">{{item.addTimeStr.slice(10,19)}}</span>
             </span>
           </p>
         </div>
+        <div v-show="noShow" class="noChange">您关注的项目还未发布进展</div>
     </div>
-    <div class="project" style="margin-top:50px;">
-        <p class="project_title">
-          <span class="project_">资金动态</span>
-          <span class="project_more flr"  @click="$router.push('/money')">查看更多></span>
-        </p>
-        <div v-for="(item, index) in moneyData.slice(0,2)" :key="index" class="project_list bd_none">
-          <p class="title">{{item.title}}</p>
-          <p class="con clearfix">
-            <span class="content fll">{{item.content}}</span>
-            <span class="time flr">
-              <i></i>
-              {{item.time}}
-              <span class="seconed">{{item.seconed}}</span>
-            </span>
-          </p>
-        </div>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    data() {
-      return {
-        projectData:[
-          {
-            title:'北京某互联网创新创业服务平台项目',
-            content:'感谢大家关注本项目，现已经正式投入研发，预计年底之前上线 ',
-            time:'2018-11-29',
-            seconed:'15:56:31'
-          },
-          {
-            title:'北京某互联网创新创业服务平台项目',
-            content:'感谢大家关注本项目，现已经正式投入研发，预计年底之前上线 ',
-            time:'2018-11-29',
-            seconed:'15:56:31'
-          },
-          {
-            title:'北京某互联网创新创业服务平台项目',
-            content:'感谢大家关注本项目，现已经正式投入研发，预计年底之前上线 ',
-            time:'2018-11-29',
-            seconed:'15:56:31'
-          },
-          {
-            title:'北京某互联网创新创业服务平台项目',
-            content:'感谢大家关注本项目，现已经正式投入研发，预计年底之前上线 ',
-            time:'2018-11-29',
-            seconed:'15:56:31'
-          },
-        ],
-         moneyData:[
-          {
-            title:'北京某互联网创新创业服务平台项目',
-            content:'感谢大家关注本项目，现已经正式投入研发，预计年底之前上线 ',
-            time:'2018-11-29',
-            seconed:'15:56:31'
-          },
-          {
-            title:'北京某互联网创新创业服务平台项目',
-            content:'感谢大家关注本项目，现已经正式投入研发，预计年底之前上线 ',
-            time:'2018-11-29',
-            seconed:'15:56:31'
-          },
-          {
-            title:'北京某互联网创新创业服务平台项目',
-            content:'感谢大家关注本项目，现已经正式投入研发，预计年底之前上线 ',
-            time:'2018-11-29',
-            seconed:'15:56:31'
-          },
-          {
-            title:'北京某互联网创新创业服务平台项目',
-            content:'感谢大家关注本项目，现已经正式投入研发，预计年底之前上线 ',
-            time:'2018-11-29',
-            seconed:'15:56:31'
-          },
-        ]
+    data(){
+      return{
+        time:'2019-01-15',
+        content:'项目启动',
+        imgPath:'',
+        projectData:[],
+        noShow:false,
+        title:'',
       }
     },
     methods:{
       getData(){
-        let id = this.$route.query.id
-        this.$axios.get(`/jsp/wap/trProject/ctrl/jsonProjectDynamicList.jsp?id=${id}`).then(res => {
+        this.$axios.get('/jsp/wap/center/ctrl/jsonDynamicList.jsp?type=1').then(res => {
           console.log(res);
+          this.projectData = res.data
         })
       },
+      project(){
+        let id = this.$route.query.id
+        let {href} = this.$router.resolve({
+              name: "project",
+          });
+        window.open(href, '_blank');
+      }
     },
     created(){
       this.getData()
@@ -110,6 +63,25 @@
 </script>
 
 <style scoped lang="scss">
+.project_title {
+  font-size: 18px;
+  font-family: "Microsoft YaHei";
+  color: rgb(0, 83, 133);
+  font-weight: bold;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed #cdcdcd;
+  .project_ {
+    padding-left: 20px;
+    border-left: 5px solid #005982;
+  }
+}
+.time {
+  padding: 30px;
+}
+.dynamic {
+  border-bottom: 1px solid #cdcdcd;
+}
+
 .project_title {
   font-size: 18px;
   font-family: "Microsoft YaHei";
@@ -135,6 +107,7 @@
   .project_list {
     padding: 20px 0;
     border-bottom: 1px solid #cdcdcd;
+    position: relative;
     .title {
       font-size: 18px;
       font-family: "Microsoft YaHei";
@@ -142,7 +115,7 @@
       font-weight: bold;
     }
     .content {
-      font-size: 14px;
+      font-size: 16px;
       font-family: "Microsoft YaHei";
       color: rgb( 102, 102, 102 );
       width: 710px;
@@ -151,6 +124,9 @@
       text-overflow: ellipsis;
     }
     .time {
+      position: absolute;
+      bottom: 0;
+      right: 0;
       font-size: 16px;
       font-family: "Microsoft YaHei";
       color: rgb( 204, 204, 204 );
@@ -166,12 +142,49 @@
       }
     }
   }
-  .project .project_list:last-child {
-    border-bottom: 1px solid #cdcdcd;
+  .noLikeBtn {
+    width: 110px;
+    height: 35px;
+    color: #999;
+    line-height: 0.425;
+    display: inline-block;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 1.5px solid #999;
+    border-color: #dcdfe6;
+    -webkit-appearance: none;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+    margin: 0;
+    transition: 0.1s;
+    font-weight: 500;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    padding: 12px 20px 12px 35px;
+    border-radius: 6px;
+    position: relative;
+    i {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      background: url(/static/img/jiahao-1.png) no-repeat center;
+      background-size: contain;
+      position: absolute;
+      top: 9px;
+      left: 15px;
+    }
   }
-  .project .bd_none:last-child {
-    border-bottom: none;
+  .noChange {
+    width: 200px;
+    margin: 250px auto;
   }
-
-
+  .content {
+    padding: 10px 0;
+  }
+  .con {
+    width: 690px;
+  }
 </style>

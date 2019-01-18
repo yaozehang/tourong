@@ -37,31 +37,31 @@
             <img :src="$url + item.recommendImgPath" alt width="140px" height="180px" class="fll" style="cursor:pointer">
             <div class="invest-text fll">
               <p class="invest-item-title" v-if="item&&item.title">{{item.title}}</p>
-              <p class="invest-item-list">
+              <p class="invest-item-list" v-if="item&&item.investAmountName">
                 投资资金：
                 <span class="invest-money" v-if="item&&item.investAmountName">{{item.investAmountName}}</span>
               </p>
-              <p class="invest-item-list w230 inb">
+              <p class="invest-item-list w230 inb" v-if="item&&item.investCase">
                 投资方式：
                 <span class="invest-content" v-if="item&&item.investCase">{{item.investCase}}</span>
               </p>
-              <p class="invest-item-list inb w175">
+              <p class="invest-item-list inb w175" v-if="item&&item.investTypeName">
                 资金类型：
                 <span class="invest-content" v-if="item&&item.investTypeName">{{item.investTypeName}}</span>
               </p>
-              <p class="invest-item-list w230 inb">
+              <p class="invest-item-list w230 inb" v-if="item&&item.investRegionNameStr">
                 投资地区：
                 <span class="invest-content" v-if="item&&item.investRegionNameStr">{{item.investRegionNameStr}}</span>
               </p>
-              <p class="invest-item-list inb w175">
+              <p class="invest-item-list inb w175" v-if="item&&item.investIndustryName">
                 投资行业：
                 <span class="invest-content" v-if="item&&item.investIndustryName">{{item.investIndustryName}}</span>
               </p>
-              <p class="invest-item-list w230 inb">
+              <p class="invest-item-list w230 inb" v-if="item&&item.investTypeName">
                 投资类型：
                 <span class="invest-content" v-if="item&&item.investTypeName">{{item.investTypeName}}</span>
               </p>
-              <p class="invest-item-list inb w175">
+              <p class="invest-item-list inb w175" v-if="item&&item.investStageName">
                 投资阶段：
                 <span class="invest-content" v-if="item&&item.investStageName">{{item.investStageName}}</span>
               </p>
@@ -630,6 +630,8 @@ export default {
   }
   .invest-content {
     color: #000;
+    display: inline-block;
+    width: 150px;
   }
 }
 .w230 {

@@ -102,7 +102,6 @@ export default {
     },
     getData(pageNumber){
         this.$axios.get('/jsp/wap/center/ctrl/jsonMyProjectList.jsp',{params:{pageNumber}}).then(res => {
-          console.log(res);
           if(res.success == 'true'){
             this.pageList = res.data.pageList
             this.count = Number(res.data.pagination.totalCount)

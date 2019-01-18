@@ -35,10 +35,20 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <button class="sub_btn" @click="submitForm('ruleForm')">提交认证</button>
+          <div class="sub_btn" @click="submitForm('ruleForm')">提交认证</div>
         </el-form-item>
       </el-form>
     </div>
+    <el-dialog
+      :visible.sync="toast_show"
+      width="30%"
+      center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
@@ -72,7 +82,10 @@ export default {
         // ],
         brief: [{ required: true, message: "请填写介绍", trigger: "blur" }]
       },
-      fileList: []
+      fileList: [],
+      hint:"",
+      success:false,
+      toast_show:false,
     };
   },
   methods: {
@@ -83,7 +96,9 @@ export default {
             var filePaths = this.attestForm.filePaths.join(',')
             this.$axios.get('/jsp/wap/center/do/doAuthentication.jsp',{params:{type:this.attestForm.type,brief:this.attestForm.brief,fileNames,filePaths}}).then(res => {
               if(res.success == "true") {
-                this.$message.success('上传认证资料成功')
+                this.success = true;
+                this.hint = "上传认证资料成功";
+                this.toast_show = true;
                 this.attestForm.brief = ""
                 this.type.forEach(item => {
                   item.checked = false
@@ -93,7 +108,9 @@ export default {
                 this.attestForm.fileNames = []
                 this.attestForm.filePaths = []
               } else {
-                this.$message.error('上传认证资料失败，请检查网络')
+                this.success = false;
+                this.hint = "上传认证资料失败，请检查网络";
+                this.toast_show = true;
               }
             })
           } else {

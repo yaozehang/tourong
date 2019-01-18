@@ -316,6 +316,44 @@ export default {
       });
       window.open(href, '_blank');
     },
+    sub_apply() {
+      let activityId = this.$route.query.id;
+      this.$axios
+        .get("/jsp/wap/trActivity/do/doSignUp.jsp", {
+          params: {
+            activityId,
+            memberName: this.appleform.memberName,
+            memberMobile: this.appleform.memberName,
+            remark: this.appleform.remark
+          }
+        })
+        .then(res => {
+          console.log(res);
+          if(res.succsee == 'true'){
+            this.showApply = false
+            setTimeout(() => {
+            this.success = true
+            this.hint = '报名成功！当前已有' + res.data + '人报名参加'
+            this.toast_show = true
+            },1000)
+          } else {
+            this.success = false
+            this.hint = res.message
+            this.toast_show = true
+          }
+
+        });
+      // this.showApply = false
+    },
+    act_show(){
+      if(Cookies.get('userKey')) {
+        showApply = true
+      } else {
+        this.success = false;
+        this.hint = '登录后才能报名哦';
+        this.toast_show = true;
+      }
+    },
   },
   created(){
     this.getTypeData()

@@ -48,7 +48,6 @@
           this.title = res.data.project.title
         })
         this.$axios.get(`/jsp/wap/trProject/ctrl/jsonProjectDynamicList.jsp?id=${id}`).then(res => {
-          console.log(res);
           this.projectData = res.data
           var imgPaths = res.data
           imgPaths.forEach(item => {

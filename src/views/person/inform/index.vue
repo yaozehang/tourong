@@ -6,16 +6,26 @@
       </p>
       <div v-for="(item , index) in informData" :key="index" class="inform_list" @click="hadShow(index)">
         <p class="type">
-          <span>{{item.type}}</span>
-          <span style="margin-left:15px;">{{item.time}}</span>
+          <span  v-if="item.noticeType == 0" style="margin-right:15px;">系统</span>
+          <span  v-if="item&&item.addTimeStr">{{item.addTimeStr.slice(0,10)}}</span>
         </p>
         <p class="clearfix">
-          <router-link to="/person/informDetail">
-            <span class="fll">{{item.content}}</span>
-            <span class="red"></span>
-          </router-link>
-            <span class="flr delete">删除</span>
+          <!-- <router-link to="/person/informDetail"> -->
+            <span class="fll" v-if="item&&item.content">{{item.content}}</span>
+            <span class="red" v-if="item.isRead == '0'"></span>
+          <!-- </router-link> -->
+            <!-- <span class="flr delete">删除</span> -->
         </p>
+      </div>
+      <div v-show="noShow" class="noChange">您还未添加过进展</div>
+      <div class="mes_page">
+        <el-pagination
+          v-show="!noShow"
+          background
+          @current-change="handleCurrentChange"
+          layout="total, prev, pager, next, jumper"
+          :total="count"
+        ></el-pagination>
       </div>
     </div>
   </div>
@@ -25,23 +35,9 @@
   export default {
     data(){
       return {
-        informData:[
-          {
-            type:'系统',
-            time:'2018-11-14',
-            content:'您发布的投资信息审核通过',
-          },
-          {
-            type:'系统',
-            time:'2018-11-14',
-            content:'您发布的投资信息审核通过',
-          },
-          {
-            type:'系统',
-            time:'2018-11-14',
-            content:'您发布的投资信息审核通过',
-          },
-        ]
+        informData:[],
+        count:1,
+        noShow:false,
       }
     },
     methods:{
@@ -49,7 +45,22 @@
         informData[index].push(
                 Object.assign({},item,{indexNum:str})
             )
-      }
+      },
+      getData(pn){
+        this.$axios.get('/jsp/wap/center/ctrl/jsonNoticeList.jsp',{params:{pageNumber:pn}}).then(res => {
+          this.informData = res.data.pageList
+          this.count = Number(res.data.pagination.totalCount)
+          if(this.informData.length == 0){
+            this.noShow = true
+          }
+        })
+      },
+      handleCurrentChange(val) {
+        this.getData(val)
+      },
+    },
+    created(){
+      this.getData()
     }
   }
 </script>
@@ -94,4 +105,25 @@
     color: #000;
   }
 }
+
+.mes_page {
+  margin: 20px 0;
+  padding: 0 60px;
+  /deep/ {
+    .el-pagination.is-background .el-pager li:not(.disabled).active {
+      background: #005983 !important;
+      color: #fff !important;
+    }
+    .el-pagination.is-background .el-pager li {
+      background: #fff !important;
+      color: #000 !important;
+      border: 1px solid #d9d9d9 !important;
+      font-weight: 400;
+    }
+  }
+} 
+ .noChange {
+    width: 200px;
+    margin: 250px auto;
+  }
 </style>

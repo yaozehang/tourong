@@ -5,12 +5,12 @@
         <span class="project_">基本信息</span>
       </p>
       <el-form ref="ruleForm" :model="formData" label-width="80px" :rules="rules">
-        <el-form-item label="认证状态" class="w180">
+        <!-- <el-form-item label="认证状态" class="w180">
           <el-input v-model="formData.authenticationName" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="账号" class="w180">
           <el-input v-model="formData.userName" :disabled="true"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="头像">
           <el-upload
             class="avatar-uploader"

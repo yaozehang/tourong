@@ -1,103 +1,106 @@
 <template>
   <div class="invest-menu clearfix">
+    <div class="invest_height">
     <div v-for="(item , index) in investData" :key="index" class="invest-item fll clearfix">
-      <div class="invest-text fll">
-        <router-link to="/money/investors">
-          <p class="invest-item-title">{{item.title}}</p>
-        </router-link>
+      <div class="invest-text fll" @click="toMoneyDetailPage(item.id)">
+        <p class="invest-item-title">{{item.title}}</p>
         <p class="invest-item-list">
           投资资金：
-          <span class="invest-money">{{item.money}}</span>
+          <span class="invest-money">{{item.investAmountName}}</span>
         </p>
         <p class="invest-item-list w230 inb">
           投资方式：
-          <span class="invest-content">{{item.way}}</span>
+          <span class="invest-content">{{item.investCase}}</span>
         </p>
         <p class="invest-item-list inb">
           资金类型：
-          <span class="invest-content">{{item.moneyType}}</span>
+          <span class="invest-content">{{item.pawnTypeName}}</span>
         </p>
         <p class="invest-item-list w230 inb">
           投资地区：
-          <span class="invest-content">{{item.region}}</span>
+          <span class="invest-content">{{item.regionNameStr}}</span>
         </p>
         <p class="invest-item-list inb">
           投资行业：
-          <span class="invest-content">{{item.trade}}</span>
+          <span class="invest-content">{{item.investIndustryName}}</span>
         </p>
         <p class="invest-item-list w230 inb">
           投资类型：
-          <span class="invest-content">{{item.investType}}</span>
+          <span class="invest-content">{{item.investTypeName}}</span>
         </p>
         <p class="invest-item-list inb">
           投资阶段：
-          <span class="invest-content">{{item.stage}}</span>
+          <span class="invest-content">{{item.investStageName}}</span>
         </p>
       </div>
-      <button class="flr cancel" @click="cancelBtn(index)">取消关注</button>
+      <button class="flr cancel" @click="cancelBtn(item.id,index)">取消关注</button>
     </div>
-    <p v-show="investData.length == 0" class="noAtt">你没有关注任何资金哦~</p>
+    <p v-show="invest_show" class="noAtt">你没有关注任何资金哦~ <span style="color:#005982;cursor:pointer" @click="toMoney">前去关注→</span></p>
+    </div>
+    <div class="mes_page" v-show="!invest_show">
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          layout="total, prev, pager, next, jumper"
+          :total="count"
+        ></el-pagination>
+      </div>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data(){
     return {
-      investData: [
-        {
-          img: "/static/img/touzi-1.png",
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期"
-        },
-        {
-          img: "/static/img/touzi-1.png",
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期"
-        },
-        {
-          img: "/static/img/touzi-1.png",
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期"
-        },
-        {
-          img: "/static/img/touzi-1.png",
-          title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作项目合作项目合作项目合作项目合作",
-          money: "200-500W",
-          way: "股权投资",
-          moneyType: "企业资金",
-          region: "不限",
-          trade: "互联网",
-          investType: "参股合作 收购/并购",
-          stage: "成长期、成熟期"
-        }
-      ]
-    };
+      investData: [],
+      count:1,
+      invest_show:false,
+    }
   },
-    methods:{
-    cancelBtn(index){
-      this.investData.splice(index,1)
+  methods:{
+    cancelBtn(id,index){
+      this.$confirm("即将取消关注, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+        }).then(() => {
+        this.$axios.get(`/jsp/wap/trCapital/do/doUnfollow.jsp?id=${id}`).then(res => {
+          if(res.success == 'true'){
+              this.investData.splice(index,1)    
+              if(this.investData.length == 0){
+                this.invest_show = true
+              }   
+            }
+        })
+      })
     },
     getData(){
-
+      this.$axios.get('/jsp/wap/center/ctrl/jsonFollowList.jsp?type=2').then(res => {
+        console.log(res);
+        if(res.success == 'true'){
+            this.investData = res.data.pageList
+            this.count = Number(res.data.pagination.totalCount)
+            if(this.investData.length == 0){
+              this.invest_show = true
+            }
+          }
+      })
+    },
+    handleCurrentChange(val) {
+        this.getData(val)
+      },
+    toMoneyDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "moneyDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
+    toMoney(){
+        let {href} = this.$router.resolve({
+            name: "money",
+        });
+        window.open(href, '_blank');
     }
   },
   created(){
@@ -150,6 +153,9 @@ export default {
 }
 .w230 {
   width: 230px;
+  overflow: hidden; /*超出部分隐藏*/
+  white-space: nowrap; /*不换行*/
+  text-overflow: ellipsis;
 }
 .inb {
   display: inline-block;
@@ -182,9 +188,9 @@ export default {
     border-radius: 6px;
 }
 
-.invest-menu .invest-item:last-of-type {
-  border: none;
-}
+// .invest-menu .invest-item:last-of-type {
+//   border: none;
+// }
 
 .cancel:active {
   background: #000;
@@ -193,7 +199,32 @@ export default {
 }
 
 .noAtt {
-  margin-top: 50px;
+  margin-top: 150px;
   text-align: center;
+}
+
+.invest-content {
+  display: inline-block;
+  width: 162px;
+}
+.invest_height {
+  min-height: 700px;
+}
+
+.mes_page {
+  margin: 20px 0 ;
+  padding: 0 60px;
+  /deep/ {
+    .el-pagination.is-background .el-pager li:not(.disabled).active {
+      background: #005983 !important;
+      color: #fff !important;
+    }
+    .el-pagination.is-background .el-pager li {
+      background: #fff !important;
+      color: #000 !important;
+      border: 1px solid #d9d9d9 !important;
+      font-weight: 400;
+    }
+  }
 }
 </style>

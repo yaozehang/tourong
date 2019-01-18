@@ -19,88 +19,80 @@
           </div>
           <div class="clearfix">
             <div class="fll">
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.projectId">
                 <span class="list-contentName">编号：</span>
-                <span class="list-content" v-if="project&&project.projectId">{{project.projectId}}</span>
+                <span class="list-content" >{{project.projectId}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.financeBodyName">
                 <span class="list-contentName">融资主体：</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.financeBodyName"
+                  
                 >{{project.financeBodyName}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.companyAssessed">
                 <span class="list-contentName">公司估值：</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.companyAssessed"
+                  
                 >{{project.companyAssessed}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.pb">
                 <span class="list-contentName">市净率(P/B):</span>
-                <span class="list-content" v-if="project&&project.pb">{{project.pb}}</span>
+                <span class="list-content">{{project.pb}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.regionNameStr">
                 <span class="list-contentName">所在地区:</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.regionNameStr"
                 >{{project.regionNameStr}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.industryName">
                 <span class="list-contentName">所属行业:</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.industryName"
                 >{{project.industryName}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.financingExplain">
                 <span class="list-contentName">融资用途:</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.financingExplain"
                 >{{project.financingExplain}}</span>
               </div>
             </div>
             <div class="fll">
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.financingWayName">
                 <span class="list-contentName">融资方式：</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.financingWayName"
                 >{{project.financingWayName}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.pe">
                 <span class="list-contentName">市盈率(P/E):</span>
-                <span class="list-content" v-if="project&&project.pe">{{project.pe}}</span>
+                <span class="list-content" >{{project.pe}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.paymentTypeName">
                 <span class="list-contentName">支付方式:</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.paymentTypeName"
                 >{{project.paymentTypeName}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.industryName">
                 <span class="list-contentName">行业性质:</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.industryName"
                 >{{project.industryName}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.paymentTypeName">
                 <span class="list-contentName">融资金额:</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.paymentTypeName"
                 >{{project.paymentTypeName}}</span>
               </div>
-              <div class="box_content">
+              <div class="box_content" v-if="project&&project.intentCapitalList">
                 <span class="list-contentName">意向资金:</span>
                 <span
                   class="list-content"
-                  v-if="project&&project.intentCapitalList"
                 >{{project.intentCapitalList}}</span>
               </div>
             </div>
@@ -113,7 +105,7 @@
         </div>
       </div>
       <div class="w810">
-        <div class="require">
+        <div class="require" v-if="project&&project.brief">
           <span>项目简介</span>
         </div>
         <div class="requireContent" v-if="project&&project.brief">{{project.brief}}</div>
@@ -122,78 +114,78 @@
         </div>
         <div class="requireContent clearfix">
           <div class="fll">
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.companyName">
               <span class="list-contentName">企业名称:</span>
-              <span class="list-content" v-if="project&&project.companyName">{{project.companyName}}</span>
+              <span class="list-content" >{{project.companyName}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.registeredCapital">
               <span class="list-contentName">注册资本:</span>
               <span
                 class="list-content"
-                v-if="project&&project.registeredCapital"
+                
               >{{project.registeredCapital}}万</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.regionNameStr">
               <span class="list-contentName">所在地：</span>
               <span
                 class="list-content"
-                v-if="project&&project.regionNameStr"
+                
               >{{project.regionNameStr}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.address">
               <span class="list-contentName">详细地址:</span>
-              <span class="list-content" v-if="project&&project.address">{{project.address}}</span>
+              <span class="list-content" >{{project.address}}</span>
             </div>
           </div>
           <div class="fll">
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.averageAge">
               <span class="list-contentName">团队平均年龄：</span>
-              <span class="list-content" v-if="project&&project.averageAge">{{project.averageAge}}</span>
+              <span class="list-content" >{{project.averageAge}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.companyFoundTimeStr">
               <span class="list-contentName">建企时间：</span>
               <span
                 class="list-content"
-                v-if="project&&project.companyFoundTimeStr"
+                
               >{{project.companyFoundTimeStr}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.weChat">
               <span class="list-contentName">官方微信：</span>
-              <span class="list-content" v-if="project&&project.weChat">{{project.weChat}}</span>
+              <span class="list-content">{{project.weChat}}</span>
             </div>
           </div>
         </div>
-        <div>
+        <div v-if="project&&project.business">
           <span class="list-contentName" style="display:inline-block">主营业务：</span>
           <p class="content_desc">
-            <span v-if="project&&project.business">{{project.business}}</span>
+            <span >{{project.business}}</span>
           </p>
         </div>
-        <div>
+        <div v-if="project&&project.brightSpot">
           <span class="list-contentName" style="display:inline-block">公司亮点：</span>
           <p class="content_desc">
-            <span v-if="project&&project.brightSpot">{{project.brightSpot}}</span>
+            <span >{{project.brightSpot}}</span>
           </p>
         </div>
-        <div>
+        <div v-if="project&&project.position">
           <span class="list-contentName" style="display:inline-block">行业地位：</span>
           <p class="content_desc">
-            <span v-if="project&&project.position">{{project.position}}</span>
+            <span >{{project.position}}</span>
           </p>
         </div>
-        <div>
+        <div v-if="project&&project.trienniumFinancialData">
           <span class="list-contentName" style="display:inline-block">近三年财务数据：</span>
           <p class="content_desc">
-            <span v-if="project&&project.trienniumFinancialData">{{project.trienniumFinancialData}}</span>
+            <span >{{project.trienniumFinancialData}}</span>
           </p>
         </div>
-        <div>
+        <div v-if="project&&project.profitForecast">
           <span class="list-contentName" style="display:inline-block">3-5年盈利预测：</span>
           <p class="content_desc">
-            <span v-if="project&&project.profitForecast">{{project.profitForecast}}</span>
+            <span >{{project.profitForecast}}</span>
           </p>
         </div>
-        <div class="require">
+        <div class="require" v-if="project&&project.stockStructureImgPath">
           <span>股权结构</span>
         </div>
         <div class="requireContent">
@@ -237,11 +229,11 @@
             </div>
           </div>
         </div>
-        <div class="require">
+        <div class="require" v-if="project&&project.teamBrief">
           <span>团队核心</span>
         </div>
         <div class="requireContent" v-if="project&&project.teamBrief">{{project.teamBrief}}</div>
-        <div class="require">
+        <div class="require" v-if="project&&project.comment">
           <span>项目点评</span>
         </div>
         <div class="requireContent">
@@ -291,7 +283,7 @@
       <div v-if="sub_project">
         <el-form>
           <el-form-item label="资金" label-width="100">
-            <el-select v-model="projectId" placeholder="请选择资金">
+            <el-select v-model="moneyId" placeholder="请选择资金">
               <el-option
                 v-for="item in myMoney"
                 :key="item.id"
@@ -494,8 +486,8 @@ export default {
             this.toast_show = true;
           } else {
             this.success = false;
-            this.hint = "关注失败";
-            this.toast_show = false;
+            this.hint = res.message;
+            this.toast_show = true;
           }
         });
     },
@@ -512,7 +504,7 @@ export default {
           } else {
             this.success = false;
             this.hint = "取消失败";
-            this.toast_show = false;
+            this.toast_show = true;
           }
         });
     },
@@ -529,13 +521,13 @@ export default {
       } else {
         this.success = false;
         this.hint = "您未登录，请先登录";
-        this.toast_show = false;
+        this.toast_show = true;
       }
     },
     apply() {
       this.$axios
-        .get("/jsp/wap/trCapital/do/doDeliver.jsp", {
-          params: { id: this.moneyId, projectId: this.projectId }
+        .get("/jsp/wap/trProject/do/doBespoke.jsp", {
+          params: { id: this.projectId, moneyId: this.moneyId }
         })
         .then(res => {
           if (res.success == "true") {
@@ -558,7 +550,7 @@ export default {
     },
     getMyMoney(pn) {
       this.$axios
-        .get("/jsp/wap/center/ctrl/jsonIssueProjectList.jsp", {
+        .get("/jsp/wap/center/ctrl/jsonIssueCapitalList.jsp", {
           params: { pageNumber: pn }
         })
         .then(res => {
@@ -576,12 +568,18 @@ export default {
   created() {
     this.getData();
     this.getFollow();
-    // this.getMyMoney()
+    if (Cookies.get("userKey")) {
+    this.getMyMoney()
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
+.dialog-footer {
+  width: 200px;
+  margin: 0 auto;
+}
 .bread_search {
   border-bottom: 1px solid #d9d9d9;
   margin-bottom: 10px;
@@ -701,7 +699,7 @@ export default {
 .content_desc {
   font-size: 14px;
   line-height: 2;
-  text-indent: 2em;
+  text-indent: 1em;
 }
 .box_content {
   line-height: 2;

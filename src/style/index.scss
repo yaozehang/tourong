@@ -107,3 +107,31 @@ a{
   .toast_content {
     text-align: center;
   }
+
+  .like {
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url(/static/img/zan.png) no-repeat center;
+    background-size: contain;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+  
+  .nolike {
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url(/static/img/zanzan.png) no-repeat center;
+    background-size: contain;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }

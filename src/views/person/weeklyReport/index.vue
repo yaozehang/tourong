@@ -5,12 +5,12 @@
         <span class="week_title">本期周报</span>
       </p>
       <router-link
-        :to="{name:'weeklyReportDetail',params:reportData[reportData.length - 1],query:reportData.length}"
+        :to="{name:'weeklyReportDetail',query:{id:reportData[0].id,issue:count,time:reportData[0].addTimeStr}}"
       >
         <p class="report_now">
           <i></i>
-          <span>{{reportData[reportData.length - 1].year}}年第{{reportData.length}}期</span>
-          <span class="time">{{reportData[reportData.length - 1].time}}</span>
+          <span v-if="reportData">{{reportData[0].addTimeStr.substr(0,4)}}年第{{count}}期</span>
+          <span class="time" v-if="reportData">{{reportData[0].addTimeStr}}</span>
         </p>
       </router-link>
     </div>
@@ -20,24 +20,24 @@
       </p>
       <div class="clearfix">
         <ul class="report_ul fll">
-          <router-link to>
             <li class="report_list" v-for="(item , index) in reportData" :key="index">
-              <span class="time">{{item.time}}</span>
+          <router-link :to="{name:'weeklyReportDetail',query:{id:item.id,issue:count - index,time:item.addTimeStr}}">
+              <span class="time" v-if="item&&item.addTimeStr">{{item.addTimeStr.substr(0,10)}}</span>
               <span class="line"></span>
               <i></i>
-              <span class="year">{{item.year}}年第{{index + 1}}期</span>
-            </li>
+              <span class="year" v-if="item&&item.addTimeStr">{{item.addTimeStr.substr(0,4)}}年第{{count - index}}期</span>
           </router-link>
+            </li>
         </ul>
-        <ul class="report_ul flr" style="margin-right:30px;">
-          <!-- <router-link to=""> -->
-          <li class="report_list" v-for="(item , index) in reportData" :key="index">
-            <span class="time">{{item.time}}</span>
+        <ul class="report_ul flr" style="margin-right:30px;" v-if="reportData.length == 10">
+          <li class="report_list" v-for="(item , index) in reportData2" :key="index">
+          <router-link :to="{name:'weeklyReportDetail',query:{id:item.id,issue:count - index,time:item.addTimeStr}}">
+            <span class="time" v-if="item&&item.addTimeStr">{{item.addTimeStr.substr(0,10)}}</span>
             <span class="line"></span>
             <i></i>
-            <span class="year">{{item.year}}年第{{index + 1}}期</span>
+            <span class="year" v-if="item&&item.addTimeStr">{{item.addTimeStr.substr(0,4)}}年第{{count - index}}期</span>
+          </router-link>
           </li>
-          <!-- </router-link> -->
         </ul>
       </div>
     </div>
@@ -49,41 +49,35 @@ export default {
   data() {
     return {
       reportData: [
-        {
-          time: "2018-11-14",
-          year: "2018",
-        },
-        {
-          time: "2018-11-14",
-          year: "2018"
-        },
-        {
-          time: "2018-11-14",
-          year: "2018"
-        },
-        {
-          time: "2018-11-14",
-          year: "2018"
-        },
-        {
-          time: "2018-11-14",
-          year: "2018"
-        },
-        {
-          time: "2018-11-14",
-          year: "2018"
-        },
-        {
-          time: "2018-11-14",
-          year: "2018"
-        },
-        {
-          time: "2018-11-14",
-          year: "2018",
-        }
-      ]
+        {addTimeStr:''}
+      ],
+      reportData2: [],
+      count:1,
     };
-  }
+  },
+  methods:{
+    getData(pn){
+      this.$axios.get('/jsp/wap/center/ctrl/jsonWeeklyList.jsp',{params:{pageNumber:pn}}).then(res => {
+        this.reportData = res.data.pageList
+        this.count = Number(res.data.pagination.totalCount)
+      })
+    },
+    getData2(pn){
+      this.$axios.get('/jsp/wap/center/ctrl/jsonWeeklyList.jsp',{params:{pageNumber:pn}}).then(res => {
+        this.reportData2 = res.data.pageList
+      })
+    },
+  },
+  created(){
+    this.getData(1)
+  },
+  watch: {
+    count(e){
+      if(e>10) {
+        this.getData2(2)
+      }
+    }
+  },
 };
 </script>
 
@@ -162,11 +156,18 @@ li {
     border: none;
   }
 }
+.time {
+    color: #999;
+}
+.year{
+    color: #999;
+}
 
 .report_ul .report_list:hover {
   font-size: 16px;
   font-family: "Microsoft YaHei";
-  color: rgb(0, 83, 133);
+  .year{color: rgb(0, 83, 133);}
+  .time{color: rgb(0, 83, 133);}
     i {
       display: inline-block;
       width: 13px;

@@ -24,7 +24,7 @@
           <el-input v-model="formData.title"></el-input>
         </el-form-item>
         <el-form-item label="所属行业">
-          <el-checkbox-group v-model="industys">
+          <el-checkbox-group v-model="industrys">
             <el-checkbox
               v-for="industry in industryList"
               :label="industry.dataValue"
@@ -215,9 +215,9 @@
         <el-form-item label="职务" class="w350">
           <el-input v-model="formData.directorJob"></el-input>
         </el-form-item>
-        <el-form-item label="年龄" class="w350" prop="directorAge">
+        <!-- <el-form-item label="年龄" class="w350" prop="directorAge">
           <el-input v-model="formData.directorAge"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="电话" class="w350" prop="directorPhone">
           <el-input v-model="formData.directorPhone"></el-input>
         </el-form-item>
@@ -271,6 +271,16 @@
         </el-form-item>
       </el-form>
     </div>
+    <el-dialog
+      :visible.sync="toast_show"
+      width="30%"
+      center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
@@ -284,10 +294,7 @@ export default {
     var checkPhone = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("联系人手机号不能为空"));
-      } else {
-        callback();
-      }
-      if (!/^1[34578]\d{9}$/.test(value)) {
+      } else if (!/^1[34578]\d{9}$/.test(value)) {
         callback("手机号码有误，请重填");
       } else {
         callback();
@@ -394,11 +401,14 @@ export default {
         { dataValue: "2", dataName: "仅对VIP会员公开" },
         { dataValue: "3", dataName: "保密，仅对后台管理员公开" }
       ],
-      industys: [],
+      industrys: [],
       paymentTypes: [],
       fileNames: [],
       filePaths: [],
-      fileList: []
+      fileList: [],
+      hint:"",
+      success:false,
+      toast_show:false,
     };
   },
   methods: {
@@ -497,7 +507,7 @@ export default {
             this.financingWayList = financingWayList;
           }
           if (res.data.project.industryName != "") {
-            this.industys = res.data.project.industryName.split(",");
+            this.industrys = res.data.project.industry.replace(/[\[\]]/g, "").split(",");
           }
           if (res.data.project.paymentType != "") {
             this.paymentTypes = res.data.project.paymentType
@@ -553,7 +563,7 @@ export default {
           }).then(() => {
             var fileNames = this.fileNames.join(";=;");
             var filePaths = this.filePaths.join(",");
-            var industys = this.industys.join(",");
+            var industrys = this.industrys.join(",");
             var paymentTypes = this.paymentTypes.join(",");
             var id = this.$route.query.id;
             if (id != "") {
@@ -597,7 +607,7 @@ export default {
                 financingWay: this.formData.financingWay,
                 stage: this.formData.stage,
                 stockStructureImgPath: this.formData.stockStructureImgPath,
-                industys,
+                industrys,
                 paymentTypes,
                 fileNames,
                 filePaths,
@@ -643,7 +653,7 @@ export default {
                 financingWay: this.formData.financingWay,
                 stage: this.formData.stage,
                 stockStructureImgPath: this.formData.stockStructureImgPath,
-                industys,
+                industrys,
                 paymentTypes,
                 fileNames,
                 filePaths,
@@ -658,20 +668,30 @@ export default {
               .then(res => {
                 if (res.success == "true") {
                   if(status == 0){
-                    this.$message.success("保存成功")
-                    this.$router.push("/person/myMoney");
+                    this.success = true;
+                    this.hint = "保存项目成功";
+                    this.toast_show = true;
+                    setTimeout(()=> {
+                      this.$router.push("/person/myProject");
+                    },1000)
                   } else {
-                    this.$message.success("上传项目成功");
-                  this.$router.push("/person/myProject");
+                  this.success = true;
+                  this.hint = "上传项目成功";
+                  this.toast_show = true;
+                  setTimeout(()=> {
+                      this.$router.push("/person/myProject");
+                    },1000)
                   }
                 } else {
-                  this.$message.error("上传资金失败，请完善资金信息或检查网络");
+                  this.success = false;
+                  this.hint = "提交失败，请检查网络或重试";
+                  this.toast_show = true;
                 }
               });
           });
         } else {
           console.log("error submit!!");
-          this.$message.error("请完善信息");
+          this.$message.error("请完善以下信息，方便我们更好的为您服务");
           return false;
         }
       });

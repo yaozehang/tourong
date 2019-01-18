@@ -591,7 +591,8 @@ export default {
             investTypes,
             regions,
             investRegions,
-            investAmounts
+            investAmounts,
+            title: this.title
           }
         })
         .then(res => {
@@ -915,7 +916,7 @@ export default {
       } else {
         this.success = false;
         this.hint = "您未登录，请先登录";
-        this.toast_show = false;
+        this.toast_show = true;
       }
     },
     apply() {
@@ -950,7 +951,33 @@ export default {
     this.getTypeData();
     this.getActData();
     this.getNewsList();
-    this.getMyProject();
+    if (Cookies.get("userKey")) {
+      this.getMyProject();
+    }
+  },
+  watch:{
+    title(title){
+      this.loading = true;
+      this.$axios
+        .get("/jsp/wap/trCapital/ctrl/jsonCapitalPage.jsp", {
+          params: {
+            investIndustrys: this.investIndustrys,
+            investTypes: this.investTypes,
+            regions: this.regions,
+            investRegions: this.investRegions,
+            investAmounts: this.investAmounts,
+            title
+          }
+        })
+        .then(res => {
+          if (res.success == "true") {
+            this.pageList = res.data.pageList;
+            this.totalCount = res.data.pagination.totalCount;
+            this.pn = 1;
+            this.loading = false;
+          }
+        });
+    }
   }
 };
 </script>

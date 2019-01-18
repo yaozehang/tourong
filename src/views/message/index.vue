@@ -199,6 +199,7 @@ export default {
       });
       window.open(href, '_blank');
     },
+
   },
   created(){
     if(this.$route.query.category) {
@@ -312,11 +313,12 @@ export default {
     font-size: 14px;
     font-family: "Microsoft YaHei";
     color: #999;
-    line-height: 1.286;
+    line-height: 1.5;
+    margin-top: 8px;
   }
   .content {
     position: relative;
-    max-height: 35px;
+    max-height: 38px;
     overflow: hidden;
   }
   .content::after {
@@ -354,6 +356,7 @@ export default {
     font-family: "Microsoft YaHei";
     color: #999;
     line-height: 1.286;
+    
   }
   .content {
     position: relative;

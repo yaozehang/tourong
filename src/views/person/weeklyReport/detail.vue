@@ -3,59 +3,55 @@
     <div class="person_content">
       <p class="report_now">
         <i></i>
-        <span>{{reportData.year}}年第{{lssues}}期</span>
-        <span class="time">{{reportData.time}}</span>
+        <span>{{time.substr(0,4)}}年第{{issue}}期</span>
+        <span class="time">{{time.substr(0,10)}}</span>
       </p>
       <p class="project_title">
         <span class="project_">项目精选</span>
-        <span class="project_more flr" @click="$router.push('/project')">更多></span>
+        <span class="project_more flr" @click="toProject">更多></span>
       </p>
       <div
-        v-for="(item , index) in reportData.projectData.slice(0,2)"
+        v-for="(item , index) in projectData"
         :key="index + 'project'"
         class="project_list clearfix"
       >
-        <router-link :to="{name:'projectDetail'}">
-        <img :src="item.img" alt class="fll">
+        <!-- <img :src="$url + item.imgPaths" alt class="fll"> -->
         <div class="fll project_con">
-          <p class="title">{{item.title}}</p>
+          <p class="title" @click="toProjectDetailPage(item.resourceId)">{{item.title}}</p>
           <p class="content">{{item.content}}</p>
         </div>
-        </router-link>
       </div>
       <p class="project_title" style="margin-top:0;">
         <span class="project_">资金对接</span>
-        <span class="project_more flr" @click="$router.push('/money')">更多></span>
+        <span class="project_more flr" @click="toMoney">更多></span>
       </p>
       <div
-        v-for="(item , index) in reportData.moneyData.slice(0,2)"
+        v-for="(item , index) in moneyData"
         :key="index + 'money'"
         class="project_list clearfix lastborder"
       >
-        <router-link :to="{name:'moneyDetail'}">
-        <img :src="item.img" alt class="fll">
+        <!-- <img :src="$url + item.imgPaths" alt class="fll"> -->
         <div class="fll project_con">
-          <p class="title">{{item.title}}</p>
+          <p class="title" @click="toMoneyDetailPage(item.resourceId)">{{item.title}}</p>
           <p class="content">{{item.content}}</p>
         </div>
-        </router-link>
       </div>
       <p class="project_title" style="margin-top:0;">
         <span class="project_">资讯</span>
-        <span class="project_more flr" @click="$router.push('/message')">更多></span>
+        <span class="project_more flr" @click="toMessage">更多></span>
       </p>
       <div
-        v-for="(item , index) in reportData.messageData.slice(0,2)"
+        v-for="(item , index) in messageData"
         :key="index + 'message'"
         class="mg-20"
       >
         <div v-if="item.img" class="clearfix">
           <router-link to="/message/messageDetail">
-            <img :src="item.img" alt class="fll" width="152px" height="101px">
+            <img :src="$url + item.imgPaths" alt class="fll" width="152px" height="101px">
             <div class="fll mes_box">
-              <p class="title">{{item.title}}</p>
+              <p class="title" @click="toMessageDetailPage(item.resourceId)">{{item.title}}</p>
               <div class="clearfix">
-                <span class="fll time">发布时间；{{item.time}}</span>
+                <span class="fll time">发布时间；{{item.addTimeStr}}</span>
                 <span class="flr num">浏览：{{item.num}}次</span>
               </div>
               <p class="content">{{item.content}}</p>
@@ -63,31 +59,29 @@
           </router-link>
         </div>
         <div v-else class="clearfix">
-          <router-link to="/message/messageDetail">
             <div class="fll mes_box2">
-              <p class="title">{{item.title}}</p>
+              <p class="title" @click="toMessageDetailPage(item.resourceId)">{{item.title}}</p>
               <div class="clearfix">
-                <span class="fll time">发布时间；{{item.time}}</span>
+                <span class="fll time">发布时间；{{item.addTimeStr}}</span>
                 <span class="flr num">浏览：{{item.num}}次</span>
               </div>
               <p class="content">{{item.content}}</p>
             </div>
-          </router-link>
         </div>
       </div>
       <p class="project_title" style="margin-top:20px;">
         <span class="project_">活动</span>
-        <span class="project_more flr" @click="$router.push('/activity')">更多></span>
+        <span class="project_more flr" @click="activity">更多></span>
       </p>
       <div
         class="act_list clearfix"
-        v-for="(item, index) in reportData.actlist.slice(0,2)"
+        v-for="(item, index) in actlist"
         :key="index + 'act'"
       >
-        <img :src="item.img" alt width="270px" height="180px" class="fll">
-        <div class="fll list">
-          <p class="list-title">{{item.title}}</p>
-          <p class="list-content">
+        <!-- <img :src="$url + item.imgPaths" alt width="270px" height="180px" class="fll"> -->
+         <div class="fll list">
+          <p class="list-title" style="font-size:18px;" @click="activityDetailPage(item.resourceId)">{{item.title}}</p>
+          <!-- <p class="list-content">
             <i class="local"></i>
             {{item.local}}
           </p>
@@ -102,15 +96,15 @@
           <p class="list-content2">
             <i class="time"></i>
             报名时间：{{item.beginTime}} 至 {{item.endTime}}
-          </p>
+          </p> -->
         </div>
-        <div class="flr">
+        <!-- <div class="flr">
           <span :class="item.status == 1 ? 'apply' : 'over'">{{item.status == 1 ? '报名中' : '已结束'}}</span>
           <button
             :class="item.status == 1 ? 'applyBtn' : 'overBtn'"
             @click="item.status == 1 ? apply() : over() "
           >{{item.status == 1 ? '我要报名' : '活动结束'}}</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -120,7 +114,6 @@
 export default {
   data() {
     return {
-      reportData: {
         time: "2018-11-14",
         year: "2018",
         projectData: [
@@ -288,14 +281,23 @@ export default {
             endTime: "2018-10-12",
             status: 1
           }
-        ]
-      },
-      lssues: 1
+        ],
+      issue: 1,
+      time:''
     };
   },
   methods: {
     getData() {
-      this.lssues = this.$route.query;
+      let id = this.$route.query.id
+      this.issue = this.$route.query.issue
+      this.time = this.$route.query.time
+      this.$axios.get(`/jsp/wap/center/ctrl/jsonWeeklyDetail.jsp?id=${id}`).then(res => {
+        console.log(res);
+        this.actlist = res.data.activityList
+        this.projectData = res.data.projectList
+        this.messageData = res.data.newsList
+        this.moneyData = res.data.capitalList
+      })
     },
     getType(e) {
       console.log(e);
@@ -311,7 +313,59 @@ export default {
         title: "错误",
         message: "活动已结束"
       });
-    }
+    },
+    toProjectDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "projectDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
+    toProject(){
+        let {href} = this.$router.resolve({
+            name: "project",
+        });
+        window.open(href, '_blank');
+    },
+    toMoneyDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "moneyDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
+    toMoney(){
+        let {href} = this.$router.resolve({
+            name: "money",
+        });
+        window.open(href, '_blank');
+    },
+    toMessage(){
+      let {href} = this.$router.resolve({
+            name: "message",
+        });
+        window.open(href, '_blank');
+    },
+    toMessageDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "messageDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
+      activity(){
+        let {href} = this.$router.resolve({
+            name: "activity",
+        });
+        window.open(href, '_blank');
+      },
+      activityDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "activityDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
   },
   mounted() {
     this.getData()
@@ -369,11 +423,15 @@ export default {
   }
 }
 
+.title:hover{
+  color:#005982;
+}
+
 //项目列表
 .project_list {
   padding-bottom: 20px;
   margin-bottom: 20px;
-  // border-bottom: 1px solid #cdcdcd;
+  border-bottom: 1px solid #ededed;
   img {
     width: 235px;
     height: 150px;
@@ -383,6 +441,7 @@ export default {
     width: 660px;
     margin-left: 20px;
     .title {
+      cursor: pointer;
       margin-top: 0;
       width: 550px;
       font-size: 18px;
@@ -392,6 +451,9 @@ export default {
       overflow: hidden; /*超出部分隐藏*/
       white-space: nowrap; /*不换行*/
       text-overflow: ellipsis;
+    }
+    .title:hover{
+      color:#005982;
     }
     .content {
       font-size: 14px;
@@ -423,9 +485,13 @@ export default {
   width: 748px;
   margin-left: 20px;
   .title {
+    cursor: pointer;
     color: #000;
     margin-top: 0;
     margin-bottom: 10px;
+  }
+  .title:hover{
+    color:#005982;
   }
   .time {
     font-size: 12px;
@@ -462,10 +528,16 @@ export default {
   }
 }
 .mes_box2 {
+  width: 100%;
+  border-bottom: 1px solid #ededed;
   .title {
+    cursor: pointer;
     margin-top: 5px;
     margin-bottom: 10px;
     color: #000;
+  }
+  .title:hover{
+    color:#005982;
   }
   .time {
     font-size: 12px;
@@ -505,18 +577,23 @@ export default {
 //活动列表
 .act_list {
   // width: 810px;
-  height: 180px;
+  // height: 180px;
   margin-bottom: 20px;
+  border-bottom: 1px solid #ededed;
 }
 .list {
   margin-left: 20px;
 }
 .list-title {
+  cursor: pointer;
   font-size: 20px;
   font-family: "Microsoft YaHei";
   color: rgb(51, 51, 51);
   margin: 10px 0 25px;
 }
+.list-title:hover{
+    color:#005982;
+  }
 .list-content {
   margin-left: 30px;
   font-size: 14px;

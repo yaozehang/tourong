@@ -26,51 +26,51 @@
             <el-button plain v-else class="focus" @click="gofollow">关注</el-button>
           </div>
         </div>
-        <div class="box_content">
+        <div class="box_content" v-if="money&&money.investAmountName">
           <span class="list-contentName">投资资金：</span>
           <span class="list-content current">{{money.investAmountName}}</span>
         </div>
         <div class="clearfix">
           <div class="fll">
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.investCase">
               <span class="list-contentName">投资方式：</span>
               <span class="list-content">{{money.investCase}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.investRegionNameStr">
               <span class="list-contentName">投资地区：</span>
               <span class="list-content">{{money.investRegionNameStr}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.investTypeName">
               <span class="list-contentName">投资类型：</span>
               <span class="list-content">{{money.investTypeName}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.paymentTypeName">
               <span class="list-contentName">支付方式：</span>
               <span class="list-content">{{money.paymentTypeName}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.safeguardName">
               <span class="list-contentName">保障措施：</span>
               <span class="list-content">{{money.safeguardName}}</span>
             </div>
           </div>
           <div class="fll">
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.pawnTypeName">
               <span class="list-contentName">资金类型：</span>
               <span class="list-content">{{money.pawnTypeName}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.investIndustryName">
               <span class="list-contentName">投资行业：</span>
               <span class="list-content">{{money.investIndustryName}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.investStageName">
               <span class="list-contentName">投资阶段：</span>
               <span class="list-content">{{money.investStageName}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.validStartTimeStr">
               <span class="list-contentName">有效期限：</span>
               <span
                 class="list-content"
-              >{{money.expiryDateStartTimeStr}}~{{money.expiryDateEndTimeStr}}</span>
+              >{{money.validStartTimeStr}}~{{money.validEndTimeStr}}</span>
             </div>
           </div>
           <div class="fll">
@@ -78,13 +78,13 @@
               <span class="list-contentName">资金来源：</span>
               <span class="list-content">{{money.capitalSourceName}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.marketHotName">
               <span class="list-contentName">市场热点：</span>
-              <span class="list-content">{{money.hot}}</span>
+              <span class="list-content">{{money.marketHotName}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="money&&money.areaHotName">
               <span class="list-contentName">区域热点：</span>
-              <span class="list-content">{{money.hotArea}}</span>
+              <span class="list-content">{{money.areaHotName}}</span>
             </div>
           </div>
         </div>
@@ -305,7 +305,7 @@ export default {
             this.toast_show = true;
           } else {
             this.success = false;
-            this.hint = "关注失败";
+            this.hint = res.message;
             this.toast_show = true;
           }
         });
@@ -353,7 +353,7 @@ export default {
       } else {
         this.success = false;
         this.hint = "您未登录，请先登录";
-        this.toast_show = false;
+        this.toast_show = true;
       }
     },
     apply() {
@@ -387,7 +387,9 @@ export default {
   created() {
     this.getData();
     this.getFollow();
+    if (Cookies.get("userKey")) {
     this.getMyProject()
+    }
   }
 };
 </script>

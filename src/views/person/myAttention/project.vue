@@ -1,15 +1,25 @@
 <template>
   <div class="project-menu">
+    <div class="project_height">
     <div v-for="(item , index) in projectData" :key="index" class="project-item clearfix">
-      <router-link to="/project/projectDetail" class="fll">
+      <div @click="toProjectDetailPage(item.id)" class="fll">
         <p class="project-item-title">{{item.title}}</p>
-        <p class="project-item-content">{{item.content}}</p>
-      </router-link>
-      <button class="flr cancel" @click="cancelBtn(index)">取消关注</button>
+        <p class="project-item-content">{{item.brief}}</p>
+      </div>
+      <button class="flr cancel" @click="cancelBtn(item.id,index)">取消关注</button>
     </div>
-    <p v-show="projectData.length == 0" class="noAtt">
-      你没有关注任何项目哦~
+    <p v-show="projent_show" class="noAtt">
+      你没有关注任何项目哦~ <span style="color:#005982;cursor:pointer" @click="toProject">前去关注→</span>
     </p>
+    </div>
+    <div class="mes_page">
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          layout="total, prev, pager, next, jumper"
+          :total="count"
+        ></el-pagination>
+      </div>
   </div>
 </template>
 
@@ -17,52 +27,55 @@
 export default {
   data(){
     return {
-      projectData: [
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        },
-        {
-          img:'/static/img/pro-1.jpg',
-          title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-          content:
-            "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        }
-      ],
+      projectData: [],
+      count:1,
+      projent_show:false,
     }
   },
   methods:{
-    cancelBtn(index){
-      this.projectData.splice(index,1)
+    cancelBtn(id,index){
+      this.$confirm("即将取消关注, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+        }).then(() => {
+        this.$axios.get(`/jsp/wap/trProject/do/doUnfollow.jsp?id=${id}`).then(res => {
+          if(res.success == 'true'){
+              this.projectData.splice(index,1)    
+              if(this.projectData.length == 0){
+                this.projent_show = true
+              }   
+            }
+        })
+      })
     },
-    getData(){
-
+    getData(pn){
+      this.$axios.get('/jsp/wap/center/ctrl/jsonFollowList.jsp?type=1',{params:{pageNumber:pn}}).then(res => {
+        console.log(res);
+        if(res.success == 'true'){
+            this.projectData = res.data.pageList
+            this.count = Number(res.data.pagination.totalCount)
+            if(this.projectData.length == 0){
+              this.projent_show = true
+            }
+          }
+      })
+    },
+    handleCurrentChange(val) {
+        this.getData(val)
+      },
+    toProjectDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "projectDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
+    toProject(){
+        let {href} = this.$router.resolve({
+            name: "project",
+        });
+        window.open(href, '_blank');
     }
   },
   created(){
@@ -148,8 +161,12 @@ export default {
     border-radius: 6px;
 }
 
-.project-menu .project-item:last-of-type {
-  border: none;
+// .project-menu .project-item:last-of-type {
+//   border: none;
+// }
+
+.project_height {
+  min-height: 700px;
 }
 
 .cancel:active {
@@ -159,7 +176,24 @@ export default {
 }
 
 .noAtt {
-  margin-top: 50px;
+  margin-top: 150px;
   text-align: center;
+}
+
+.mes_page {
+  margin: 20px 0 ;
+  padding: 0 60px;
+  /deep/ {
+    .el-pagination.is-background .el-pager li:not(.disabled).active {
+      background: #005983 !important;
+      color: #fff !important;
+    }
+    .el-pagination.is-background .el-pager li {
+      background: #fff !important;
+      color: #000 !important;
+      border: 1px solid #d9d9d9 !important;
+      font-weight: 400;
+    }
+  }
 }
 </style>

@@ -171,7 +171,7 @@
         <div v-if="sub_project"> 
             <el-form>
                 <el-form-item label="资金" label-width="100">
-                    <el-select v-model="projectId" placeholder="请选择资金">
+                    <el-select v-model="moneyId" placeholder="请选择资金">
                     <el-option
                         v-for="item in myMoney"
                         :key="item.id"
@@ -422,8 +422,8 @@ export default {
   getActData(financingWays,regions,industrys,financingMoneys) {
       this.loading = true;
       this.$axios
-        .get("/jsp/wap/trProject/ctrl/jsonProjectPage.jsp", {
-          params: { financingWays,regions,industrys,financingMoneys}
+        .get("/jsp/wap/trProject/ctrl/jsonProjectPage.jsp", {       
+          params: { financingWays,regions,industrys,financingMoneys,title: this.title}
         })
         .then(res => {
           if (res.success == "true") {
@@ -455,7 +455,7 @@ export default {
   },
   getMyMoney(pn) {
       this.$axios
-        .get("/jsp/wap/center/ctrl/jsonIssueProjectList.jsp", {
+        .get("/jsp/wap/center/ctrl/jsonIssueCapitalList.jsp", {
           params: { pageNumber: pn }
         })
         .then(res => {
@@ -640,13 +640,13 @@ export default {
       } else {
         this.success = false;
         this.hint = "您未登录，请先登录";
-        this.toast_show = false;
+        this.toast_show = true;
       }
     },
     apply() {
       this.$axios
         .get("/jsp/wap/trCapital/do/doDeliver.jsp", {
-          params: { id: this.moneyId, projectId: this.projectId }
+          params: { projectId: this.moneyId, id: this.projectId }
         })
         .then(res => {
           if (res.success == "true") {
@@ -672,12 +672,35 @@ export default {
     this.getTypeData()
     this.getActData()
     this.getNewsList()
-    // this.getMyMoney()
+    if (Cookies.get("userKey")) {
+      this.getMyMoney()
+    }
+  },
+  watch:{
+    title(title){
+      this.loading = true;
+      this.$axios
+        .get("/jsp/wap/trProject/ctrl/jsonProjectPage.jsp", {
+          params: { financingWays:this.financingWays,regions:this.regions,industrys:this.industrys,financingMoneys:this.financingMoneys,title}
+        })
+        .then(res => {
+          if (res.success == "true") {
+            this.pageList = res.data.pageList;
+            this.totalCount = res.data.pagination.totalCount;
+            this.pn = 1;
+            this.loading = false;
+          }
+        });
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
+.dialog-footer {
+  width: 200px;
+  margin: 0 auto;
+}
 .bread_search {
   border-bottom: 1px solid #d9d9d9;
   margin-bottom: 10px;

@@ -360,6 +360,9 @@ export default {
             this.success = false;
             this.hint = res.message;
             this.toast_show = true;
+            setTimeout(()=> {
+              this.toast_show = false;
+            },2000)
           }
         });
     },
