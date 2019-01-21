@@ -1,5 +1,7 @@
 <template>
   <div>
+    <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
+    <Login :should_login="should_login" :login_show="login_show"></Login>
     <div class="bg-89">
       <div class="w1200">
         <span class="txt-202" v-show="login">您好，请
@@ -8,7 +10,7 @@
         <span class="txt-202" v-show="!login">
           您好，欢迎您
         </span>
-        <span class="txt-202 register" @click="login_in"  v-show="login">免费注册</span>
+        <span class="txt-202 register" @click="login_re" v-show="login">免费注册</span>
         <span class="txt-202 register"  v-show="!login" style="color:#fff;" @click="login_out">退出登录</span>
         <el-dropdown placement="bottom">
           <span class="invest el-dropdown-link">
@@ -83,6 +85,8 @@ import * as Cookies from 'js-cookie'
 export default {
   data() {
     return {
+      login_show:true,
+      should_login:false,
       login:false,
       type:'1',
       title:'',
@@ -99,9 +103,8 @@ export default {
     login_out(){
         Cookies.remove('userKey')
         this.login = false
-        this.$router.push('/home')
         setTimeout(()=> {
-          location.reload()
+          window.history.go(0)
         },50)
     },
     person(){
@@ -111,28 +114,32 @@ export default {
           });
           window.open(href, '_blank');
        } else {
-         this.$router.push('/login')
+        //  this.$router.push('/login')
+        this.should_login = true
        }
      },
       toMymoney(){
         if(Cookies.get('userKey')){
         this.$router.push('/person/applyMoney')
         } else {
-          this.$router.push('/login')
+          // this.$router.push('/login')
+        this.should_login = true
         }
       },
       toMemberAttest(){
         if(Cookies.get('userKey')){
         this.$router.push('/person/memberAttest')
         } else {
-          this.$router.push('/login')
+          // this.$router.push('/login')
+        this.should_login = true
         }
       },
       toMyproject(){
         if(Cookies.get('userKey')){
         this.$router.push('/person/applyProject')
         } else {
-          this.$router.push('/login')
+          // this.$router.push('/login')
+        this.should_login = true
         }
       },
       tokefu(){
@@ -145,7 +152,8 @@ export default {
           });
           window.open(href, '_blank');
        } else {
-         this.$router.push('/login')
+        //  this.$router.push('/login')
+        this.should_login = true
        }
      },
     search(){
@@ -177,6 +185,16 @@ export default {
       }
     },
     login_in(){
+      let { href } = this.$router.resolve({
+        name: "login"
+      });
+      window.open(href, "_blank");
+      // this.login_show = true
+      // this.should_login = true
+    },
+    login_re(){
+      // this.login_show = false
+      // this.should_login = true
       let { href } = this.$router.resolve({
         name: "login"
       });

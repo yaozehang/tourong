@@ -22,6 +22,9 @@ import 'vue-social-share/dist/client.css';
 Vue.use(Share)
 Vue.use(ElementUI);
 
+import Login from './components/Login'
+Vue.use(Login)
+
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = $axios;

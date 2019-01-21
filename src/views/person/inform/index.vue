@@ -17,7 +17,7 @@
             <!-- <span class="flr delete">删除</span> -->
         </p>
       </div>
-      <div v-show="noShow" class="noChange">您还未添加过进展</div>
+      <div v-show="noShow" class="noChange">暂无消息通知</div>
       <div class="mes_page">
         <el-pagination
           v-show="!noShow"

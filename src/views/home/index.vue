@@ -12,9 +12,9 @@
     </div>
     <div class="w1200">
       <div class="project clearfix">
-        <div class="project-title">
+        <div class="project-title" @click="toProductPage">
           优质项目
-          <i @click="toProductPage"></i>
+          <i ></i>
         </div>
         <div class="project-menu">
           <div v-for="(item , index) in projectData.slice(0,6)" :key="index" class="project-item fll" @click="toProjectDetailPage(item.id)">
@@ -28,9 +28,9 @@
     <img src="/static/img/touronglianxian.png" alt width="100%" style="display:block;min-width: 1200px;">
     <div class="bg-f2f2f3">
       <div class="w1200 clearfix">
-        <div class="invest-title">
+        <div class="invest-title" @click="toMoneyPage">
           投资信息
-          <i @click="toMoneyPage"></i>
+          <i ></i>
         </div>
         <div class="invest-menu">
           <div v-for="(item , index) in investData.slice(0,4)" :key="index" class="invest-item fll clearfix" @click="toMoneyDetailPage(item.id)">
@@ -71,9 +71,9 @@
       </div>
     </div>
     <div class="w1200" style="padding-bottom:80px;">
-      <div class="message-title">
+      <div class="message-title" @click="toMessagePage">
         投融资讯
-        <i @click="toMessagePage"></i>
+        <i ></i>
       </div>
       <div class="mes-title">
         <span class="mes-title-item"
@@ -487,6 +487,7 @@ export default {
 
 // 项目模块
 .project-title {
+  cursor: pointer;
   width: 100%;
   text-align: center;
   font-size: 36px;
@@ -568,6 +569,7 @@ export default {
   height: 700px;
 }
 .invest-title {
+  cursor: pointer;
   width: 100%;
   text-align: center;
   font-size: 36px;
@@ -584,19 +586,19 @@ export default {
   }
 }
 .invest-menu .invest-item:nth-child(1) {
-  margin-right: 80px;
+  // margin-right: 40px;
 }
 .invest-menu .invest-item:nth-child(3) {
-  margin-right: 80px;
+  // margin-right: 40px;
 }
 .invest-item {
-  width: 560px;
+  // width: 560px;
   height: 180px;
   margin-bottom: 55px;
 }
 .invest-text {
   margin-left: 10px;
-  width: 410px;
+  width: 470px;
 }
 .invest-item-title {
   font-size: 18px;
@@ -638,7 +640,7 @@ export default {
   width: 230px;
 }
 .w175 {
-  width: 175px;
+  width: 230px;
 }
 .inb {
   display: inline-block;
@@ -648,6 +650,7 @@ export default {
 }
 // 资讯
 .message-title {
+  cursor: pointer;
   width: 100%;
   text-align: center;
   font-size: 36px;

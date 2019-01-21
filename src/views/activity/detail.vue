@@ -81,6 +81,8 @@
       <div v-else class="toast_title">失败</div>
       <p class="toast_content">{{hint}}</p>
     </el-dialog>
+    <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
+    <Login :should_login="should_login"></Login>
   </div>
 </template>
 
@@ -90,6 +92,7 @@ import * as Cookies from 'js-cookie'
 export default {
   data() {
     return {
+      should_login:false,
       mesDetailData: {
         // title:'最新中国联通微博关注领取500M手机流量奖励 非秒到',
         // time:'2018-12-28 10:50:53',
@@ -174,9 +177,9 @@ export default {
         memberMobile: "",
         remark: ""
       },
-      showApply: false,
       loading: false,
       newsloading: false,
+      showApply:false,
       config: {
         // url                 : '', // 网址，默认使用 window.location.href
         // source              : '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
@@ -264,6 +267,8 @@ export default {
           this.like_show = false
         } else if(res.data == '1'){
           this.like_show = true
+        } else {
+          this.like_show = false
         }
       })
     },
@@ -281,13 +286,10 @@ export default {
           }
         })
         .then(res => {
-          if(res.succsee == 'true'){
-            this.showApply = false
-            setTimeout(() => {
+          if(res.success == 'true'){
             this.success = true
             this.hint = '报名成功！当前已有' + res.data + '人报名参加'
             this.sub_act = false;
-            },1000)
           } else {
             this.success = false
             this.hint = res.message
@@ -305,9 +307,10 @@ export default {
       if(Cookies.get('userKey')) {
         this.showApply = true
       } else {
-        this.success = false;
-        this.hint = '登录后才能报名哦';
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = '登录后才能报名哦';
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     toMessagePage() {
@@ -337,9 +340,10 @@ export default {
             }
           })
         } else {
-        this.success = false;
-        this.hint = '登录后才能点赞哦';
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = '登录后才能点赞哦';
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     nolike(){
@@ -356,9 +360,10 @@ export default {
             }
           })
         } else {
-        this.success = false;
-        this.hint = '登录后才能点赞哦';
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = '登录后才能点赞哦';
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     before_close(){

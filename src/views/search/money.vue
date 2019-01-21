@@ -50,32 +50,66 @@
             </div>
           </div>
           </div>
-        <button class="subBtn" @click="dialogFormVisible = true">投递项目</button>
+        <button class="subBtn" @click="applyPoject(item.id)">投递项目</button>
       </div>
       </div>
       <div class="load_more"  @click="morePage" v-show="more">加载更多...</div>
       <p style="color:#999;"  v-show="noMore">-------------------------------------------------没有更多资金了----------------------------------------------------</p>
-      <el-dialog title="选择投递项目" :visible.sync="dialogFormVisible" width="30%">
-        <el-form :model="projectForm">
-          <el-form-item label="项目" label-width="100">
-            <el-select v-model="projectForm.project" placeholder="请选择项目">
-              <el-option label="项目一" value="shanghai"></el-option>
-              <el-option label="项目二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="info" @click="dialogFormVisible = false">确认投递</el-button>
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+      <el-dialog title="选择投递项目" :visible.sync="dialogFormVisible" width="30%" :before-close ="before_close">
+        <div v-if="sub_project"> 
+            <el-form>
+                <el-form-item label="项目" label-width="100">
+                    <el-select v-model="projectId" placeholder="请选择项目">
+                    <el-option
+                        v-for="item in myProject"
+                        :key="item.id"
+                        :label="item.title"
+                        :value="item.id"
+                    ></el-option>
+                    <el-pagination
+                        v-show="myProject_pagination"
+                        small
+                        @current-change="handleCurrentChange"
+                        layout="total, prev, pager, next"
+                        :total="myProject_Count"
+                    ></el-pagination>
+                    </el-select>
+                </el-form-item>
+                </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="info" @click="apply">确认投递</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">取 消</el-button>
+            </div>
+        </div>
+        <div v-else>
+            <div class="toast_success" v-if="success"></div>
+            <div class="toast_error" v-else></div>
+            <div v-if="success" class="toast_title">成功</div>
+            <!-- <div v-else class="toast_title">失败</div> -->
+            <p class="toast_title">{{hint}}</p>
         </div>
       </el-dialog>
+
+      <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
+      <Login :should_login="should_login"></Login>
+
+      <el-dialog :visible.sync="toast_show" width="30%" center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <!-- <div v-else class="toast_content">失败</div> -->
+      <p class="toast_title">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import * as Cookies from 'js-cookie'
+
   export default {
     data(){
       return {
+        should_login:false,
         loading:false,
         dialogFormVisible:false,
         more:false,
@@ -84,9 +118,15 @@
         totalCount:[],
         pn:1,
         title:'',
-        projectForm:{
-          project:''
-        }
+        hint:"",
+        success:false,
+        toast_show:false,
+        myProject: [],
+        projectId: "",
+        moneyId: "",
+        myProject_Count: 0,
+        myProject_pagination: false,
+        sub_project:true,
       }
     },
     methods:{
@@ -137,9 +177,73 @@
         });
         window.open(href, '_blank');
       },
+      getMyProject(pn) {
+      this.$axios
+        .get("/jsp/wap/center/ctrl/jsonIssueProjectList.jsp", {
+          params: { pageNumber: pn }
+        })
+        .then(res => {
+          this.myProject = res.data.pageList;
+          var myProject = res.data.pageList
+          if(myProject.length > 0){
+          this.projectId = myProject[0].id
+          }
+          this.myProject_Count = Number(res.data.pagination.totalCount);
+          if (this.myProject_Count > 10) {
+            this.myProject_pagination = true;
+          }
+        });
+    },
+       applyPoject(id) {
+      if (Cookies.get("userKey")) {
+        if (this.myProject.length == 0) {
+          this.success = false;
+          this.hint = "您还没有发布项目，请先发布项目";
+          this.toast_show = true;
+        } else {
+          this.dialogFormVisible = true;
+          this.moneyId = id;
+        }
+      } else {
+        // this.success = false;
+        // this.hint = "您未登录，请先登录";
+        // this.toast_show = true;
+        this.should_login = true
+      }
+    },
+    apply() {
+      this.$axios
+        .get("/jsp/wap/trCapital/do/doDeliver.jsp", {
+          params: { id: this.moneyId, projectId: this.projectId }
+        })
+        .then(res => {
+          if (res.success == "true") {
+            this.success = true;
+            this.hint = "项目投递成功，平台将尽快为您安排";
+            this.sub_project = false;
+            // this.dialogFormVisible = false;
+          } else {
+            this.success = false;
+            this.hint = "项目投递失败，请您检查网络或重试";
+            this.sub_project = false;
+          }
+        });
+    },
+    before_close(){
+        this.dialogFormVisible = false;
+        setTimeout(()=> {
+         this.sub_project = true;
+        },1000)
+    },
+    handleCurrentChange(val) {
+      this.getMyProject(val);
+    },
     },
     created(){
       this.getActData()
+      if (Cookies.get("userKey")) {
+        this.getMyProject();
+      }
     }
   }
 </script>
@@ -287,6 +391,10 @@
   color: rgb(26, 26, 26);
   line-height: 1.333;
   margin: 10px 0;
+  width: 700px;
+  overflow: hidden; /*超出部分隐藏*/
+  white-space: nowrap; /*不换行*/
+  text-overflow: ellipsis;
 }
 
 .list-contentName {

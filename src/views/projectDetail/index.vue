@@ -83,11 +83,11 @@
                   class="list-content"
                 >{{project.industryName}}</span>
               </div>
-              <div class="box_content" v-if="project&&project.paymentTypeName">
+              <div class="box_content" v-if="project&&project.financingMoneyName">
                 <span class="list-contentName">融资金额:</span>
                 <span
                   class="list-content"
-                >{{project.paymentTypeName}}</span>
+                >{{project.financingMoneyName}}</span>
               </div>
               <div class="box_content" v-if="project&&project.intentCapitalList">
                 <span class="list-contentName">意向资金:</span>
@@ -200,14 +200,14 @@
         </div>
         <div class="requireContent clearfix">
           <div class="fll">
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.directorName">
               <span class="list-contentName">姓名:</span>
               <span
                 class="list-content"
                 v-if="project&&project.directorName"
               >{{project.directorName}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.directorEmail">
               <span class="list-contentName">邮箱:</span>
               <span
                 class="list-content"
@@ -216,11 +216,11 @@
             </div>
           </div>
           <div class="fll">
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.directorJob">
               <span class="list-contentName">职务：</span>
               <span class="list-content" v-if="project&&project.directorJob">{{project.directorJob}}</span>
             </div>
-            <div class="box_content">
+            <div class="box_content" v-if="project&&project.directorPhone">
               <span class="list-contentName">电话：</span>
               <span
                 class="list-content"
@@ -309,8 +309,8 @@
         <div class="toast_success" v-if="success"></div>
         <div class="toast_error" v-else></div>
         <div v-if="success" class="toast_title">成功</div>
-        <div v-else class="toast_title">失败</div>
-        <p class="toast_content">{{hint}}</p>
+        <!-- <div v-else class="toast_title">失败</div> -->
+        <p class="toast_title">{{hint}}</p>
       </div>
     </el-dialog>
 
@@ -318,9 +318,12 @@
       <div class="toast_success" v-if="success"></div>
       <div class="toast_error" v-else></div>
       <div v-if="success" class="toast_title">成功</div>
-      <div v-else class="toast_title">失败</div>
-      <p class="toast_content">{{hint}}</p>
+      <!-- <div v-else class="toast_title">失败</div> -->
+      <p class="toast_title">{{hint}}</p>
     </el-dialog>
+
+    <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
+    <Login :should_login="should_login"></Login>
   </div>
 </template>
 <script>
@@ -453,6 +456,7 @@ export default {
       myMoney_pagination: false,
       sub_project: true,
       dialogFormVisible:false,
+      should_login:false
     };
   },
   methods: {
@@ -462,7 +466,7 @@ export default {
       this.$axios
         .get(`/jsp/wap/trProject/ctrl/jsonProjectDetail.jsp?id=${this.id}`)
         .then(res => {
-          this.project = res.data;
+          this.project = res.data.project;
           this.loading = false;
         });
     },
@@ -519,9 +523,10 @@ export default {
           this.projectId = this.$route.query.id;
         }
       } else {
-        this.success = false;
-        this.hint = "您未登录，请先登录";
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = "您未登录，请先登录";
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     apply() {
@@ -532,7 +537,7 @@ export default {
         .then(res => {
           if (res.success == "true") {
             this.success = true;
-            this.hint = "项目约谈成功，平台将立刻为您安排";
+            this.hint = "项目约谈成功，平台将尽快为您安排";
             this.sub_project = false;
             // this.dialogFormVisible = false;
           } else {
@@ -555,6 +560,10 @@ export default {
         })
         .then(res => {
           this.myMoney = res.data.pageList;
+          var myMoney = res.data.pageList
+          if(myMoney.length > 0){
+          this.moneyId = myMoney[0].id
+          }
           this.myMoney_Count = Number(res.data.pagination.totalCount);
           if (this.myMoney_Count > 10) {
             this.myMoney_pagination = true;

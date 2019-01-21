@@ -197,8 +197,8 @@
             <div class="toast_success" v-if="success"></div>
             <div class="toast_error" v-else></div>
             <div v-if="success" class="toast_title">成功</div>
-            <div v-else class="toast_title">失败</div>
-            <p class="toast_content">{{hint}}</p>
+            <!-- <div v-else class="toast_title">失败</div> -->
+            <p class="toast_title">{{hint}}</p>
         </div>
       </el-dialog>
 
@@ -209,9 +209,12 @@
       <div class="toast_success" v-if="success"></div>
       <div class="toast_error" v-else></div>
       <div v-if="success" class="toast_title">成功</div>
-      <div v-else class="toast_title">失败</div>
-      <p class="toast_content">{{hint}}</p>
+      <!-- <div v-else class="toast_title">失败</div> -->
+      <p class="toast_title">{{hint}}</p>
     </el-dialog>
+
+    <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
+    <Login :should_login="should_login"></Login>
   </div>
 </template>
 
@@ -221,6 +224,7 @@ import * as Cookies from 'js-cookie'
 export default {
   data() {
     return {
+      should_login:false,
       isShow: false,
       isShowArea: false,
       isCheck: false,
@@ -460,6 +464,10 @@ export default {
         })
         .then(res => {
           this.myMoney = res.data.pageList;
+          var myMoney = res.data.pageList
+          if(myMoney.length > 0){
+          this.moneyId = myMoney[0].id
+          }
           this.myMoney_Count = Number(res.data.pagination.totalCount);
           if (this.myMoney_Count > 10) {
             this.myMoney_pagination = true;
@@ -638,9 +646,10 @@ export default {
           this.projectId = id;
         }
       } else {
-        this.success = false;
-        this.hint = "您未登录，请先登录";
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = "您未登录，请先登录";
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     apply() {
@@ -651,7 +660,7 @@ export default {
         .then(res => {
           if (res.success == "true") {
             this.success = true;
-            this.hint = "项目约谈成功，平台将立刻为您安排";
+            this.hint = "项目约谈成功，平台将尽快为您安排";
             this.sub_project = false;
             // this.dialogFormVisible = false;
           } else {

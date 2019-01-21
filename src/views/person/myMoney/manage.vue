@@ -3,14 +3,14 @@
     <div class="person_content">
       <div class="project">
         <p class="project_title">
-          <span class="project_">项目进展</span>
+          <span class="project_">资金动态</span>
           <span class="project_more flr">
           <button class="noLikeBtn" @click="applyDynamic">
-            <i></i>添加进展
+            <i></i>添加动态
           </button>
           </span>
         </p>
-        <div v-for="(item, index) in projectData" :key="index" class="project_list">
+        <div v-for="(item, index) in MoneyData" :key="index" class="project_list">
           <p class="title">{{title}}</p>
           <p class="con clearfix">
             <span class="content fll">{{item.content}}</span>
@@ -23,19 +23,9 @@
           </p>
           <el-button type="danger" icon="el-icon-delete" circle class="flr cancel" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>
-        <div v-show="noShow" class="noChange">您还未添加过进展</div>
+        <div v-show="noShow" class="noChange">您还未添加过动态</div>
     </div>
     </div>
-    <el-dialog
-      :visible.sync="toast_show"
-      width="30%"
-      center>
-      <div class="toast_success" v-if="success"></div>
-      <div class="toast_error" v-else></div>
-      <div v-if="success" class="toast_title">成功</div>
-      <div v-else class="toast_title">失败</div>
-      <p class="toast_content">{{hint}}</p>
-    </el-dialog>
   </div>
 </template>
 
@@ -46,23 +36,21 @@
         time:'2019-01-15',
         content:'项目启动',
         imgPath:'',
-        projectData:[],
+        MoneyData:[],
         noShow:false,
         title:'',
-        hint:'',
-        success:false,
-        toast_show:false
+        img:[]
       }
     },
     methods:{
       getData(){
         let id = this.$route.query.id
-        this.$axios.get(`/jsp/wap/center/ctrl/jsonProjectDetail.jsp?id=${id}`).then(res => {
-          this.title = res.data.project.title
+        this.$axios.get(`/jsp/wap/center/ctrl/jsonCapitalDetail.jsp?id=${id}`).then(res => {
+          this.title = res.data.capital.title
         })
-        this.$axios.get(`/jsp/wap/trProject/ctrl/jsonProjectDynamicList.jsp?id=${id}`).then(res => {
-          this.projectData = res.data
-          if(this.projectData.length == 0){
+        this.$axios.get(`/jsp/wap/trCapital/ctrl/jsonCapitalDynamicList.jsp?id=${id}`).then(res => {
+          this.MoneyData = res.data
+          if(this.MoneyData.length == 0){
             this.noShow = true
           }
         })
@@ -70,7 +58,7 @@
       applyDynamic(){
         let id = this.$route.query.id
         let {href} = this.$router.resolve({
-              name: "addDynamic",
+              name: "addDynamicMoney",
               query: {id}
           });
         window.open(href, '_blank');
@@ -83,7 +71,7 @@
         }).then(()=> {
           this.$axios.get(`/jsp/wap/center/do/doDelProjectDynamic.jsp?id=${id}`).then(res => {
             if(res.success == 'true') {
-              this.projectData.splice(index,1)
+              this.MoneyData.splice(index,1)
             } else {
               this.success = false
               this.hint = res.message

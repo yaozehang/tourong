@@ -14,6 +14,7 @@
           @click="get_type(index)"
         >{{item.name}}</div>
       </div>
+      <div v-show="!table">
       <el-form
         style="margin-top:20px;"
         :model="attestForm"
@@ -59,6 +60,43 @@
         <div class="sub_btn flr" @click="submitFind" v-show="sub_type == 1">提交</div>
         <div class="sub_btn flr" @click="submit" v-show="sub_type == 3">提交</div>
       </el-form>
+      </div>
+      <div v-show="table">
+      <el-table
+          :data="otherDemand"
+          style="width: 100%"
+          :default-sort = "{prop: 'date', order: 'descending'}"
+          >
+          <el-table-column
+            prop="status"
+            label="类型"
+            sortable
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="addTimeStr"
+            label="填报时间"
+            sortable
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="content"
+            label="内容"
+            sortable
+            >
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.row,scope.$index)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
     <el-dialog
       :visible.sync="toast_show"
@@ -77,12 +115,14 @@
 export default {
   data() {
     return {
+      table:false,
       specialist_show: false,
       hint:"",
       success:false,
       toast_show:false,
       sub_type:1,
       content: "",
+      otherDemand:[],
       attestForm: {
         name : "",
         mobile:'',
@@ -96,7 +136,7 @@ export default {
         { name: "找专家", checked: true },
         { name: "推荐专家", checked: false },
         { name: "其他需求", checked: false },
-        // { name: "查看需求", checked: false }
+        { name: "查看需求", checked: false }
       ],
       rules: {
         introduce: { required: true, message: "请填写介绍", trigger: "blur" },
@@ -162,7 +202,7 @@ export default {
             this.toast_show = true;
           } else {
             this.success = false;
-            this.hint = "提交失败，请检查网络或重试";
+            this.hint = res.message;
             this.toast_show = true;
           }
         });
@@ -178,7 +218,7 @@ export default {
               this.toast_show = true;
             } else {
               this.success = false;
-              this.hint = "提交失败，请检查网络或重试";
+              this.hint = res.message;
               this.toast_show = true;
             }
           })
@@ -189,6 +229,18 @@ export default {
           return false;
         }
       });
+    },
+    getDemand(){
+      this.$axios.get('/jsp/wap/center/ctrl/jsonFeedbackList.jsp').then(res => {
+        console.log(res);
+        var demand = res.data.pageList
+        demand.forEach(item => {
+          if(item.status == '0'){
+            item.status = '其他需求'
+          }
+        })
+        this.otherDemand = demand
+      })
     },
     get_type(index) {
       if (this.type[index].checked == true) {
@@ -201,27 +253,51 @@ export default {
       }
 
       if (index == 0) {
+        this.table = true
         let { href } = this.$router.resolve({
           name: "memberAttest"
         });
         window.open(href, "_blank");
       }
       if (index == 1) {
+        this.table = false
         this.placeholder = "请填写详细需求！例如专家的所属领域、行业等。";
         this.specialist_show = false;
         this.sub_type = 1
       }
       if (index == 2) {
+        this.table = false
         this.specialist_show = true;
         this.sub_type = 2
       }
       if (index == 3) {
+        this.table = false
         this.specialist_show = false;
         this.placeholder = "请详细填写您的需求：";
         this.sub_type = 3
       }
-    }
-  }
+      if (index == 4) {
+        this.table = true
+        this.getDemand()
+      }
+    },
+    handleDelete(row,index){
+    let id = row.id
+    this.$axios.get(`/jsp/wap/center/do/doDelFeedback.jsp?id=${id}`).then(res => {
+      if(res.success == 'true'){
+        this.otherDemand.splice(index,1)
+        this.success = true;
+        this.hint = "删除成功";
+        this.toast_show = true;
+      } else {
+        this.success = false;
+        this.hint = res.message;
+        this.toast_show = true;
+      }
+    })
+   }
+  },
+  
 };
 </script>
 

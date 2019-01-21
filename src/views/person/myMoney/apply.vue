@@ -308,7 +308,8 @@ export default {
     onSubmit(status,formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$confirm("即将提交资金, 是否继续?", "提示", {
+          if(status == 0){
+            this.$confirm("即将保存资金, 是否继续?", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
@@ -422,6 +423,122 @@ export default {
                 }
               });
           });
+          } else {
+            this.$confirm("即将提交资金, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            var fileNames = this.fileNames.join(";=;");
+            var filePaths = this.filePaths.join(",");
+            var investStages = this.investStages.join(",");
+            var investIndustrys = this.investIndustrys.join(",");
+            var capitalSources = this.capitalSources.join(",");
+            var investTypes = this.investTypes.join(",");
+            var riskControls = this.riskControls.join(",");
+            var pawnTypes = this.pawnTypes.join(",");
+            var datums = this.datums.join(",");
+            var id = this.$route.query.id;
+            if (id != "") {
+              var params = {
+                id,
+                title: this.formData.title,
+                linkmanPhone: this.formData.linkmanPhone,
+                linkmanName: this.formData.linkmanName,
+                upfrontCost: this.formData.upfrontCost,
+                linkmanAddress: this.formData.linkmanAddress,
+                regionProvinceId: this.formData.regionProvinceId,
+                regionCityId: this.formData.regionCityId,
+                regionCountyId: this.formData.regionCountyId,
+                investRegionProvinceId: this.formData.investRegionProvinceId,
+                investRegionCityId: this.formData.investRegionCityId,
+                investRegionCountyId: this.formData.investRegionCountyId,
+                investAmount: this.formData.investAmount,
+                minRepay: this.formData.minRepay,
+                validStartTimeStr: this.formData.validStartTimeStr,
+                validEndTimeStr: this.formData.validEndTimeStr,
+                pawnDiscountRateMin: this.formData.pawnDiscountRateMin,
+                pawnDiscountRateMax: this.formData.pawnDiscountRateMax,
+                investRequire: this.formData.investRequire,
+                investCase: this.formData.investCase,
+                otherExplain: this.formData.otherExplain,
+                capitalBody: this.formData.capitalBody,
+                fileNames,
+                filePaths,
+                investStages,
+                investIndustrys,
+                capitalSources,
+                investTypes,
+                riskControls,
+                pawnTypes,
+                datums,
+                status,
+              };
+            } else {
+              var params = {
+                title: this.formData.title,
+                linkmanPhone: this.formData.linkmanPhone,
+                linkmanName: this.formData.linkmanName,
+                upfrontCost: this.formData.upfrontCost,
+                linkmanAddress: this.formData.linkmanAddress,
+                regionProvinceId: this.formData.regionProvinceId,
+                regionCityId: this.formData.regionCityId,
+                regionCountyId: this.formData.regionCountyId,
+                investRegionProvinceId: this.formData.investRegionProvinceId,
+                investRegionCityId: this.formData.investRegionCityId,
+                investRegionCountyId: this.formData.investRegionCountyId,
+                investAmount: this.formData.investAmount,
+                minRepay: this.formData.minRepay,
+                validStartTimeStr: this.formData.validStartTimeStr,
+                validEndTimeStr: this.formData.validEndTimeStr,
+                pawnDiscountRateMin: this.formData.pawnDiscountRateMin,
+                pawnDiscountRateMax: this.formData.pawnDiscountRateMax,
+                investRequire: this.formData.investRequire,
+                investCase: this.formData.investCase,
+                otherExplain: this.formData.otherExplain,
+                capitalBody: this.formData.capitalBody,
+                fileNames,
+                filePaths,
+                investStages,
+                investIndustrys,
+                capitalSources,
+                investTypes,
+                riskControls,
+                pawnTypes,
+                datums,
+                status,
+              };
+            }
+            this.$axios
+              .post(
+                "/jsp/wap/center/do/doEditCapital.jsp",
+                qs.stringify(params)
+              )
+              .then(res => {
+                if (res.success == "true") {
+                  if(status == 0){
+                    this.success = true;
+                    this.hint = "保存资金成功";
+                    this.toast_show = true;
+                    setTimeout(()=> {
+                      this.$router.push("/person/myMoney");
+                    },1000)
+                  } else {
+                    this.success = true;
+                    this.hint = "上传资金成功";
+                    this.toast_show = true;
+                    setTimeout(()=> {
+                      this.$router.push("/person/myMoney");
+                    },1000)
+                  }
+                } else {
+                  this.success = false;
+                  this.hint = "提交失败，请检查网络或重试";
+                  this.toast_show = true;
+                }
+              });
+          });
+          }
         } else {
           console.log("error submit!!");
           this.$message.error('请完善信息')

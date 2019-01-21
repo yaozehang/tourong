@@ -119,7 +119,7 @@ export default {
 }
 .invest-text {
   margin-left: 10px;
-  width: 500px;
+  width: 700px;
 }
 .invest-item-title {
   font-size: 18px;
@@ -152,13 +152,19 @@ export default {
   }
 }
 .w230 {
-  width: 230px;
+  width: 300px;
+  height: 16px;
   overflow: hidden; /*超出部分隐藏*/
   white-space: nowrap; /*不换行*/
   text-overflow: ellipsis;
 }
 .inb {
+  width: 300px;
+  height: 16px;
   display: inline-block;
+  overflow: hidden; /*超出部分隐藏*/
+  white-space: nowrap; /*不换行*/
+  text-overflow: ellipsis;
 }
 
 .cancel {
@@ -205,7 +211,6 @@ export default {
 
 .invest-content {
   display: inline-block;
-  width: 162px;
 }
 .invest_height {
   min-height: 700px;

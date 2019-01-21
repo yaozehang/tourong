@@ -52,7 +52,7 @@
               <p class="title" @click="toMessageDetailPage(item.resourceId)">{{item.title}}</p>
               <div class="clearfix">
                 <span class="fll time">发布时间；{{item.addTimeStr}}</span>
-                <span class="flr num">浏览：{{item.num}}次</span>
+                <span class="flr num">阅读：{{item.num}}次</span>
               </div>
               <p class="content">{{item.content}}</p>
             </div>
@@ -63,9 +63,9 @@
               <p class="title" @click="toMessageDetailPage(item.resourceId)">{{item.title}}</p>
               <div class="clearfix">
                 <span class="fll time">发布时间；{{item.addTimeStr}}</span>
-                <span class="flr num">浏览：{{item.num}}次</span>
+                <!-- <span class="flr num">阅读：{{item.num}}次</span> -->
               </div>
-              <p class="content">{{item.content}}</p>
+              <p class="content" v-html="item.content"></p>
             </div>
         </div>
       </div>
@@ -78,9 +78,10 @@
         v-for="(item, index) in actlist"
         :key="index + 'act'"
       >
-        <!-- <img :src="$url + item.imgPaths" alt width="270px" height="180px" class="fll"> -->
+        <img :src="$url + item.imgPaths" alt width="270px" height="180px" class="fll">
          <div class="fll list">
           <p class="list-title" style="font-size:18px;" @click="activityDetailPage(item.resourceId)">{{item.title}}</p>
+          <p v-html="item.content" style="color:#999"></p>
           <!-- <p class="list-content">
             <i class="local"></i>
             {{item.local}}
@@ -114,174 +115,12 @@
 export default {
   data() {
     return {
-        time: "2018-11-14",
-        year: "2018",
-        projectData: [
-          {
-            img: "/static/img/xiangmutou-1.jpg",
-            title:
-              "增资扩股——长安汽车拟通过公开挂牌增资扩股引扩股引扩股引扩股引",
-            content:
-              "即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重",
-            like: 0
-          },
-          {
-            img: "/static/img/xiangmutou-1.jpg",
-            title:
-              "增资扩股——长安汽车拟通过公开挂牌增资扩股引扩股引扩股引扩股引",
-            content:
-              "即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重",
-            like: 0
-          }
-        ],
-        moneyData: [
-          {
-            img: "/static/img/xiangmutou-1.jpg",
-            title:
-              "增资扩股——长安汽车拟通过公开挂牌增资扩股引扩股引扩股引扩股引",
-            content:
-              "即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重",
-            like: 0
-          },
-          {
-            img: "/static/img/xiangmutou-1.jpg",
-            title:
-              "增资扩股——长安汽车拟通过公开挂牌增资扩股引扩股引扩股引扩股引",
-            content:
-              "即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重",
-            like: 0
-          }
-        ],
-        messageData: [
-          {
-            img: "",
-            title: "十九届中央第一轮巡视整改进展情况开始公布",
-            time: "2017-06-10",
-            num: 124,
-            content:
-              "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-          },
-          {
-            img: "/static/img/list-3.jpg",
-            title: "十九届中央第一轮巡视整改进展情况开始公布",
-            time: "2017-06-10",
-            num: 124,
-            content:
-              "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-          },
-          {
-            img: "",
-            title: "十九届中央第一轮巡视整改进展情况开始公布",
-            time: "2017-06-10",
-            num: 124,
-            content:
-              "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-          },
-          {
-            img: "/static/img/list-3.jpg",
-            title: "十九届中央第一轮巡视整改进展情况开始公布",
-            time: "2017-06-10",
-            num: 124,
-            content:
-              "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-          },
-          {
-            img: "/static/img/list-3.jpg",
-            title: "十九届中央第一轮巡视整改进展情况开始公布",
-            time: "2017-06-10",
-            num: 124,
-            content:
-              "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-          },
-          {
-            img: "",
-            title: "十九届中央第一轮巡视整改进展情况开始公布",
-            time: "2017-06-10",
-            num: 124,
-            content:
-              "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-          },
-          {
-            img: "/static/img/list-3.jpg",
-            title: "十九届中央第一轮巡视整改进展情况开始公布",
-            time: "2017-06-10",
-            num: 124,
-            content:
-              "在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这在以杀毒软件为代表的免费模式中，实际上是C端用户免费，然后靠流量收取B端广告费，也就是羊毛出在猪身上，新闻网站等也是类似的。这"
-          }
-        ],
-        actlist: [
-          {
-            img: "/static/img/list-1.jpg",
-            title: "投融资讯活动",
-            local: "北京市海淀区天秀路10号中国农大国际科技园",
-            company: "北京开拓明天科技股份有限公司",
-            num: 255,
-            beginTime: "2017-06-10",
-            endTime: "2018-10-12",
-            status: 1
-          },
-          {
-            img: "/static/img/list-1.jpg",
-            title: "投融资讯活动",
-            local: "北京市海淀区天秀路10号中国农大国际科技园",
-            company: "北京开拓明天科技股份有限公司",
-            num: 255,
-            beginTime: "2017-06-10",
-            endTime: "2018-10-12",
-            status: 0
-          },
-          {
-            img: "/static/img/list-1.jpg",
-            title: "投融资讯活动",
-            local: "北京市海淀区天秀路10号中国农大国际科技园",
-            company: "北京开拓明天科技股份有限公司",
-            num: 255,
-            beginTime: "2017-06-10",
-            endTime: "2018-10-12",
-            status: 0
-          },
-          {
-            img: "/static/img/list-1.jpg",
-            title: "投融资讯活动",
-            local: "北京市海淀区天秀路10号中国农大国际科技园",
-            company: "北京开拓明天科技股份有限公司",
-            num: 255,
-            beginTime: "2017-06-10",
-            endTime: "2018-10-12",
-            status: 0
-          },
-          {
-            img: "/static/img/list-1.jpg",
-            title: "投融资讯活动",
-            local: "北京市海淀区天秀路10号中国农大国际科技园",
-            company: "北京开拓明天科技股份有限公司",
-            num: 255,
-            beginTime: "2017-06-10",
-            endTime: "2018-10-12",
-            status: 1
-          },
-          {
-            img: "/static/img/list-1.jpg",
-            title: "投融资讯活动",
-            local: "北京市海淀区天秀路10号中国农大国际科技园",
-            company: "北京开拓明天科技股份有限公司",
-            num: 255,
-            beginTime: "2017-06-10",
-            endTime: "2018-10-12",
-            status: 0
-          },
-          {
-            img: "/static/img/list-1.jpg",
-            title: "投融资讯活动",
-            local: "北京市海淀区天秀路10号中国农大国际科技园",
-            company: "北京开拓明天科技股份有限公司",
-            num: 255,
-            beginTime: "2017-06-10",
-            endTime: "2018-10-12",
-            status: 1
-          }
-        ],
+        time: "",
+        year: "",
+        projectData: [],
+        moneyData: [],
+        messageData: [],
+        actlist: [],
       issue: 1,
       time:''
     };
@@ -292,7 +131,6 @@ export default {
       this.issue = this.$route.query.issue
       this.time = this.$route.query.time
       this.$axios.get(`/jsp/wap/center/ctrl/jsonWeeklyDetail.jsp?id=${id}`).then(res => {
-        console.log(res);
         this.actlist = res.data.activityList
         this.projectData = res.data.projectList
         this.messageData = res.data.newsList
@@ -579,6 +417,7 @@ export default {
   // width: 810px;
   // height: 180px;
   margin-bottom: 20px;
+  padding-bottom: 20px;
   border-bottom: 1px solid #ededed;
 }
 .list {

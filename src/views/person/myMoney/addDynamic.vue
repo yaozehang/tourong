@@ -2,7 +2,7 @@
     <div class="fll">
       <div class="person_content">
         <p class="project_title">
-          <span class="project_">添加进展</span>
+          <span class="project_">添加动态</span>
         </p>
         <el-form
           :model="form"
@@ -68,20 +68,22 @@
         var imgPaths = this.imgPaths.join(',')
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$axios.get('/jsp/wap/center/do/doEditProjectDynamic.jsp',{params:{projectId:id,content:this.form.content,imgPaths}}).then(res => {
+            this.$axios.get('/jsp/wap/center/do/doEditCapitalDynamic.jsp',{params:{projectId:id,content:this.form.content,imgPaths}}).then(res => {
               if(res.success == 'true'){
                 this.success = true
-                this.hint = '提交进展成功'
+                this.hint = '提交动态成功'
                 this.toast_show = true
                 setTimeout(()=> {
-                  this.$router.push({name:'manageProject',query:{id}})
+                  this.$router.push({name:'manageMoney',query:{id}})
                 },500)
+              } else {
+              this.success = false
+              this.hint = res.message
+              this.toast_show = true
               }
             })
           } else {
-            // this.success = false
-            // this.hint = '提交失败，请完善数据或检查网络'
-            // this.toast_show = true
+            
             return false;
           }
         });

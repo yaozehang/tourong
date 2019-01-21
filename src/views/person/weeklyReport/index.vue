@@ -6,6 +6,7 @@
       </p>
       <router-link
         :to="{name:'weeklyReportDetail',query:{id:reportData[0].id,issue:count,time:reportData[0].addTimeStr}}"
+        v-if="reportData.length > 0"
       >
         <p class="report_now">
           <i></i>
@@ -13,12 +14,13 @@
           <span class="time" v-if="reportData">{{reportData[0].addTimeStr}}</span>
         </p>
       </router-link>
+      <p v-else>暂无周报</p>
     </div>
     <div class="person_content mg-20">
       <p class="week_now">
         <span class="week_title">往期周报</span>
       </p>
-      <div class="clearfix">
+      <div class="clearfix" v-if="reportData.length > 0">
         <ul class="report_ul fll">
             <li class="report_list" v-for="(item , index) in reportData" :key="index">
           <router-link :to="{name:'weeklyReportDetail',query:{id:item.id,issue:count - index,time:item.addTimeStr}}">
@@ -40,6 +42,7 @@
           </li>
         </ul>
       </div>
+      <p v-else>暂无周报</p>
     </div>
   </div>
 </template>
@@ -48,9 +51,7 @@
 export default {
   data() {
     return {
-      reportData: [
-        {addTimeStr:''}
-      ],
+      reportData: [],
       reportData2: [],
       count:1,
     };

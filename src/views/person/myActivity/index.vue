@@ -45,7 +45,7 @@
           </p>
         </div>
       </div>
-      <p v-show="pageList.length == 0" class="noAtt">你没有任何资金哦~</p>
+      <p v-show="pageList.length == 0" class="noAtt">你没有报名任何活动哦~</p>
       <div class="mes_page">
         <el-pagination
           background
@@ -144,6 +144,7 @@
       getData(pageNumber){
         this.$axios.get('/jsp/wap/center/ctrl/jsonMyActivityList.jsp',{params:{pageNumber}}).then(res => {
           if(res.success == 'true'){
+            console.log(res);
             this.pageList = res.data.pageList
             this.count = Number(res.data.pagination.totalCount)
           }

@@ -17,7 +17,7 @@
           </div>
           <div class="listContent">{{item.brief}}</div>
         </div>
-        <button class="subBtn" @click="dialogFormVisible = true">约见项目</button>
+        <button class="subBtn" @click="applyPoject(item.id)">约见项目</button>
       </div>
     </div>
     <div class="load_more" @click="morePage" v-show="more">加载更多...</div>
@@ -25,24 +25,60 @@
       v-show="noMore"
       style="color:#999;"
     >-------------------------------------------------没有更多项目了----------------------------------------------------</p>
-    <el-dialog title="选择资金" :visible.sync="dialogFormVisible" width="30%">
-      <el-form :model="moneyForm">
-        <el-form-item label="资金" label-width="100">
-          <el-select v-model="moneyForm.project" placeholder="请选择资金">
-            <el-option label="资金一" value="shanghai"></el-option>
-            <el-option label="资金二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="dialogFormVisible = false">确认投递</el-button>
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-      </div>
-    </el-dialog>
+    <el-dialog title="选择投递资金" :visible.sync="dialogFormVisible" width="30%" :before-close ="before_close">
+        <div v-if="sub_project"> 
+            <el-form>
+                <el-form-item label="资金" label-width="100">
+                    <el-select v-model="moneyId" placeholder="请选择资金">
+                    <el-option
+                        v-for="item in myMoney"
+                        :key="item.id"
+                        :label="item.title"
+                        :value="item.id"
+                    ></el-option>
+                    <el-pagination
+                        v-show="myMoney_pagination"
+                        small
+                        @current-change="handleCurrentChange"
+                        layout="total, prev, pager, next"
+                        :total="myMoney_Count"
+                    ></el-pagination>
+                    </el-select>
+                </el-form-item>
+                </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="info" @click="apply">确认投递</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">取 消</el-button>
+            </div>
+        </div>
+        <div v-else>
+            <div class="toast_success" v-if="success"></div>
+            <div class="toast_error" v-else></div>
+            <div v-if="success" class="toast_title">成功</div>
+            <!-- <div v-else class="toast_title">失败</div> -->
+            <p class="toast_title">{{hint}}</p>
+        </div>
+      </el-dialog>
+
+      <el-dialog
+        :visible.sync="toast_show"
+        width="30%"
+        center>
+        <div class="toast_success" v-if="success"></div>
+        <div class="toast_error" v-else></div>
+        <div v-if="success" class="toast_title">成功</div>
+        <!-- <div v-else class="toast_title">失败</div> -->
+        <p class="toast_title">{{hint}}</p>
+      </el-dialog>
+
+      <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
+      <Login :should_login="should_login"></Login>
   </div>
 </template>
 
 <script>
+import * as Cookies from 'js-cookie'
+
 export default {
   data(){
       return {
@@ -54,9 +90,16 @@ export default {
         totalCount:[],
         pn:1,
         title:'',
-        moneyForm:{
-          money:[]
-        }
+        hint:"",
+        success:false,
+        toast_show:false,
+        myMoney:[],
+        projectId: "",
+        moneyId: "",
+        myMoney_Count: 0,
+        myMoney_pagination: false,
+        sub_project:true,
+        should_login:false,
       }
     },
     methods:{
@@ -107,9 +150,76 @@ export default {
         });
         window.open(href, '_blank');
       },
+      handleCurrentChange(val) {
+      this.getMyMoney(val);
+    },
+      getMyMoney(pn) {
+        this.$axios
+          .get("/jsp/wap/center/ctrl/jsonIssueCapitalList.jsp", {
+            params: { pageNumber: pn }
+          })
+          .then(res => {
+            this.myMoney = res.data.pageList;
+            var myMoney = res.data.pageList
+            if(myMoney.length > 0){
+            this.moneyId = myMoney[0].id
+            }
+            this.myMoney_Count = Number(res.data.pagination.totalCount);
+            if (this.myMoney_Count > 10) {
+              this.myMoney_pagination = true;
+            }
+          });
+    },
+    applyPoject(id) {
+      if (Cookies.get("userKey")) {
+        if (this.myMoney.length == 0) {
+          this.success = false;
+          this.hint = "您还没有发布资金，请先发布资金";
+          this.toast_show = true;
+        } else {
+          this.dialogFormVisible = true;
+          this.projectId = id;
+        }
+      } else {
+        // this.success = false;
+        // this.hint = "您未登录，请先登录";
+        // this.toast_show = true;
+        this.should_login = true
+      }
+    },
+    apply() {
+      this.$axios
+        .get("/jsp/wap/trCapital/do/doDeliver.jsp", {
+          params: { projectId: this.moneyId, id: this.projectId }
+        })
+        .then(res => {
+          if (res.success == "true") {
+            this.success = true;
+            this.hint = "项目约谈成功，平台将尽快为您安排";
+            this.sub_project = false;
+            // this.dialogFormVisible = false;
+          } else {
+            this.success = false;
+            this.hint = "项目约谈失败，请您检查网络或重试";
+            this.sub_project = false;
+          }
+        });
+    },
+      before_close(){
+          this.dialogFormVisible = false;
+          setTimeout(()=> {
+          this.sub_project = true;
+          },1000)
+      },
+      handleCurrentChange(val) {
+      this.getMyMoney(val);
+    },
     },
     created(){
       this.getActData()
+      if (Cookies.get("userKey")) {
+        this.getMyMoney()
+      }
     }
 };
 </script>

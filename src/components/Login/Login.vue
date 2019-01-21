@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="should_login">
     <el-dialog :visible.sync="toast_show" width="30%" center>
       <div class="toast_success" v-if="success"></div>
       <div class="toast_error" v-else></div>
@@ -7,14 +7,8 @@
       <div v-else class="toast_title">失败</div>
       <p class="toast_content">{{hint}}</p>
     </el-dialog>
-    <div class="w1200 clearfix">
-      <img src="/static/img/logo-1.png" alt class="logo-1" @click="$router.push('/home')">
-      <router-link to="/home">
-        <span class="flr toHome">返回首页</span>
-      </router-link>
-    </div>
     <div class="login">
-      <div class="w1200 clearfix">
+      <div class="clearfix">
         <div class="login-box flr" v-show="!forget">
           <div class="login-box_header">
             <span
@@ -137,18 +131,17 @@
         </div>
       </div>
     </div>
-    <Bottom></Bottom>
   </div>
 </template>
 
 <script>
-import Bottom from "@/components/Bottom.vue";
 import * as Cookies from "js-cookie";
 import qs from "qs";
 
 export default {
-  components: {
-    Bottom
+  props:{
+    should_login:{type:Boolean},
+    // login_show:{type:Boolean}
   },
   data() {
     return {
@@ -288,7 +281,7 @@ export default {
                 )
                 .then(res => {
                   if (res.success == "true") {
-                    this.$router.push({ name: "home" });
+                    window.history.go(0)                    
                   } else {
                     // this.$notify.error({
                     //   title: '错误',
@@ -321,7 +314,7 @@ export default {
             } else {
               Cookies.set("userKey", res.data, { expires: 3 });
             }
-            this.$router.push({name:'home'})
+            window.history.go(0)
           } else {
             // this.$notify.error({
             //   title: '错误',
@@ -392,13 +385,22 @@ export default {
 }
 //登录
 .login {
-  width: 100%;
-  min-width: 1200px;
-  height: 693px;
-  background: url(/static/img/bg-1.jpg) no-repeat center;
-  background-size: cover;
+  // position: fixed;
+  // top: 0;
+  // right: 0;
+  // bottom: 0;
+  // left: 0;
+  // overflow: auto;
+  // width: 100%;
+  // min-width: 1200px;
+  // height: 100%;
   //登录注册盒子
   .login-box {
+    position: fixed;
+    z-index: 999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-70%);
     width: 410px;
     min-height: 395px;
     margin-top: 80px;

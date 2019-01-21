@@ -13,7 +13,8 @@
       <div class="person_navbar fll">
         <div class="person_top" @click="$router.push('/person')"></div>
         <div class="person_information">
-          <img :src="$url + personData.avatar" alt class="avatar" v-if="personData&&personData.avatar">
+          <img :src="$url + personData.avatar" alt class="avatar" v-if="personData&&personData.avatar != '/static/img/avatar-1.png'">
+          <img :src="personData.avatar" alt="" v-else class="avatar">
           <i class="attest" v-show="personData.vip == '1'"></i>
           <p class="username">
             <i></i>

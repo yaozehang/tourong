@@ -174,8 +174,8 @@
             <div class="toast_success" v-if="success"></div>
             <div class="toast_error" v-else></div>
             <div v-if="success" class="toast_title">成功</div>
-            <div v-else class="toast_title">失败</div>
-            <p class="toast_content">{{hint}}</p>
+            <!-- <div v-else class="toast_title">失败</div> -->
+            <p class="toast_title">{{hint}}</p>
         </div>
     </el-dialog>
 
@@ -183,9 +183,12 @@
       <div class="toast_success" v-if="success"></div>
       <div class="toast_error" v-else></div>
       <div v-if="success" class="toast_title">成功</div>
-      <div v-else class="toast_title">失败</div>
-      <p class="toast_content">{{hint}}</p>
+      <!-- <div v-else class="toast_title">失败</div> -->
+      <p class="toast_title">{{hint}}</p>
     </el-dialog>
+
+    <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
+    <Login :should_login="should_login"></Login>
   </div>
 </template>
 <script>
@@ -194,6 +197,7 @@ import * as Cookies from "js-cookie";
 export default {
   data() {
     return {
+      should_login:false,
       actType: [
         "股权投资",
         "债权投资",
@@ -281,7 +285,7 @@ export default {
       this.$axios
         .get(`/jsp/wap/trCapital/ctrl/jsonCapitalDetail.jsp?id=${this.id}`)
         .then(res => {
-          this.money = res.data;
+          this.money = res.data.capital;
           this.loading = false;
         });
     },
@@ -334,6 +338,10 @@ export default {
         })
         .then(res => {
           this.myProject = res.data.pageList;
+          var myProject = res.data.pageList
+          if(myProject.length > 0){
+          this.projectId = myProject[0].id
+          }
           this.myProject_Count = Number(res.data.pagination.totalCount);
           if (this.myProject_Count > 10) {
             this.myProject_pagination = true;
@@ -351,9 +359,10 @@ export default {
           this.moneyId = this.$route.query.id;
         }
       } else {
-        this.success = false;
-        this.hint = "您未登录，请先登录";
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = "您未登录，请先登录";
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     apply() {
@@ -364,7 +373,7 @@ export default {
         .then(res => {
           if (res.success == "true") {
             this.success = true;
-            this.hint = "项目投递成功，平台将立刻为您安排";
+            this.hint = "项目投递成功，平台将尽快为您安排";
             this.sub_project = false;
             // this.dialogFormVisible = false;
           } else {

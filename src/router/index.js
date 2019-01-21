@@ -33,11 +33,13 @@ const components = {
   myMoney: () => import('@/views/person/myMoney'), //我的资金
   applyMoney: () => import('@/views/person/myMoney/apply'), //发布资金
   uploadApplyMoney: () => import('@/views/person/myMoney/uploadApply'),//上传资金
+  manageMoney: () => import('@/views/person/myMoney/manage'), //动态管理
+  addDynamicMoney: () => import('@/views/person/myMoney/addDynamic'), //添加动态
   myProject: () => import('@/views/person/myProject'), //我的项目
   applyProject: () => import('@/views/person/myProject/apply'), //发布项目
-  manageProject: () => import('@/views/person/myProject/manage'), //动态管理
-  uploadApplyProject: () => import('@/views/person/myProject/uploadApply'),//上传资金
-  addDynamic: () => import('@/views/person/myProject/addDynamic'), //添加动态
+  manageProject: () => import('@/views/person/myProject/manage'), //进展管理
+  uploadApplyProject: () => import('@/views/person/myProject/uploadApply'),//上传项目
+  addDynamic: () => import('@/views/person/myProject/addDynamic'), //添加进展
   inform: () => import('@/views/person/inform'),//消息中心
   informDetail: () => import('@/views/person/inform/detail'),//消息内容
   search: () => import('@/views/search'), //搜索列表
@@ -354,6 +356,22 @@ const router = new Router({
               }
             },
             {
+              path:'manageMoney',
+              name:'manageMoney',
+              component:components.manageMoney,
+              meta:{
+                title:'我的资金 > 动态管理'
+              }
+            },
+            {
+              path:'addDynamicMoney',
+              name:'addDynamicMoney',
+              component:components.addDynamicMoney,
+              meta:{
+                title:'我的资金 > 资金动态'
+              }
+            },
+            {
               path:'applyMoney',
               name:'applyMoney',
               component:components.applyMoney,
@@ -398,7 +416,7 @@ const router = new Router({
               name:'manageProject',
               component:components.manageProject,
               meta:{
-                title:'我的项目 > 动态管理'
+                title:'我的项目 > 进展管理'
               }
             },
             {

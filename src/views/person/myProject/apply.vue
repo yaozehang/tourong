@@ -143,7 +143,8 @@
             @click="get_type1(index,item.dataValue)"
           >{{item.dataName}}</div>
         </el-form-item>
-        <div style="background:#f2f2f2;padding:10px 0;margin-bottom:20px;">
+        <div class="way">
+          <div v-if="fin_way1">
           <el-form-item label="注册资本" class="w350" prop="registeredCapital">
             <el-input v-model="formData.registeredCapital">
               <span slot="append">万元</span>
@@ -151,12 +152,12 @@
           </el-form-item>
           <el-form-item label="市盈率（P/E）" class="w350" prop="pe">
             <el-input v-model="formData.pe">
-              <span slot="append">万元</span>
+              <!-- <span slot="append">万元</span> -->
             </el-input>
           </el-form-item>
           <el-form-item label="市净率（P/B）" class="w350" prop="pb">
             <el-input v-model="formData.pb">
-              <span slot="append">万元</span>
+              <!-- <span slot="append">万元</span> -->
             </el-input>
           </el-form-item>
           <el-form-item label="支付方式">
@@ -199,6 +200,80 @@
           <el-form-item label="交易对手简介" style="width:600px">
             <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.opponentBrief"></el-input>
           </el-form-item>
+          </div>
+          <div v-if="fin_way2">
+            <el-form-item label="融资金额" class="w350">
+              <el-input v-model="formData.financingMoney"></el-input>
+            </el-form-item>
+            <el-form-item label="品种">
+              <el-checkbox-group v-model="varietys">
+                <el-checkbox
+                  v-for="variety in varietyList"
+                  :label="variety.dataValue"
+                  :key="variety.dataValue"
+                  name="type"
+                >{{variety.dataName}}</el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+            <el-form-item label="期限" class="w350">
+              <el-input v-model="formData.dueTime"></el-input>
+            </el-form-item>
+            <el-form-item label="利润" class="w350">
+              <el-input v-model="formData.interestRates"></el-input>
+            </el-form-item>
+            <el-form-item label="增信方式">
+              <el-checkbox-group v-model="creditWays">
+                <el-checkbox
+                  v-for="creditWay in creditWayList"
+                  :label="creditWay.dataValue"
+                  :key="creditWay.dataValue"
+                  name="type"
+                >{{creditWay.dataName}}</el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+            <el-form-item label="融资用途" style="width:600px">
+              <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.loanUses"></el-input>
+            </el-form-item>
+            <el-form-item label="还款来源" class="w350">
+              <el-input v-model="formData.repaymentsSource"></el-input>
+            </el-form-item>
+            <el-form-item label="有效期限">
+            <div style="width:28.16667%" class="fll">
+              <el-date-picker
+                value-format="yyyy-MM-dd"
+                type="date"
+                placeholder="选择日期"
+                v-model="formData.expiryDateStartTimeStr"
+              ></el-date-picker>
+            </div>
+            <el-col class="line" :span="1" style="text-align:center;">~</el-col>
+            <el-col :span="7">
+              <el-date-picker
+                value-format="yyyy-MM-dd"
+                type="date"
+                placeholder="选择日期"
+                v-model="formData.expiryDateEndTimeStr"
+              ></el-date-picker>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="项目建设合规性" style="width:600px">
+              <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.standard"></el-input>
+          </el-form-item>
+          <el-form-item label="资金来源及落实情况" style="width:600px">
+              <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.sourcesFunds"></el-input>
+          </el-form-item>
+          <el-form-item label="项目产品及竞争能力分析" style="width:600px">
+              <el-input type="textarea" :autosize="{ minRows: 2}" v-model="formData.marketCompetitivePower"></el-input>
+          </el-form-item>
+          <el-form-item label="项目效益测算及偿债能力分析" style="width:600px">
+              <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.guessSovency"></el-input>
+          </el-form-item>
+          </div>
+          <div v-if="fin_way3">
+            <el-form-item label="其他融资" style="width:600px">
+              <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.financingExplain"></el-input>
+            </el-form-item>
+          </div>
         </div>
         <p>
           <span class="item_title">核心团队</span>
@@ -376,7 +451,17 @@ export default {
         financingWay: "",
         stage: "",
         industryName: "",
-        stockStructureImgPath: ""
+        stockStructureImgPath: "",
+        financingMoney:'',
+        dueTime:"",
+        interestRates:"",
+        loanUses:'',
+        repaymentsSource:'',
+        standard:'',
+        sourcesFunds:'',
+        marketCompetitivePower:'',
+        guessSovency:'',
+        financingExplain:'',
       },
       financeBodyList: [],
       stageList: [],
@@ -406,9 +491,16 @@ export default {
       fileNames: [],
       filePaths: [],
       fileList: [],
+      varietyList:[],
+      varietys:[],
+      creditWayList:[],
+      creditWays:[],
       hint:"",
       success:false,
       toast_show:false,
+      fin_way1:true,
+      fin_way2:false,
+      fin_way3:false,
     };
   },
   methods: {
@@ -435,9 +527,11 @@ export default {
             }
             this.countyStr = project.regionNameStr.split(",")[2];
           }
+          this.varietyList = res.data.varietyList
           this.financeBodyList = res.data.financeBodyList;
           this.industryList = res.data.industryList;
           this.paymentTypeList = res.data.paymentTypeList;
+          this.creditWayList = res.data.creditWayList;
           var stageList = res.data.stageList;
           if (this.formData.stage == "") {
             stageList.forEach(item => {
@@ -506,13 +600,19 @@ export default {
             financingWayList[2].checked = true;
             this.financingWayList = financingWayList;
           }
-          if (res.data.project.industryName != "") {
+          if (res.data.project.industry != "") {
             this.industrys = res.data.project.industry.replace(/[\[\]]/g, "").split(",");
           }
           if (res.data.project.paymentType != "") {
             this.paymentTypes = res.data.project.paymentType
               .replace(/[\[\]]/g, "")
               .split(",");
+          }
+          if (res.data.project.variety != "") {
+            this.varietys = res.data.project.variety.replace(/[\[\]]/g, "").split(",");
+          }
+          if (res.data.project.creditWay != "") {
+            this.creditWays = res.data.project.creditWay.replace(/[\[\]]/g, "").split(",");
           }
           var file = {};
           var fileList = [];
@@ -523,6 +623,19 @@ export default {
               file.url = item.filePaths;
             });
             this.fileList.push(file);
+          }
+          if (this.formData.financingWay == '61') {
+            this.fin_way1 = true
+            this.fin_way2 = false
+            this.fin_way3 = false
+          } else if (this.formData.financingWay == '62') {
+            this.fin_way1 = false
+            this.fin_way2 = true
+            this.fin_way3 = false
+          } else if (this.formData.financingWay == '63') {
+            this.fin_way1 = false
+            this.fin_way2 = false
+            this.fin_way3 = true
           }
         });
     },
@@ -549,6 +662,20 @@ export default {
         this.financingWayList[index].checked = true;
         this.formData.financingWay = dataValue;
       }
+
+      if(index == 0){
+        this.fin_way1 = true
+        this.fin_way2 = false
+        this.fin_way3 = false
+      } else if (index == 1) {
+        this.fin_way1 = false
+        this.fin_way2 = true
+        this.fin_way3 = false
+      } else if (index == 2) {
+        this.fin_way1 = false
+        this.fin_way2 = false
+        this.fin_way3 = true
+      }
     },
     onSave(formName) {
       this.onSubmit(0,formName);
@@ -556,7 +683,8 @@ export default {
     onSubmit(status, formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$confirm("即将提交项目, 是否继续?", "提示", {
+          if(status == 0) {
+            this.$confirm("即将保存项目, 是否继续?", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
@@ -564,6 +692,164 @@ export default {
             var fileNames = this.fileNames.join(";=;");
             var filePaths = this.filePaths.join(",");
             var industrys = this.industrys.join(",");
+            var paymentTypes = this.paymentTypes.join(",");
+            var varietys = this.varietys.join(",");
+            var creditWays = this.creditWays.join(",");
+            var id = this.$route.query.id;
+            if (id != "") {
+              var params = {
+                id,
+                title: this.formData.title,
+                brief: this.formData.brief,
+                financeBody: this.formData.financeBody,
+                companyName: this.formData.companyName,
+                address: this.formData.address,
+                registeredCapital: this.formData.registeredCapital,
+                owner: this.formData.owner,
+                business: this.formData.business,
+                brightSpot: this.formData.brightSpot,
+                position: this.formData.position,
+                trienniumFinancialData: this.formData.trienniumFinancialData,
+                profitForecast: this.formData.profitForecast,
+                averageAge: this.formData.averageAge,
+                websiteUrl: this.formData.websiteUrl,
+                weChat: this.formData.weChat,
+                companyFoundTimeStr: this.formData.companyFoundTimeStr,
+                registeredCapital: this.formData.registeredCapital,
+                pe: this.formData.pe,
+                pb: this.formData.pb,
+                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
+                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                safeguard: this.formData.safeguard,
+                opponentBrief: this.formData.opponentBrief,
+                teamBrief: this.formData.teamBrief,
+                directorName: this.formData.directorName,
+                directorJob: this.formData.directorJob,
+                directorAge: this.formData.directorAge,
+                directorPhone: this.formData.directorPhone,
+                directorEmail: this.formData.directorEmail,
+                bodySecrecyType: this.formData.bodySecrecyType,
+                infoSecrecyType: this.formData.infoSecrecyType,
+                contactSecrecyType: this.formData.contactSecrecyType,
+                regionProvinceId: this.formData.regionProvinceId,
+                regionCityId: this.formData.regionCityId,
+                regionCountyId: this.formData.regionCountyId,
+                financingWay: this.formData.financingWay,
+                stage: this.formData.stage,
+                stockStructureImgPath: this.formData.stockStructureImgPath,
+                dueTime: this.formData.dueTime,
+                interestRates: this.formData.interestRates,
+                loanUses: this.formData.loanUses,
+                standard: this.formData.standard,
+                sourcesFunds: this.formData.sourcesFunds,
+                marketCompetitivePower: this.formData.marketCompetitivePower,
+                guessSovency: this.formData.guessSovency,
+                financingExplain: this.formData.financingExplain,
+                industrys,
+                paymentTypes,
+                fileNames,
+                filePaths,
+                status,
+                varietys,
+                creditWays,
+              };
+            } else {
+              var params = {
+                title: this.formData.title,
+                brief: this.formData.brief,
+                financeBody: this.formData.financeBody,
+                companyName: this.formData.companyName,
+                address: this.formData.address,
+                registeredCapital: this.formData.registeredCapital,
+                owner: this.formData.owner,
+                business: this.formData.business,
+                brightSpot: this.formData.brightSpot,
+                position: this.formData.position,
+                trienniumFinancialData: this.formData.trienniumFinancialData,
+                profitForecast: this.formData.profitForecast,
+                averageAge: this.formData.averageAge,
+                websiteUrl: this.formData.websiteUrl,
+                weChat: this.formData.weChat,
+                companyFoundTimeStr: this.formData.companyFoundTimeStr,
+                registeredCapital: this.formData.registeredCapital,
+                pe: this.formData.pe,
+                pb: this.formData.pb,
+                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
+                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                safeguard: this.formData.safeguard,
+                opponentBrief: this.formData.opponentBrief,
+                teamBrief: this.formData.teamBrief,
+                directorName: this.formData.directorName,
+                directorJob: this.formData.directorJob,
+                directorAge: this.formData.directorAge,
+                directorPhone: this.formData.directorPhone,
+                directorEmail: this.formData.directorEmail,
+                bodySecrecyType: this.formData.bodySecrecyType,
+                infoSecrecyType: this.formData.infoSecrecyType,
+                contactSecrecyType: this.formData.contactSecrecyType,
+                regionProvinceId: this.formData.regionProvinceId,
+                regionCityId: this.formData.regionCityId,
+                regionCountyId: this.formData.regionCountyId,
+                financingWay: this.formData.financingWay,
+                stage: this.formData.stage,
+                stockStructureImgPath: this.formData.stockStructureImgPath,
+                dueTime: this.formData.dueTime,
+                interestRates: this.formData.interestRates,
+                loanUses: this.formData.loanUses,
+                standard: this.formData.standard,
+                sourcesFunds: this.formData.sourcesFunds,
+                marketCompetitivePower: this.formData.marketCompetitivePower,
+                guessSovency: this.formData.guessSovency,
+                financingExplain: this.formData.financingExplain,
+                industrys,
+                paymentTypes,
+                fileNames,
+                filePaths,
+                status,
+                varietys,
+                creditWays,
+              };
+            }
+            this.$axios
+              .post(
+                "/jsp/wap/center/do/doEditProject.jsp",
+                qs.stringify(params)
+              )
+              .then(res => {
+                if (res.success == "true") {
+                  if(status == 0){
+                    this.success = true;
+                    this.hint = "保存项目成功";
+                    this.toast_show = true;
+                    setTimeout(()=> {
+                      this.$router.push("/person/myProject");
+                    },1000)
+                  } else {
+                  this.success = true;
+                  this.hint = "上传项目成功";
+                  this.toast_show = true;
+                  setTimeout(()=> {
+                      this.$router.push("/person/myProject");
+                    },1000)
+                  }
+                } else {
+                  this.success = false;
+                  this.hint = "提交失败，请检查网络或重试";
+                  this.toast_show = true;
+                }
+              });
+          });
+          } else {
+            this.$confirm("即将提交项目, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            var fileNames = this.fileNames.join(";=;");
+            var filePaths = this.filePaths.join(",");
+            var industrys = this.industrys.join(",");
+            var creditWays = this.creditWays.join(",");
+            var varietys = this.varietys.join(",");
             var paymentTypes = this.paymentTypes.join(",");
             var id = this.$route.query.id;
             if (id != "") {
@@ -607,11 +893,21 @@ export default {
                 financingWay: this.formData.financingWay,
                 stage: this.formData.stage,
                 stockStructureImgPath: this.formData.stockStructureImgPath,
+                dueTime: this.formData.dueTime,
+                interestRates: this.formData.interestRates,
+                loanUses: this.formData.loanUses,
+                standard: this.formData.standard,
+                sourcesFunds: this.formData.sourcesFunds,
+                marketCompetitivePower: this.formData.marketCompetitivePower,
+                guessSovency: this.formData.guessSovency,
+                financingExplain: this.formData.financingExplain,
                 industrys,
                 paymentTypes,
                 fileNames,
                 filePaths,
-                status
+                status,
+                varietys,
+                creditWays,
               };
             } else {
               var params = {
@@ -653,11 +949,21 @@ export default {
                 financingWay: this.formData.financingWay,
                 stage: this.formData.stage,
                 stockStructureImgPath: this.formData.stockStructureImgPath,
+                dueTime: this.formData.dueTime,
+                interestRates: this.formData.interestRates,
+                loanUses: this.formData.loanUses,
+                standard: this.formData.standard,
+                sourcesFunds: this.formData.sourcesFunds,
+                marketCompetitivePower: this.formData.marketCompetitivePower,
+                guessSovency: this.formData.guessSovency,
+                financingExplain: this.formData.financingExplain,
                 industrys,
                 paymentTypes,
                 fileNames,
                 filePaths,
-                status
+                status,
+                varietys,
+                creditWays,
               };
             }
             this.$axios
@@ -689,6 +995,8 @@ export default {
                 }
               });
           });
+          }
+          
         } else {
           console.log("error submit!!");
           this.$message.error("请完善以下信息，方便我们更好的为您服务");
@@ -899,6 +1207,19 @@ export default {
     position: absolute;
     top: 7px;
     left: 4px;
+  }
+}
+
+//融资方式
+.way {
+  background:#f2f2f2;
+  padding:10px 0;
+  margin-bottom:20px;
+}
+
+/deep/ {
+    .el-checkbox+.el-checkbox {
+      margin-left: 20px !important;
   }
 }
 </style>

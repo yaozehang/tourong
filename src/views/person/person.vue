@@ -25,6 +25,30 @@
         </div>
         <div v-show="noShow" class="noChange">您关注的项目还未发布进展</div>
     </div>
+      <!-- <div class="project">
+        <p class="project_title">
+          <span class="project_">关注的资金动态</span>
+          <span class="project_more flr">
+          <button class="noLikeBtn" @click="applyDynamic">
+            <i></i>添加动态
+          </button>
+          </span>
+        </p>
+        <div v-for="(item, index) in MoneyData" :key="index" class="project_list">
+          <p class="title">{{title}}</p>
+          <p class="con clearfix">
+            <span class="content fll">{{item.content}}</span>
+            <img :src=" $url + imgPaths" alt="" v-for="(imgPaths,idx) in item.imgPathList" :key="idx" style="max-width:250px;padding-right:10px">
+            <span class="time flr">
+              <i></i>
+              {{item.addTimeStr.slice(0,10)}}
+              <span class="seconed">{{item.addTimeStr.slice(10,19)}}</span>
+            </span>
+          </p>
+          <el-button type="danger" icon="el-icon-delete" circle class="flr cancel" size="mini" @click="delete_item(item.id,index)"></el-button>
+        </div>
+        <div v-show="noShow1" class="noChange">您还未添加过动态</div>
+    </div> -->
     </div>
   </div>
 </template>
@@ -39,6 +63,8 @@
         projectData:[],
         noShow:false,
         title:'',
+        MoneyData:[],
+        noShow1:false,
       }
     },
     methods:{
@@ -46,6 +72,9 @@
         this.$axios.get('/jsp/wap/center/ctrl/jsonDynamicList.jsp?type=1').then(res => {
           console.log(res);
           this.projectData = res.data
+          if(this.projectData.length == 0){
+            this.noShow = true
+          }
         })
       },
       project(){

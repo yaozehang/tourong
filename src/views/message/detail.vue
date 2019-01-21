@@ -27,7 +27,8 @@
         </div>
         <p class="contentHtml" v-html="mesDetailData.content"></p>
         <div class="discuss">
-          <img :src="$url + avatar" alt="" class="avatar" v-if="avatar_show">
+          <img :src="$url + avatar" alt="" class="avatar" v-if="avatar_show&&avatar != '/static/img/avatar-1.png'">
+          <img :src="avatar" alt="" class="avatar" v-else-if="avatar_show&&avatar == '/static/img/avatar-1.png'">
           <p class="login" @click="login_in" v-else>登录</p>
           <textarea name="" id="" style="width:785px;" rows="3" placeholder="来说两句吧..." v-model="content"></textarea>
         </div>
@@ -123,6 +124,9 @@
       <div v-else class="toast_title">失败</div>
       <p class="toast_content">{{hint}}</p>
     </el-dialog>
+
+    <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
+    <Login :should_login="should_login"></Login>
   </div>
 </template>
 
@@ -132,6 +136,7 @@ import * as Cookies from 'js-cookie'
 export default {
   data(){
     return {
+      should_login:false,
       mesDetailData:{
         title:'投资界沙龙：共享经济——势不可挡 or 资本捧杀',
         time:'2017-06-06 11:20',
@@ -272,6 +277,8 @@ export default {
           this.like_show = false
         } else if(res.data == '1'){
           this.like_show = true
+        } else {
+          this.like_show = false
         }
       })
     },
@@ -329,9 +336,10 @@ export default {
           this.toast_show = true;
         }    
       } else {
-        this.success = false;
-        this.hint = '登录后才能发表评论';
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = '登录后才能发表评论';
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     sub_com_com(index){
@@ -339,9 +347,10 @@ export default {
         this.comindex = index
         this.comm_input_show = !this.comm_input_show
       } else {
-        this.success = false;
-        this.hint = '登录后才能发表评论';
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = '登录后才能发表评论';
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     sub_com_com2(index){
@@ -349,9 +358,10 @@ export default {
         this.comindex = index
         this.comm_input_show = true
       } else {
-        this.success = false;
-        this.hint = '登录后才能发表评论';
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = '登录后才能发表评论';
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     handleCurrentChange(val) {
@@ -442,9 +452,10 @@ export default {
             }
           })
         } else {
-        this.success = false;
-        this.hint = '登录后才能点赞哦';
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = '登录后才能点赞哦';
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     nolike(){
@@ -461,16 +472,18 @@ export default {
             }
           })
         } else {
-        this.success = false;
-        this.hint = '登录后才能点赞哦';
-        this.toast_show = true;
+        // this.success = false;
+        // this.hint = '登录后才能点赞哦';
+        // this.toast_show = true;
+        this.should_login = true
       }
     },
     login_in(){
-      let { href } = this.$router.resolve({
-        name: "login"
-      });
-      window.open(href, "_blank");
+      // let { href } = this.$router.resolve({
+      //   name: "login"
+      // });
+      // window.open(href, "_blank");
+        this.should_login = true
     }
   },
   created(){
