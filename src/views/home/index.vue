@@ -598,7 +598,7 @@ export default {
 }
 .invest-text {
   margin-left: 10px;
-  width: 470px;
+  width: 450px;
 }
 .invest-item-title {
   font-size: 18px;
@@ -637,10 +637,10 @@ export default {
   }
 }
 .w230 {
-  width: 230px;
+  width: 220px;
 }
 .w175 {
-  width: 230px;
+  width: 220px;
 }
 .inb {
   display: inline-block;
