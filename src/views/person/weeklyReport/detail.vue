@@ -46,7 +46,6 @@
         class="mg-20"
       >
         <div v-if="item.img" class="clearfix">
-          <router-link to="/message/messageDetail">
             <img :src="$url + item.imgPaths" alt class="fll" width="152px" height="101px">
             <div class="fll mes_box">
               <p class="title" @click="toMessageDetailPage(item.resourceId)">{{item.title}}</p>
@@ -56,7 +55,6 @@
               </div>
               <p class="content">{{item.content}}</p>
             </div>
-          </router-link>
         </div>
         <div v-else class="clearfix">
             <div class="fll mes_box2">
@@ -65,6 +63,7 @@
                 <span class="fll time">发布时间；{{item.addTimeStr}}</span>
                 <!-- <span class="flr num">阅读：{{item.num}}次</span> -->
               </div>
+              <!-- <p class="content">{{item.content}}</p> -->
               <p class="content" v-html="item.content"></p>
             </div>
         </div>
@@ -81,7 +80,8 @@
         <img :src="$url + item.imgPaths" alt width="270px" height="180px" class="fll">
          <div class="fll list">
           <p class="list-title" style="font-size:18px;" @click="activityDetailPage(item.resourceId)">{{item.title}}</p>
-          <p v-html="item.content" style="color:#999"></p>
+          <!-- <p style="color:#999">{{item.content}}</p> -->
+          <p style="color:#999" v-html="item.content"></p>
           <!-- <p class="list-content">
             <i class="local"></i>
             {{item.local}}

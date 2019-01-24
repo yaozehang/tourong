@@ -4,9 +4,10 @@
       <p class="project_title">
         <span class="project_">会员信息认证</span>
       </p>
+      <p style="color:#999;line-height:1.5;font-size:14px;">通过认证信息能增加您身份的可信程度，增加投融资信息匹配的精准度，能够更容易促成投融资意向。名片、营业执照、微信号等信息，仅供认证使用，平台不会暴露您的个人信息。</p>
       <el-form
         :model="attestForm"
-        label-width="100px"
+        label-width="130px"
         class="demo-ruleForm"
         :rules="rules"
         ref="ruleForm"
@@ -14,7 +15,8 @@
         <el-form-item label="类型：" prop="type">
           <div v-for="(item , index) in type" :key="index" class="fll type_btn" :class="{'active':item.checked}" @click="get_type(index)">{{item.name}}</div>
         </el-form-item>
-        <el-form-item label="认证材料：">
+        <div v-if="attestForm.type == 1">
+        <el-form-item label="个人名片：" prop="cardFilePath" v-model="attestForm.cardFilePath">
           <el-upload
             class="upload-demo"
             :http-request="uploadFlie"
@@ -22,11 +24,97 @@
             :file-list="fileList"
           >
             <div class="likeBtn">
-              <i></i>点击上传文件
+              <i></i>点击上传名片
             </div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="介绍：" prop="brief">
+        <el-form-item label="个人简历：">
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie1"
+            action=""
+            :file-list="fileList1"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传简历
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="个人荣誉：">
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie2"
+            action=""
+            :file-list="fileList2"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传荣誉
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="企业营业执照：" prop="licenseFilePath" v-model="attestForm.licenseFilePath">
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie3"
+            action=""
+            :file-list="fileList3"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传企业营业执照
+            </div>
+          </el-upload>
+        </el-form-item>
+        </div>
+        <div v-else-if="attestForm.type == 2">
+          <el-form-item label="个人名片：" prop="cardFilePath" v-model="attestForm.cardFilePath">
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie"
+            action=""
+            :file-list="fileList"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传名片
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="个人简历：">
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie1"
+            action=""
+            :file-list="fileList1"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传简历
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="个人荣誉：">
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie2"
+            action=""
+            :file-list="fileList2"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传荣誉
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="企业营业执照：" prop="licenseFilePath" v-model="attestForm.licenseFilePath">
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie3"
+            action=""
+            :file-list="fileList3"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传企业营业执照
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="历史投资案例：">
           <el-input
             type="textarea"
             v-model="attestForm.brief"
@@ -34,6 +122,45 @@
             placeholder="请输入内容"
           ></el-input>
         </el-form-item>
+        </div>
+        <div v-else-if="attestForm.type == 3">
+        <el-form-item label="个人名片：" prop="cardFilePath" v-model="attestForm.cardFilePath">
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie"
+            action=""
+            :file-list="fileList"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传名片
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="个人简历：" prop="cvFilePath" v-model="attestForm.cvFilePath" >
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie1"
+            action=""
+            :file-list="fileList1"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传简历
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="个人荣誉：" prop="honorFilePath" v-model="attestForm.honorFilePath" >
+          <el-upload
+            class="upload-demo"
+            :http-request="uploadFlie2"
+            action=""
+            :file-list="fileList2"
+          >
+            <div class="likeBtn">
+              <i></i>点击上传荣誉
+            </div>
+          </el-upload>
+        </el-form-item>
+        </div>
         <el-form-item>
           <div class="sub_btn" @click="submitForm('ruleForm')">提交认证</div>
         </el-form-item>
@@ -58,11 +185,13 @@ export default {
     return {
       attestForm: {
         brief: "",
-        type: "",
-        fileNames:[],
-        filePaths:[],
+        type: "1",
+        cardFilePath:[],
+        cvFilePath:[],
+        honorFilePath:[],
+        licenseFilePath:[],
       },
-      type: [ {name:"项目方",checked:false},{name:"投资人",checked:false},{name:"专家",checked:false}],
+      type: [ {name:"项目方",checked:true},{name:"资金方",checked:false},{name:"专家",checked:false}],
       rules: {
         type: [
           {
@@ -72,6 +201,10 @@ export default {
             trigger: "change"
           }
         ],
+        cardFilePath:[{ required: true, message: '请上传个人名片', trigger: 'blur'}],
+        cvFilePath:[{ required: true, message: '请上传个人简历', trigger: 'blur'}],
+        honorFilePath:[{ required: true, message: '请上传个人荣誉', trigger: 'blur'}],
+        licenseFilePath:[{ required: true, message: '请上传企业营业执照', trigger: 'blur'}],
         // file: [
         //   {
         //     type: "file",
@@ -80,9 +213,12 @@ export default {
         //     trigger: "change"
         //   }
         // ],
-        brief: [{ required: true, message: "请填写介绍", trigger: "blur" }]
+        // brief: [{ required: true, message: "请填写历史投资案例", trigger: "blur" }]
       },
       fileList: [],
+      fileList1: [],
+      fileList2: [],
+      fileList3: [],
       hint:"",
       success:false,
       toast_show:false,
@@ -92,9 +228,11 @@ export default {
     submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            var fileNames = this.attestForm.fileNames.join(';=;')
-            var filePaths = this.attestForm.filePaths.join(',')
-            this.$axios.get('/jsp/wap/center/do/doAuthentication.jsp',{params:{type:this.attestForm.type,brief:this.attestForm.brief,fileNames,filePaths}}).then(res => {
+            var cardFilePath = this.attestForm.cardFilePath.join(',')
+            var cvFilePath = this.attestForm.cvFilePath.join(',')
+            var honorFilePath = this.attestForm.honorFilePath.join(',')
+            var licenseFilePath = this.attestForm.licenseFilePath.join(',')
+            this.$axios.get('/jsp/wap/center/do/doAuthentication.jsp',{params:{type:this.attestForm.type,brief:this.attestForm.brief,cardFilePath,cvFilePath,honorFilePath,licenseFilePath}}).then(res => {
               if(res.success == "true") {
                 this.success = true;
                 this.hint = "上传认证资料成功";
@@ -105,11 +243,13 @@ export default {
                 })
                 this.attestForm.type = ""
                 this.fileList = []
-                this.attestForm.fileNames = []
-                this.attestForm.filePaths = []
+                this.attestForm.cardFilePath = []
+                this.attestForm.cvFilePath = []
+                this.attestForm.honorFilePath  = []
+                this.attestForm.licenseFilePath = []
               } else {
                 this.success = false;
-                this.hint = "上传认证资料失败，请检查网络";
+                this.hint = res.message;
                 this.toast_show = true;
               }
             })
@@ -139,13 +279,67 @@ export default {
          };  //添加请求头
       this.$axios.post('/component/trUpload2/uploadify',param,config).then(res => {
         if(res.success == true) {
-          this.attestForm.fileNames.push(res.data.originalName)
-          this.attestForm.filePaths.push(res.data.relativePath)
+          this.attestForm.cardFilePath.push(res.data.relativePath)
         } else {
-          this.$message.error('上传失败，请检查网络')
+          this.success = false;
+          this.hint = res.message;
+          this.toast_show = true;
         }
       })
     },
+    uploadFlie1(f){
+      let param = new FormData(); //创建form对象
+         param.append('file',f.file);//通过append向form对象添加数据
+         let config = {
+           headers:{'content-type':'multipart/form-data'}
+         };  //添加请求头
+      this.$axios.post('/component/trUpload2/uploadify',param,config).then(res => {
+        if(res.success == true) {
+          this.attestForm.cvFilePath.push(res.data.relativePath)
+        } else {
+          this.success = false;
+          this.hint = res.message;
+          this.toast_show = true;
+        }
+      })
+    },
+    uploadFlie2(f){
+      let param = new FormData(); //创建form对象
+         param.append('file',f.file);//通过append向form对象添加数据
+         let config = {
+           headers:{'content-type':'multipart/form-data'}
+         };  //添加请求头
+      this.$axios.post('/component/trUpload2/uploadify',param,config).then(res => {
+        if(res.success == true) {
+          this.attestForm.honorFilePath.push(res.data.relativePath)
+        } else {
+          this.success = false;
+          this.hint = res.message;
+          this.toast_show = true;
+        }
+      })
+    },
+    uploadFlie3(f){
+      let param = new FormData(); //创建form对象
+         param.append('file',f.file);//通过append向form对象添加数据
+         let config = {
+           headers:{'content-type':'multipart/form-data'}
+         };  //添加请求头
+      this.$axios.post('/component/trUpload2/uploadify',param,config).then(res => {
+        if(res.success == true) {
+          this.attestForm.licenseFilePath.push(res.data.relativePath)
+        } else {
+          this.success = false;
+          this.hint = res.message;
+          this.toast_show = true;
+        }
+      })
+    },
+  },
+  watch:{
+    'attestForm.type'(){
+      this.$refs.ruleForm.clearValidate()
+    }
   }
 };
 </script>

@@ -1,16 +1,19 @@
 <template>
   <div class="fll">
-    <div class="person_content">
-      <div class="project">
-        <p class="project_title">
+    <div class="person_content" v-loading="loading">
+      <!-- <div class="" v-for="(btn,ind) in begin" :key="ind" @click="get_ser(ind)">{{btn.name}}</div> -->
+      <el-tabs type="card">
+      <el-tab-pane label="关注的项目进展">
+      <div class="project" >
+        <!-- <p class="project_title">
           <span class="project_">关注的项目进展</span>
-          <span class="project_more flr">
+          <span class="project_more flr"> -->
           <!-- <button class="noLikeBtn" @click="applyDynamic">
             <i></i>添加进展
           </button> -->
-          <span class="project_more flr" @click="project">查看更多项目></span>
-          </span>
-        </p>
+          <!-- <span class="project_more flr" @click="project">查看更多项目></span> -->
+          <!-- </span>
+        </p> -->
         <div v-for="(item, index) in projectData" :key="index" class="project_list">
           <p class="title">{{item.title}}</p>
           <p class="con clearfix">
@@ -18,22 +21,22 @@
             <img :src=" $url + imgPaths" alt="" v-for="(imgPaths,idx) in item.imgPathList" :key="idx" style="max-width:250px;padding-right:10px">
             <span class="time flr">
               <i></i>
-              {{item.addTimeStr.slice(0,10)}}
-              <span class="seconed">{{item.addTimeStr.slice(10,19)}}</span>
+              {{item.addTimeStr.substr(0,10)}}
+              <span class="seconed">{{item.addTimeStr.substr(10,19)}}</span>
             </span>
           </p>
         </div>
         <div v-show="noShow" class="noChange">您关注的项目还未发布进展</div>
     </div>
-      <!-- <div class="project">
-        <p class="project_title">
+    </el-tab-pane>
+    <el-tab-pane label="关注的资金动态">
+      <div class="project">
+        <!-- <p class="project_title">
           <span class="project_">关注的资金动态</span>
           <span class="project_more flr">
-          <button class="noLikeBtn" @click="applyDynamic">
-            <i></i>添加动态
-          </button>
+
           </span>
-        </p>
+        </p> -->
         <div v-for="(item, index) in MoneyData" :key="index" class="project_list">
           <p class="title">{{title}}</p>
           <p class="con clearfix">
@@ -41,14 +44,16 @@
             <img :src=" $url + imgPaths" alt="" v-for="(imgPaths,idx) in item.imgPathList" :key="idx" style="max-width:250px;padding-right:10px">
             <span class="time flr">
               <i></i>
-              {{item.addTimeStr.slice(0,10)}}
-              <span class="seconed">{{item.addTimeStr.slice(10,19)}}</span>
+              {{item.addTimeStr.substr(0,10)}}
+              <span class="seconed">{{item.addTimeStr.substr(10,19)}}</span>
             </span>
           </p>
           <el-button type="danger" icon="el-icon-delete" circle class="flr cancel" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>
-        <div v-show="noShow1" class="noChange">您还未添加过动态</div>
-    </div> -->
+        <div v-show="noShow1" class="noChange">您关注的资金未添加动态</div>
+    </div>
+    </el-tab-pane>
+    </el-tabs>
     </div>
   </div>
 </template>
@@ -65,17 +70,40 @@
         title:'',
         MoneyData:[],
         noShow1:false,
+        loading:false,
+        begin:[{name:'关注项目进展',checked:false},{name:'关注的资金动态',checked:false}],
+        right:0,
       }
     },
     methods:{
       getData(){
+        this.loading = true
         this.$axios.get('/jsp/wap/center/ctrl/jsonDynamicList.jsp?type=1').then(res => {
-          console.log(res);
           this.projectData = res.data
           if(this.projectData.length == 0){
             this.noShow = true
           }
         })
+      },
+      getData1(){
+        this.$axios.get('/jsp/wap/center/ctrl/jsonDynamicList.jsp?type=2').then(res => {
+          this.MoneyData = res.data
+          if(this.MoneyData.length == 0){
+            this.noShow1 = true
+            this.loading = false
+          }
+        })
+      },
+      get_ser(index){
+        this.right = index
+        if(this.begin[index].checked){
+          this.begin[index].checked = !this.begin[index].checked
+        } else {
+            this.begin.forEach(item => {
+                item.checked = false
+          });
+          this.begin[index].checked = true
+        }
       },
       project(){
         let id = this.$route.query.id
@@ -87,6 +115,7 @@
     },
     created(){
       this.getData()
+      this.getData1()
     }
   }
 </script>
@@ -134,7 +163,7 @@
   }
 }
   .project_list {
-    padding: 20px 0;
+    // padding: 20px 0;
     border-bottom: 1px solid #cdcdcd;
     position: relative;
     .title {

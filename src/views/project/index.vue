@@ -12,8 +12,29 @@
         <i @click="search"></i>
       </div>
     </div>
-    <div class="clearfix">
-      <div class="pd-15 fll industy">
+    <div class="clearfix" style="position:relative;">
+      <div class="pd-15 fll" v-if="!isCheck2">
+        <span class="act_type fll" style="margin-right:5px;">所属行业：</span>
+        <div class="titleRight fll" v-if="!isShow">
+          <span
+            class="type_item"
+            v-for="(item , index) in industryList.slice(0,9)"
+            :key="index"
+            @click="getIndustryStatus(item.dataValue,index)"
+            :class="{active:item.checked}"
+          >{{item.dataName}}</span>
+        </div>
+        <div class="titleRight fll" v-else>
+          <span
+            class="type_item"
+            v-for="(item , index) in regionList"
+            :key="index"
+            @click="getIndustryStatus(item.dataValue,index)"
+            :class="{active:item.checked}"
+          >{{item.dataName}}</span>
+        </div>
+      </div>
+      <div class="pd-15 fll industy" v-else>
         <span class="act_type fll">所属行业：</span>
         <div class="titleRight fll">
           <template>
@@ -44,6 +65,15 @@
           收起
           <i class="el-icon-arrow-up el-icon--right"></i>
         </div>
+      </div>
+
+      <div class="flr checkBoxBtn" @click="handleCheck2" v-if="!isShow">
+        多选
+        <i class="el-icon-plus"></i>
+      </div>
+      <div class="flr checkBoxBtn2" @click="handleCheck2" v-else>
+        多选
+        <i class="el-icon-plus"></i>
       </div>
     </div>
     <div class="clearfix" style="position:relative;">
@@ -153,7 +183,7 @@
       <p style="color:#999;" v-show="noMore">-------------------------------------------------没有更多项目了----------------------------------------------------</p>
     </div>
     <div class="w360 flr mes_list clearfix">
-      <img src="/static/img/project_list.jpg" alt class="act_timelist" @click="toMyproject">
+      <img src="/static/img/money_list.jpg" alt class="act_timelist" @click="toMymoney">
       <p class="mes">
         热门资讯
         <span class="mes_more flr" @click="$router.push('/message')">更多></span>
@@ -196,7 +226,7 @@
         <div v-else>
             <div class="toast_success" v-if="success"></div>
             <div class="toast_error" v-else></div>
-            <div v-if="success" class="toast_title">成功</div>
+            <!-- <div v-if="success" class="toast_title">成功</div> -->
             <!-- <div v-else class="toast_title">失败</div> -->
             <p class="toast_title">{{hint}}</p>
         </div>
@@ -211,6 +241,7 @@
       <div v-if="success" class="toast_title">成功</div>
       <!-- <div v-else class="toast_title">失败</div> -->
       <p class="toast_title">{{hint}}</p>
+      <div v-if="no_money" @click="toMymoney" style="color:#f00;font-size:18px;cursor:pointer;text-align:center;">前去发布--></div>
     </el-dialog>
 
     <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
@@ -228,10 +259,12 @@ export default {
       isShow: false,
       isShowArea: false,
       isCheck: false,
+      isCheck2: false,
       newsloading:false,
       dialogFormVisible: false,
       more:false,
       noMore:false,
+      no_money:false,
       actType: ["不限", "债券融资", "股权融资", "整体转让", "其他融资"],
       moneyType: [
         "个人资金",
@@ -515,6 +548,19 @@ export default {
       }
       this.getActData(this.financingWays,this.regions,this.industrys,this.financingMoneys)
   },
+  getIndustryStatus(e,index){
+    this.industrys = e
+      if(this.industryList[index].checked){
+        this.industryList[index].checked = !this.industryList[index].checked
+        this.industrys = ''
+      } else {
+          this.industryList.forEach(item => {
+              item.checked = false
+        });
+        this.industryList[index].checked = true
+      }
+      this.getActData(this.financingWays,this.regions,this.industrys,this.financingMoneys)
+  },
   getRegionStatus(e,index){
     this.regions = e
       if(this.regionList[index].checked){
@@ -586,6 +632,9 @@ export default {
     handleCheck() {
       this.isCheck = !this.isCheck;
     },
+    handleCheck2() {
+      this.isCheck2 = !this.isCheck2;
+    },
     toProjectDetailPage(id){
       let {href} = this.$router.resolve({
           name: "projectDetail",
@@ -631,7 +680,16 @@ export default {
           this.$router.push('/login')
         }
       },
-
+    toMymoney() {
+      if (Cookies.get("userKey")) {
+        let { href } = this.$router.resolve({
+          name: "applyMoney"
+        });
+        window.open(href, "_blank");
+      } else {
+        this.$router.push("/login");
+      }
+    },
     handleCurrentChange(val) {
       this.getMyMoney(val);
     },
@@ -639,15 +697,18 @@ export default {
       if (Cookies.get("userKey")) {
         if (this.myMoney.length == 0) {
           this.success = false;
+          this.no_money = true
           this.hint = "您还没有发布资金，请先发布资金";
           this.toast_show = true;
         } else {
+          this.no_money = false
           this.dialogFormVisible = true;
           this.projectId = id;
         }
       } else {
         // this.success = false;
         // this.hint = "您未登录，请先登录";
+        this.no_money = false
         // this.toast_show = true;
         this.should_login = true
       }
@@ -665,7 +726,7 @@ export default {
             // this.dialogFormVisible = false;
           } else {
             this.success = false;
-            this.hint = "项目约谈失败，请您检查网络或重试";
+            this.hint = res.message;
             this.sub_project = false;
           }
         });
@@ -758,7 +819,9 @@ export default {
   color: #606266;
   font-size: 12px;
   cursor: pointer;
-  margin-right: 20px;
+  position: absolute;
+  right: 70px;
+  bottom: 18px;
 }
 .checkBoxBtn2 {
   border: 1px solid #d9d9d9;

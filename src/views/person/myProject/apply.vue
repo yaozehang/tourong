@@ -14,16 +14,16 @@
       </p>
       <p>
         <span class="item_title">项目基本信息</span>
-        <el-tooltip class="item" effect="dark" placement="bottom">
+        <!-- <el-tooltip class="item" effect="dark" placement="bottom">
           <div slot="content" v-html="templateData"></div>
           <span class="pro_template">参考模板</span>
-        </el-tooltip>
+        </el-tooltip> -->
       </p>
       <el-form ref="formData" :model="formData" label-width="150px" :rules="rules">
-        <el-form-item label="项目名称" style="width:600px">
+        <el-form-item label="项目名称" style="width:600px" class="is-required" prop="title"> 
           <el-input v-model="formData.title"></el-input>
         </el-form-item>
-        <el-form-item label="所属行业">
+        <el-form-item label="所属行业" class="is-required" prop="industrys">
           <el-checkbox-group v-model="industrys">
             <el-checkbox
               v-for="industry in industryList"
@@ -33,10 +33,10 @@
             >{{industry.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="项目简历" style="width:600px">
+        <el-form-item label="项目简介" style="width:600px" class="is-required" prop="brief">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.brief"></el-input>
         </el-form-item>
-        <el-form-item label="所处阶段">
+        <el-form-item label="所处阶段" prop="stage" v-model="formData.stage" class="is-required">
           <div
             v-for="(item , index) in stageList"
             :key="index"
@@ -45,10 +45,20 @@
             @click="get_type(index,item.dataValue)"
           >{{item.dataName}}</div>
         </el-form-item>
+        <el-form-item label="意向资金" class="is-required" prop="intentCapitals">
+          <el-checkbox-group v-model="intentCapitals">
+            <el-checkbox
+              v-for="intentCapital in intentCapitalList"
+              :label="intentCapital.dataValue"
+              :key="intentCapital.dataValue"
+              name="type"
+            >{{intentCapital.dataName}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
         <p>
           <span class="item_title">融资主体信息</span>
         </p>
-        <el-form-item label="融资主体">
+        <el-form-item label="融资主体" prop="financeBody" class="is-required">
           <el-radio-group v-model="formData.financeBody">
             <el-radio
               v-for="finance in financeBodyList"
@@ -57,10 +67,11 @@
             >{{finance.dataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="企业全称" style="width:600px">
+        <div v-if="formData.financeBody == 64">
+        <el-form-item label="单位全称" style="width:600px" class="is-required" prop="companyName">
           <el-input v-model="formData.companyName"></el-input>
         </el-form-item>
-        <el-form-item label="所在地区">
+        <el-form-item label="所在地区" required>
           <v-distpicker
             :province="provinceStr"
             :city="cityStr"
@@ -68,7 +79,7 @@
             @selected="selected"
           ></v-distpicker>
         </el-form-item>
-        <el-form-item label="详细地址" style="width:600px">
+        <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
           <el-input v-model="formData.address"></el-input>
         </el-form-item>
         <el-form-item label="注册资本" class="w350" prop="registeredCapital">
@@ -76,7 +87,7 @@
             <span slot="append">万元</span>
           </el-input>
         </el-form-item>
-        <el-form-item label="股权结构" class="w180">
+        <el-form-item label="股权结构" class="w180 is-required">
           <el-upload class="upload-demo" action :http-request="uploadImg" :show-file-list="false">
             <el-button
               size="small"
@@ -92,10 +103,43 @@
             >
           </el-upload>
         </el-form-item>
+        </div>
+        <div v-else-if="formData.financeBody == 65">
+          <el-form-item label="真实姓名" style="width:600px" class="is-required" prop="companyName">
+          <el-input v-model="formData.companyName"></el-input>
+        </el-form-item>
+        <el-form-item label="所在地区" required>
+          <v-distpicker
+            :province="provinceStr"
+            :city="cityStr"
+            :area="countyStr"
+            @selected="selected"
+          ></v-distpicker>
+        </el-form-item>
+        <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
+          <el-input v-model="formData.address"></el-input>
+        </el-form-item>
+        </div>
+        <div v-else-if="formData.financeBody == 66">
+          <el-form-item label="单位全称" style="width:600px" class="is-required" prop="companyName">
+          <el-input v-model="formData.companyName"></el-input>
+        </el-form-item>
+        <el-form-item label="所在地区" required>
+          <v-distpicker
+            :province="provinceStr"
+            :city="cityStr"
+            :area="countyStr"
+            @selected="selected"
+          ></v-distpicker>
+        </el-form-item>
+        <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
+          <el-input v-model="formData.address"></el-input>
+        </el-form-item>
+        </div>
         <el-form-item label="实际控制人" class="w180">
           <el-input v-model="formData.owner"></el-input>
         </el-form-item>
-        <el-form-item label="主营业务" style="width:600px">
+        <el-form-item label="主营业务" style="width:600px" class="is-required" prop="business">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.business"></el-input>
         </el-form-item>
         <el-form-item label="公司亮点" style="width:600px">
@@ -111,7 +155,7 @@
             v-model="formData.trienniumFinancialData"
           ></el-input>
         </el-form-item>
-        <el-form-item label="3-5年盈利预测" style="width:600px">
+        <el-form-item label="3-5年盈利预测" style="width:600px" class="is-required" prop="profitForecast">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.profitForecast"></el-input>
         </el-form-item>
         <el-form-item label="团队平均年龄" class="w350" prop="averageAge">
@@ -123,7 +167,7 @@
         <el-form-item label="官方微信" class="w350">
           <el-input v-model="formData.weChat"></el-input>
         </el-form-item>
-        <el-form-item label="建企时间" class="w350">
+        <el-form-item label="建企时间" class="w350 is-required" prop="companyFoundTimeStr">
           <el-date-picker
             value-format="yyyy-MM-dd"
             v-model="formData.companyFoundTimeStr"
@@ -144,23 +188,23 @@
           >{{item.dataName}}</div>
         </el-form-item>
         <div class="way">
-          <div v-if="fin_way1">
-          <el-form-item label="注册资本" class="w350" prop="registeredCapital">
-            <el-input v-model="formData.registeredCapital">
+          <div v-if="fin_way == 0">
+          <el-form-item label="公司估值" class="w350 is-required" prop="companyAssessed">
+            <el-input v-model="formData.companyAssessed">
               <span slot="append">万元</span>
             </el-input>
           </el-form-item>
-          <el-form-item label="市盈率（P/E）" class="w350" prop="pe">
+          <el-form-item label="市盈率（P/E）" class="w350 is-required" prop="pe">
             <el-input v-model="formData.pe">
               <!-- <span slot="append">万元</span> -->
             </el-input>
           </el-form-item>
-          <el-form-item label="市净率（P/B）" class="w350" prop="pb">
+          <el-form-item label="市净率（P/B）" class="w350 is-required" prop="pb">
             <el-input v-model="formData.pb">
               <!-- <span slot="append">万元</span> -->
             </el-input>
           </el-form-item>
-          <el-form-item label="支付方式">
+          <el-form-item label="支付方式" class=“is-required”>
             <el-checkbox-group v-model="paymentTypes">
               <el-checkbox
                 v-for="paymentType in paymentTypeList"
@@ -170,7 +214,7 @@
               >{{paymentType.dataName}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="有效期限">
+          <el-form-item label="有效期限" class=“is-required”>
             <div style="width:28.16667%" class="fll">
               <el-date-picker
                 value-format="yyyy-MM-dd"
@@ -201,11 +245,11 @@
             <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.opponentBrief"></el-input>
           </el-form-item>
           </div>
-          <div v-if="fin_way2">
-            <el-form-item label="融资金额" class="w350">
+          <div v-if="fin_way == 1">
+            <el-form-item label="融资金额" class="w350 is-required">
               <el-input v-model="formData.financingMoney"></el-input>
             </el-form-item>
-            <el-form-item label="品种">
+            <el-form-item label="品种" class=“is-required”>
               <el-checkbox-group v-model="varietys">
                 <el-checkbox
                   v-for="variety in varietyList"
@@ -218,10 +262,10 @@
             <el-form-item label="期限" class="w350">
               <el-input v-model="formData.dueTime"></el-input>
             </el-form-item>
-            <el-form-item label="利润" class="w350">
+            <el-form-item label="利润" class="w350 is-required">
               <el-input v-model="formData.interestRates"></el-input>
             </el-form-item>
-            <el-form-item label="增信方式">
+            <el-form-item label="增信方式" class="is-required">
               <el-checkbox-group v-model="creditWays">
                 <el-checkbox
                   v-for="creditWay in creditWayList"
@@ -231,10 +275,10 @@
                 >{{creditWay.dataName}}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="融资用途" style="width:600px">
+            <el-form-item label="融资用途" style="width:600px" class="is-required">
               <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.loanUses"></el-input>
             </el-form-item>
-            <el-form-item label="还款来源" class="w350">
+            <el-form-item label="还款来源" class="w350 is-required">
               <el-input v-model="formData.repaymentsSource"></el-input>
             </el-form-item>
             <el-form-item label="有效期限">
@@ -256,20 +300,20 @@
               ></el-date-picker>
             </el-col>
           </el-form-item>
-          <el-form-item label="项目建设合规性" style="width:600px">
+          <el-form-item label="项目建设合规性" style="width:600px" class="is-required">
               <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.standard"></el-input>
           </el-form-item>
-          <el-form-item label="资金来源及落实情况" style="width:600px">
+          <el-form-item label="资金来源及落实情况" style="width:600px" class="is-required">
               <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.sourcesFunds"></el-input>
           </el-form-item>
-          <el-form-item label="项目产品及竞争能力分析" style="width:600px">
+          <el-form-item label="项目产品及竞争能力分析" style="width:600px" class="is-required">
               <el-input type="textarea" :autosize="{ minRows: 2}" v-model="formData.marketCompetitivePower"></el-input>
           </el-form-item>
-          <el-form-item label="项目效益测算及偿债能力分析" style="width:600px">
+          <el-form-item label="项目效益测算及偿债能力分析" style="width:600px" class="is-required">
               <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.guessSovency"></el-input>
           </el-form-item>
           </div>
-          <div v-if="fin_way3">
+          <div v-if="fin_way == 2">
             <el-form-item label="其他融资" style="width:600px">
               <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.financingExplain"></el-input>
             </el-form-item>
@@ -278,25 +322,25 @@
         <p>
           <span class="item_title">核心团队</span>
         </p>
-        <el-form-item label="团队介绍" style="width:600px">
+        <el-form-item label="团队介绍" style="width:600px" class="is-required" prop="teamBrief">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.teamBrief"></el-input>
         </el-form-item>
         <p>
           <span class="item_title">项目负责人联系方式</span>
         </p>
-        <el-form-item label="姓名" class="w350">
+        <el-form-item label="姓名" class="w350 is-required" prop="directorName">
           <el-input v-model="formData.directorName"></el-input>
         </el-form-item>
-        <el-form-item label="职务" class="w350">
+        <el-form-item label="职务" class="w350 is-required" prop="directorJob">
           <el-input v-model="formData.directorJob"></el-input>
         </el-form-item>
         <!-- <el-form-item label="年龄" class="w350" prop="directorAge">
           <el-input v-model="formData.directorAge"></el-input>
         </el-form-item> -->
-        <el-form-item label="电话" class="w350" prop="directorPhone">
+        <el-form-item label="电话" class="w350 is-required" prop="directorPhone">
           <el-input v-model="formData.directorPhone"></el-input>
         </el-form-item>
-        <el-form-item label="Email" class="w350">
+        <el-form-item label="Email" class="w350 is-required" prop="directorEmail">
           <el-input v-model="formData.directorEmail"></el-input>
         </el-form-item>
         <p>
@@ -385,9 +429,9 @@ export default {
     };
     var checkAge = (rule, value, callback) => {
       var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
-      if (!value) {
-        return callback(new Error("年龄不能为空"));
-      }
+      // if (!value) {
+      //   return callback(new Error("年龄不能为空"));
+      // }
       if (!re.test(value)) {
         callback(new Error("请输入数字值"));
       } else {
@@ -398,14 +442,42 @@ export default {
         }
       }
     };
+    var has_value = (rule, value, callback) => {
+      if(!value){
+        return callback(new Error("不能为空"))
+      } else {
+        callback()
+      }
+    };
     return {
       rules: {
+        title: [{ validator: has_value, trigger: "blur" }],
+        // industrys: [{  validator: has_value,trigger: 'blur' }],
+        brief: [{ validator: has_value, trigger: "blur" }],
+        companyName: [{ validator: has_value, trigger: "blur" }],
+        address: [{ validator: has_value, trigger: "blur" }],
+        financeBody: [{ validator: has_value, trigger: "blur" }],
+        stage: [{ validator: has_value, trigger: "blur" }],
+        business: [{ validator: has_value, trigger: "blur" }],
+        teamBrief: [{ validator: has_value, trigger: "blur" }],
+        profitForecast: [{ validator: has_value, trigger: "blur" }],
+        directorEmail: [
+          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }],
         registeredCapital: [{ validator: checkNumber, trigger: "blur" }],
+        companyAssessed: [{ validator: checkNumber, trigger: "blur" }],
         pe: [{ validator: checkNumber, trigger: "blur" }],
         pb: [{ validator: checkNumber, trigger: "blur" }],
+        directorName: [{ validator: has_value, trigger: "blur" }],
+        directorJob: [{ validator: has_value, trigger: "blur" }],
         directorPhone: [{ validator: checkPhone, trigger: "blur" }],
         directorAge: [{ validator: checkAge, trigger: "blur" }],
-        averageAge: [{ validator: checkAge, trigger: "blur" }]
+        averageAge: [{ validator: checkAge, trigger: "blur" }],
+        companyFoundTimeStr: [{  trigger: 'change' }],
       },
       loading: false,
       templateData: "<p>lalala</p>",
@@ -415,7 +487,7 @@ export default {
       formData: {
         title: "",
         brief: "",
-        financeBody: "",
+        financeBody: '',
         companyName: "",
         address: "",
         registeredCapital: "",
@@ -445,9 +517,9 @@ export default {
         bodySecrecyType: "",
         infoSecrecyType: "",
         contactSecrecyType: "",
-        regionProvinceId: "",
-        regionCityId: "",
-        regionCountyId: "",
+        regionProvinceId: "110000",
+        regionCityId: "110100",
+        regionCountyId: "110114",
         financingWay: "",
         stage: "",
         industryName: "",
@@ -462,6 +534,7 @@ export default {
         marketCompetitivePower:'',
         guessSovency:'',
         financingExplain:'',
+        companyAssessed:'',
       },
       financeBodyList: [],
       stageList: [],
@@ -495,12 +568,12 @@ export default {
       varietys:[],
       creditWayList:[],
       creditWays:[],
+      intentCapitalList:[],
+      intentCapitals:[],
       hint:"",
       success:false,
       toast_show:false,
-      fin_way1:true,
-      fin_way2:false,
-      fin_way3:false,
+      fin_way:0,
     };
   },
   methods: {
@@ -508,7 +581,6 @@ export default {
       this.$axios
         .get(`/jsp/wap/center/ctrl/jsonProjectDetail.jsp?id=${id}`)
         .then(res => {
-          console.log(res.data.project);
           this.formData = res.data.project;
           let project = res.data.project;
           if (project.regionNameStr != "") {
@@ -532,6 +604,7 @@ export default {
           this.industryList = res.data.industryList;
           this.paymentTypeList = res.data.paymentTypeList;
           this.creditWayList = res.data.creditWayList;
+          this.intentCapitalList = res.data.intentCapitalList
           var stageList = res.data.stageList;
           if (this.formData.stage == "") {
             stageList.forEach(item => {
@@ -603,6 +676,9 @@ export default {
           if (res.data.project.industry != "") {
             this.industrys = res.data.project.industry.replace(/[\[\]]/g, "").split(",");
           }
+          if (res.data.project.intentCapital != ''){
+            this.intentCapitals = res.data.project.intentCapital.replace(/[\[\]]/g, "").split(",");
+          }
           if (res.data.project.paymentType != "") {
             this.paymentTypes = res.data.project.paymentType
               .replace(/[\[\]]/g, "")
@@ -625,17 +701,11 @@ export default {
             this.fileList.push(file);
           }
           if (this.formData.financingWay == '61') {
-            this.fin_way1 = true
-            this.fin_way2 = false
-            this.fin_way3 = false
+            this.fin_way = 0
           } else if (this.formData.financingWay == '62') {
-            this.fin_way1 = false
-            this.fin_way2 = true
-            this.fin_way3 = false
+            this.fin_way = 1
           } else if (this.formData.financingWay == '63') {
-            this.fin_way1 = false
-            this.fin_way2 = false
-            this.fin_way3 = true
+            this.fin_way = 2
           }
         });
     },
@@ -664,17 +734,11 @@ export default {
       }
 
       if(index == 0){
-        this.fin_way1 = true
-        this.fin_way2 = false
-        this.fin_way3 = false
+        this.fin_way = 0
       } else if (index == 1) {
-        this.fin_way1 = false
-        this.fin_way2 = true
-        this.fin_way3 = false
+        this.fin_way = 1
       } else if (index == 2) {
-        this.fin_way1 = false
-        this.fin_way2 = false
-        this.fin_way3 = true
+        this.fin_way = 2
       }
     },
     onSave(formName) {
@@ -692,10 +756,15 @@ export default {
             var fileNames = this.fileNames.join(";=;");
             var filePaths = this.filePaths.join(",");
             var industrys = this.industrys.join(",");
+            var intentCapitals = this.intentCapitals.join(",");
             var paymentTypes = this.paymentTypes.join(",");
             var varietys = this.varietys.join(",");
             var creditWays = this.creditWays.join(",");
-            var id = this.$route.query.id;
+            if(this.$route.query.id != ''){
+              var id = this.$route.query.id;
+            } else {
+
+            }
             if (id != "") {
               var params = {
                 id,
@@ -745,6 +814,7 @@ export default {
                 marketCompetitivePower: this.formData.marketCompetitivePower,
                 guessSovency: this.formData.guessSovency,
                 financingExplain: this.formData.financingExplain,
+                companyAssessed: this.formData.companyAssessed,
                 industrys,
                 paymentTypes,
                 fileNames,
@@ -752,6 +822,7 @@ export default {
                 status,
                 varietys,
                 creditWays,
+                intentCapitals,
               };
             } else {
               var params = {
@@ -801,6 +872,7 @@ export default {
                 marketCompetitivePower: this.formData.marketCompetitivePower,
                 guessSovency: this.formData.guessSovency,
                 financingExplain: this.formData.financingExplain,
+                companyAssessed: this.formData.companyAssessed,
                 industrys,
                 paymentTypes,
                 fileNames,
@@ -808,6 +880,7 @@ export default {
                 status,
                 varietys,
                 creditWays,
+                intentCapitals,
               };
             }
             this.$axios
@@ -824,17 +897,10 @@ export default {
                     setTimeout(()=> {
                       this.$router.push("/person/myProject");
                     },1000)
-                  } else {
-                  this.success = true;
-                  this.hint = "上传项目成功";
-                  this.toast_show = true;
-                  setTimeout(()=> {
-                      this.$router.push("/person/myProject");
-                    },1000)
-                  }
+                  } 
                 } else {
                   this.success = false;
-                  this.hint = "提交失败，请检查网络或重试";
+                  this.hint = res.message;
                   this.toast_show = true;
                 }
               });
@@ -848,6 +914,7 @@ export default {
             var fileNames = this.fileNames.join(";=;");
             var filePaths = this.filePaths.join(",");
             var industrys = this.industrys.join(",");
+            var intentCapitals = this.intentCapitals.join(",");
             var creditWays = this.creditWays.join(",");
             var varietys = this.varietys.join(",");
             var paymentTypes = this.paymentTypes.join(",");
@@ -901,6 +968,7 @@ export default {
                 marketCompetitivePower: this.formData.marketCompetitivePower,
                 guessSovency: this.formData.guessSovency,
                 financingExplain: this.formData.financingExplain,
+                companyAssessed: this.formData.companyAssessed,
                 industrys,
                 paymentTypes,
                 fileNames,
@@ -908,6 +976,7 @@ export default {
                 status,
                 varietys,
                 creditWays,
+                intentCapitals,
               };
             } else {
               var params = {
@@ -957,6 +1026,7 @@ export default {
                 marketCompetitivePower: this.formData.marketCompetitivePower,
                 guessSovency: this.formData.guessSovency,
                 financingExplain: this.formData.financingExplain,
+                companyAssessed: this.formData.companyAssessed,
                 industrys,
                 paymentTypes,
                 fileNames,
@@ -964,6 +1034,7 @@ export default {
                 status,
                 varietys,
                 creditWays,
+                intentCapitals,
               };
             }
             this.$axios
@@ -972,25 +1043,16 @@ export default {
                 qs.stringify(params)
               )
               .then(res => {
-                if (res.success == "true") {
-                  if(status == 0){
-                    this.success = true;
-                    this.hint = "保存项目成功";
-                    this.toast_show = true;
-                    setTimeout(()=> {
-                      this.$router.push("/person/myProject");
-                    },1000)
-                  } else {
+                if (res.success == "true") {    
                   this.success = true;
                   this.hint = "上传项目成功";
                   this.toast_show = true;
                   setTimeout(()=> {
                       this.$router.push("/person/myProject");
-                    },1000)
-                  }
+                  },1000)
                 } else {
                   this.success = false;
-                  this.hint = "提交失败，请检查网络或重试";
+                  this.hint = res.message;
                   this.toast_show = true;
                 }
               });
@@ -1040,11 +1102,34 @@ export default {
           }
         });
     },
-    vip() {}
+    vip() {
+      if(this.$store.state.userinfo.isVip == '0'){
+        this.$confirm('只有会员才能享受快速上传, 是否办理会员?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          let {href} = this.$router.resolve({
+                name: "member",
+            });
+          window.open(href, '_blank');
+        }).catch(() => {
+
+        });
+      } else {
+        this.$router.push({name:'uploadApplyProject'})
+      }
+    }
   },
   created() {
     let id = this.$route.query.id;
     this.getData(id);
+  },
+  watch: {
+    'fin_way'(){
+      this.$refs.formData.clearValidate()
+    }
   }
 };
 </script>

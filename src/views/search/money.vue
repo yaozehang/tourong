@@ -6,53 +6,74 @@
         </p>
       </div>
       <div v-loading="loading">
-      <div class="act_list clearfix" v-for="(item, index) in pageList" :key="index">
-        <div @click="toMoneyDetailPage(item.id)">
-          <div class="clearfix">
-            <span class="list-title fll">{{item.title}}</span>
-            <span class="title_time flr">{{item.addTimeStr.slice(0,10)}}</span>
-          </div>
-          <div class="clearfix">
-            <div class="fll box_content">
-              <span class="list-contentName">投资资金：</span>
-              <span class="current">{{item.investAmountName}}</span>
+          <div class="act_list clearfix" v-for="(item, index) in pageList" :key="index">
+            <div @click="toMoneyDetailPage(item.id)">
+              <div class="clearfix">
+                <span class="list-title fll" v-if="item&&item.title">{{item.title}}</span>
+                <span
+                  class="title_time flr"
+                  v-if="item&&item.addTimeStr"
+                >{{item.addTimeStr.slice(0,10)}}</span>
+              </div>
+              <div class="clearfix">
+                <div class="fll box_content">
+                  <span class="list-contentName">投资资金：</span>
+                  <span class="current" v-if="item&&item.investAmountName">{{item.investAmountName}}</span>
+                </div>
+                <div class="focusNum flr" v-if="item&&item.followNum">{{item.followNum}}人关注</div>
+              </div>
+              <div class="clearfix">
+                <!-- <div class="fll"> -->
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资方式：</span>
+                    <span class="list-content" v-if="item&&item.investWayName">{{item.investWayName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资地区：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investRegionNameStr"
+                    >{{item.investRegionNameStr}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资类型：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investTypeName"
+                    >{{item.investTypeName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                <!-- </div>
+                <div class="fll"> -->
+                  <div class="box_content fll">
+                    <span class="list-contentName">资金类型：</span>
+                    <span class="list-content" v-if="item&&item.pawnTypeName">{{item.pawnTypeName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资行业：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investIndustryName"
+                    >{{item.investIndustryName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资阶段：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investStageName"
+                    >{{item.investStageName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                <!-- </div> -->
+              </div>
             </div>
-            <div class="focusNum flr">{{item.followNum}}人关注</div>
+            <button class="subBtn" @click="applyPoject(item.id)">投递项目</button>
           </div>
-          <div class="clearfix">
-            <div class="fll">
-              <div class="box_content">
-                <span class="list-contentName">投资方式：</span>
-                <span class="list-content">{{item.investCase}}</span>
-              </div>
-              <div class="box_content">
-                <span class="list-contentName">投资地区：</span>
-                <span class="list-content">{{item.investRegionNameStr}}</span>
-              </div>
-              <div class="box_content">
-                <span class="list-contentName">投资类型：</span>
-                <span class="list-content">{{item.investTypeName}}</span>
-              </div>
-            </div>
-            <div class="fll">
-              <div class="box_content">
-                <span class="list-contentName">资金类型：</span>
-                <span class="list-content">{{item.pawnTypeName}}</span>
-              </div>
-              <div class="box_content">
-                <span class="list-contentName">投资行业：</span>
-                <span class="list-content">{{item.investIndustryName}}</span>
-              </div>
-              <div class="box_content">
-                <span class="list-contentName">投资阶段：</span>
-                <span class="list-content">{{item.investStageName}}</span>
-              </div>
-            </div>
-          </div>
-          </div>
-        <button class="subBtn" @click="applyPoject(item.id)">投递项目</button>
-      </div>
-      </div>
+        </div>
       <div class="load_more"  @click="morePage" v-show="more">加载更多...</div>
       <p style="color:#999;"  v-show="noMore">-------------------------------------------------没有更多资金了----------------------------------------------------</p>
       <el-dialog title="选择投递项目" :visible.sync="dialogFormVisible" width="30%" :before-close ="before_close">
@@ -224,7 +245,7 @@ import * as Cookies from 'js-cookie'
             // this.dialogFormVisible = false;
           } else {
             this.success = false;
-            this.hint = "项目投递失败，请您检查网络或重试";
+            this.hint = res.message;
             this.sub_project = false;
           }
         });

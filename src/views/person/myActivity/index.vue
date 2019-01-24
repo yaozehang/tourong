@@ -20,13 +20,17 @@
             <i class="company"></i>
             {{item.speaker}}
           </p>
-          <!-- <p class="list-content2">
+          <p class="list-content2">
             <i class="num"></i>
-            报名人数：{{item.num}}
+            报名人数：{{item.applyNumStr}}
+          </p>
+          <!-- <p class="list-content2">
+            <i class="time"></i>
+            报名时间：{{item.regStartTimeStr}} 至 {{item.regEndTimeStr}}
           </p> -->
           <p class="list-content2">
             <i class="time"></i>
-            报名时间：{{item.regStartTimeStr}} 至 {{item.regStartTimeStr}}
+            活动时间：{{item.startTimeStr}} 至 {{item.endTimeStr}}
           </p>
         </div>
         <div class="fll apply_mes">
@@ -42,6 +46,10 @@
           <p class="list-content">
             <i class="phone"></i>
             联系电话：{{item.memberMobile}}
+          </p>
+          <p class="list-content" v-if="item.remark">
+            <i class="beizhu"></i>
+            备注：{{item.remark}}
           </p>
         </div>
       </div>
@@ -239,6 +247,16 @@
     width: 20px;
     height: 20px;
     background: url(/static/img/phone.png) no-repeat center;
+    background-size: contain;
+  }
+  .beizhu{
+    position: absolute;
+    display: inline-block;
+    top: -3px;
+    left: -30px;
+    width: 20px;
+    height: 20px;
+    background: url(/static/img/beizhu.png) no-repeat center;
     background-size: contain;
   }
 }

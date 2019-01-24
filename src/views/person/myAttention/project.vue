@@ -101,25 +101,30 @@ export default {
   .project-item-title:hover {
     color: rgb(0, 89, 130);
   }
+  // .project-item-content {
+  //   // text-indent:20px;
+  //   font-size: 14px;
+  //   font-family: "Microsoft YaHei";
+  //   color: rgb(137, 137, 137);
+  //   line-height: 1.429;
+  //   text-align: left;
+  //   // 省略
+  //   display: -webkit-box;
+  //   -webkit-box-orient: vertical;
+  //   -webkit-line-clamp: 5;
+  //   overflow: hidden;
+  // }
+  // 适配所有的省略
   .project-item-content {
-    // text-indent:20px;
     font-size: 14px;
     font-family: "Microsoft YaHei";
     color: rgb(137, 137, 137);
     line-height: 1.429;
     text-align: left;
-    // 省略
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    overflow: hidden;
-  }
-  // 适配所有的省略
-  .project-item-content {
     position: relative;
     width: 620px;
     line-height: 2;
-    max-height: 100px;
+    max-height: 118px;
     overflow: hidden;
   }
   .project-item-content::after {

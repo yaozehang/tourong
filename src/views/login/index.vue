@@ -36,7 +36,7 @@
               </div>
               <div class="inputBox">
                 <i class="lock"></i>
-                <input type="password" placeholder="请输入密码" v-model="loginData.pwd">
+                <input type="password" placeholder="请输入密码" v-model="loginData.pwd" @keyup.enter="login">
               </div>
               <div class="clearfix">
                 <el-checkbox v-model="login_checked" class="fll" @click="!login_checked">两周内自动登录</el-checkbox>
@@ -66,7 +66,7 @@
                     type="password"
                     placeholder="请输入密码"
                     v-model="registerData.pwd"
-                    @keyup.enter="login"
+                    @keyup.enter="register"
                   >
                 </div>
               </div>

@@ -21,7 +21,8 @@
               <div class="clearfix">
                 <span class="fll time">发布时间；{{item.publishTimeStr}}</span>
                 <span class="fll time" style="margin-left:20px">来源：{{item.source}}</span>
-                <span class="fll time" style="margin-left:20px">作者：{{item.author}}</span>
+                <span class="fll time" style="margin-left:20px" v-if="item.author">作者：{{item.author}}</span>
+                <span class="fll time" style="margin-left:20px" v-else>作者：网络</span>
                 <span class="flr num">阅读：{{item.readNum}}次</span>
               </div>
               <p class="content">{{item.brief}}</p>
@@ -70,32 +71,7 @@
 export default {
   data() {
     return {
-      mesData: [
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        }
-      ],
+      mesData: [],
       count:1,
       messageData:[],
       loading:false,
@@ -318,7 +294,7 @@ export default {
   }
   .content {
     position: relative;
-    max-height: 38px;
+    max-height: 40px;
     overflow: hidden;
   }
   .content::after {

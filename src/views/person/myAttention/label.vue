@@ -1,10 +1,21 @@
 <template>
   <div>
     <p class="project_title">
+      <span class="project_">已关注的标签</span>
+    </p>
+    <div class="babel_list">
+      <button
+        v-for="(item, index) in followLabel"
+        :key="index"
+        class="babel_btn like"
+        :class="item.industryName.length > 2 ? '':'letter'"
+      >{{item.industryName}}</button>
+    </div>
+    <p class="project_title">
       <span class="project_">请选择感兴趣的标签</span>
-      <span class="project_more flr" @click="followAll">
+      <span class="project_more flr">
         <label class="my_protocol">
-          <input class="input_agreement_protocol" type="checkbox">
+          <input class="input_agreement_protocol" type="checkbox" @click="followAll" :checked="checked">
           <span></span>
         </label>
         全选
@@ -90,39 +101,64 @@ export default {
         }
       ],
       labelData:[],
+      followLabel:[],
+      checked:false,
     };
   },
   methods: {
     babelFollow(industryValue,index) {
+      this.checked = false
       if(this.labelData[index].isFollow == '0'){
         this.$axios.get('/jsp/wap/center/do/doFollowIndustry.jsp',{params:{ industryValue}}).then(res => {
-          console.log(res);
           this.labelData[index].isFollow = '1'
+          this.followLabel.push(this.labelData[index])
         })
       } else {
         this.$axios.get('/jsp/wap/center/do/doUnfollowIndustry.jsp',{params:{ industryValue}}).then(res => {
-          console.log(res);
           this.labelData[index].isFollow = '0'
+          this.followLabel.remove(this.labelData[index])
         })
       }
     },
-    followAll() {
-      var industry = []
-      this.labelData.forEach(item => {
-        industry.push(item.industryValue)
-      })
-      var industryValue = industry.join(',')
-      this.$axios.get('/jsp/wap/center/do/doFollowIndustry.jsp',{params:{industryValue}}).then(res => {
-          this.labelData.forEach(item => {
-            item.isFollow = '1'    
-          })    
-      })
+    followAll(e) {
+      this.checked = e.target.checked
+      if(this.checked){
+        var industry = []
+        this.labelData.forEach(item => {
+          industry.push(item.industryValue)
+        })
+        var industryValue = industry.join(',')
+        this.$axios.get('/jsp/wap/center/do/doFollowIndustry.jsp',{params:{industryValue}}).then(res => {
+            this.labelData.forEach(item => {
+              item.isFollow = '1'    
+            }) 
+            this.followLabel = []
+            this.labelData.forEach(item => {
+            if(item.isFollow == '1'){
+              this.followLabel.push(item)
+            }
+          })
+        })
+      }
     },
     getData(){
       this.$axios.get('/jsp/wap/center/ctrl/jsonIndustry.jsp').then(res => {
+        var label = res.data
+        label.forEach(item => {
+          if(item.isFollow == '1'){
+            this.followLabel.push(item)
+          }
+        })
         this.labelData = res.data
       })
-    }
+    },
+    searchLabel(labelId){
+      let { href } = this.$router.resolve({
+        name: "searchLabelMoney",
+        query: {labelId}
+      });
+      window.open(href, "_blank");
+    },
   },
   created(){
     this.getData()

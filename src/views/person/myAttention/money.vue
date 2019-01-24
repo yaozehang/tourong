@@ -6,11 +6,13 @@
         <p class="invest-item-title">{{item.title}}</p>
         <p class="invest-item-list">
           投资资金：
-          <span class="invest-money">{{item.investAmountName}}</span>
+          <span class="invest-money" v-if="item.investAmountName">{{item.investAmountName}}</span>
+          <span class="invest-money" v-else>****</span>
         </p>
         <p class="invest-item-list w230 inb">
           投资方式：
-          <span class="invest-content">{{item.investCase}}</span>
+          <span class="invest-content" v-if="item.investWayName">{{item.investWayName}}</span>
+          <span class="invest-content" v-else>****</span>
         </p>
         <p class="invest-item-list inb">
           资金类型：

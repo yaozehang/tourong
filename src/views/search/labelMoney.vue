@@ -1,47 +1,98 @@
 <template>
   <div>
     <div class="mes_top">
-      <p class="mes_type">
-        <span class="active">项目</span>
-      </p>
-    </div>
-    <div v-loading="loading">
-      <div class="act_list clearfix" v-for="(item, index) in pageList" :key="index">
-        <div @click="toProjectDetailPage(item.id)">
-          <div class="clearfix">
-            <span class="list-title fll">{{item.title}}</span>
-          </div>
-          <div class="clearfix">
-            <div class="title_time flr">{{item.addTimeStr.slice(0,10)}}</div>
-            <div class="focusNum fll">{{item.followNum}}人关注</div>
-          </div>
-          <div class="listContent">{{item.brief}}</div>
-        </div>
-        <button class="subBtn" @click="applyPoject(item.id)">约见项目</button>
+        <p class="mes_type">
+          <span class="active">{{label}}</span>
+        </p>
       </div>
-    </div>
-    <div class="load_more" @click="morePage" v-show="more">加载更多...</div>
-    <p
-      v-show="noMore"
-      style="color:#999;"
-    >-------------------------------------------------没有更多项目了----------------------------------------------------</p>
-    <el-dialog title="选择投递资金" :visible.sync="dialogFormVisible" width="30%" :before-close ="before_close">
+      <div v-loading="loading">
+          <div class="act_list clearfix" v-for="(item, index) in pageList" :key="index">
+            <div @click="toMoneyDetailPage(item.id)">
+              <div class="clearfix">
+                <span class="list-title fll" v-if="item&&item.title">{{item.title}}</span>
+                <span
+                  class="title_time flr"
+                  v-if="item&&item.addTimeStr"
+                >{{item.addTimeStr.slice(0,10)}}</span>
+              </div>
+              <div class="clearfix">
+                <div class="fll box_content">
+                  <span class="list-contentName">投资资金：</span>
+                  <span class="current" v-if="item&&item.investAmountName">{{item.investAmountName}}</span>
+                </div>
+                <div class="focusNum flr" v-if="item&&item.followNum">{{item.followNum}}人关注</div>
+              </div>
+              <div class="clearfix">
+                <!-- <div class="fll"> -->
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资方式：</span>
+                    <span class="list-content" v-if="item&&item.investWayName">{{item.investWayName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资地区：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investRegionNameStr"
+                    >{{item.investRegionNameStr}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资类型：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investTypeName"
+                    >{{item.investTypeName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                <!-- </div>
+                <div class="fll"> -->
+                  <div class="box_content fll">
+                    <span class="list-contentName">资金类型：</span>
+                    <span class="list-content" v-if="item&&item.pawnTypeName">{{item.pawnTypeName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资行业：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investIndustryName"
+                    >{{item.investIndustryName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                  <div class="box_content fll">
+                    <span class="list-contentName">投资阶段：</span>
+                    <span
+                      class="list-content"
+                      v-if="item&&item.investStageName"
+                    >{{item.investStageName}}</span>
+                    <span class="list-content" v-else>***</span>
+                  </div>
+                <!-- </div> -->
+              </div>
+            </div>
+            <button class="subBtn" @click="applyPoject(item.id)">投递项目</button>
+          </div>
+        </div>
+      <div class="load_more"  @click="morePage" v-show="more">加载更多...</div>
+      <p style="color:#999;"  v-show="noMore">-------------------------------------------------没有更多资金了----------------------------------------------------</p>
+      <el-dialog title="选择投递项目" :visible.sync="dialogFormVisible" width="30%" :before-close ="before_close">
         <div v-if="sub_project"> 
             <el-form>
-                <el-form-item label="资金" label-width="100">
-                    <el-select v-model="moneyId" placeholder="请选择资金">
+                <el-form-item label="项目" label-width="100">
+                    <el-select v-model="projectId" placeholder="请选择项目">
                     <el-option
-                        v-for="item in myMoney"
+                        v-for="item in myProject"
                         :key="item.id"
                         :label="item.title"
                         :value="item.id"
                     ></el-option>
                     <el-pagination
-                        v-show="myMoney_pagination"
+                        v-show="myProject_pagination"
                         small
                         @current-change="handleCurrentChange"
                         layout="total, prev, pager, next"
-                        :total="myMoney_Count"
+                        :total="myProject_Count"
                     ></el-pagination>
                     </el-select>
                 </el-form-item>
@@ -60,28 +111,26 @@
         </div>
       </el-dialog>
 
-      <el-dialog
-        :visible.sync="toast_show"
-        width="30%"
-        center>
-        <div class="toast_success" v-if="success"></div>
-        <div class="toast_error" v-else></div>
-        <div v-if="success" class="toast_title">成功</div>
-        <!-- <div v-else class="toast_title">失败</div> -->
-        <p class="toast_title">{{hint}}</p>
-      </el-dialog>
-
       <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
       <Login :should_login="should_login"></Login>
+
+      <el-dialog :visible.sync="toast_show" width="30%" center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <!-- <div v-else class="toast_content">失败</div> -->
+      <p class="toast_title">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import * as Cookies from 'js-cookie'
 
-export default {
-  data(){
+  export default {
+    data(){
       return {
+        should_login:false,
         loading:false,
         dialogFormVisible:false,
         more:false,
@@ -93,20 +142,21 @@ export default {
         hint:"",
         success:false,
         toast_show:false,
-        myMoney:[],
+        myProject: [],
         projectId: "",
         moneyId: "",
-        myMoney_Count: 0,
-        myMoney_pagination: false,
+        myProject_Count: 0,
+        myProject_pagination: false,
         sub_project:true,
-        should_login:false,
+        label:''
       }
     },
     methods:{
       getActData(){
         this.loading = true;
-        this.title = this.$route.query.title
-        this.$axios.get(`/jsp/wap/trProject/ctrl/jsonProjectPage.jsp?title=${this.title}`).then(res => {
+        this.labelId = this.$route.query.labelId
+        this.$axios.get(`/jsp/wap/trCapital/ctrl/jsonCapitalPage.jsp?labelId=${this.labelId}`).then(res => {
+            this.label = res.data.label.name
             this.pageList = res.data.pageList;
             this.totalCount = res.data.pagination.totalCount;
             this.pn = 1;
@@ -124,7 +174,7 @@ export default {
         this.pn += 1;
         this.loading = true;
         this.$axios
-          .get("/jsp/wap/trProject/ctrl/jsonProjectPage.jsp", {
+          .get("/jsp/wap/trCapital/ctrl/jsonCapitalPage.jsp", {
             params: {
               pageNumber: this.pn
             }
@@ -143,42 +193,39 @@ export default {
           message: "项目投递成功"
         });
       },
-      toProjectDetailPage(id){
+      toMoneyDetailPage(id){
         let {href} = this.$router.resolve({
-            name: "projectDetail",
+            name: "moneyDetail",
             query: {id}
         });
         window.open(href, '_blank');
       },
-      handleCurrentChange(val) {
-      this.getMyMoney(val);
+      getMyProject(pn) {
+      this.$axios
+        .get("/jsp/wap/center/ctrl/jsonIssueProjectList.jsp", {
+          params: { pageNumber: pn }
+        })
+        .then(res => {
+          this.myProject = res.data.pageList;
+          var myProject = res.data.pageList
+          if(myProject.length > 0){
+          this.projectId = myProject[0].id
+          }
+          this.myProject_Count = Number(res.data.pagination.totalCount);
+          if (this.myProject_Count > 10) {
+            this.myProject_pagination = true;
+          }
+        });
     },
-      getMyMoney(pn) {
-        this.$axios
-          .get("/jsp/wap/center/ctrl/jsonIssueCapitalList.jsp", {
-            params: { pageNumber: pn }
-          })
-          .then(res => {
-            this.myMoney = res.data.pageList;
-            var myMoney = res.data.pageList
-            if(myMoney.length > 0){
-            this.moneyId = myMoney[0].id
-            }
-            this.myMoney_Count = Number(res.data.pagination.totalCount);
-            if (this.myMoney_Count > 10) {
-              this.myMoney_pagination = true;
-            }
-          });
-    },
-    applyPoject(id) {
+       applyPoject(id) {
       if (Cookies.get("userKey")) {
-        if (this.myMoney.length == 0) {
+        if (this.myProject.length == 0) {
           this.success = false;
-          this.hint = "您还没有发布资金，请先发布资金";
+          this.hint = "您还没有发布项目，请先发布项目";
           this.toast_show = true;
         } else {
           this.dialogFormVisible = true;
-          this.projectId = id;
+          this.moneyId = id;
         }
       } else {
         // this.success = false;
@@ -190,12 +237,12 @@ export default {
     apply() {
       this.$axios
         .get("/jsp/wap/trCapital/do/doDeliver.jsp", {
-          params: { projectId: this.moneyId, id: this.projectId }
+          params: { id: this.moneyId, projectId: this.projectId }
         })
         .then(res => {
           if (res.success == "true") {
             this.success = true;
-            this.hint = "项目约谈成功，平台将尽快为您安排";
+            this.hint = "项目投递成功，平台将尽快为您安排";
             this.sub_project = false;
             // this.dialogFormVisible = false;
           } else {
@@ -205,23 +252,23 @@ export default {
           }
         });
     },
-      before_close(){
-          this.dialogFormVisible = false;
-          setTimeout(()=> {
-          this.sub_project = true;
-          },1000)
-      },
-      handleCurrentChange(val) {
-      this.getMyMoney(val);
+    before_close(){
+        this.dialogFormVisible = false;
+        setTimeout(()=> {
+         this.sub_project = true;
+        },1000)
+    },
+    handleCurrentChange(val) {
+      this.getMyProject(val);
     },
     },
     created(){
       this.getActData()
       if (Cookies.get("userKey")) {
-        this.getMyMoney()
+        this.getMyProject();
       }
     }
-};
+  }
 </script>
 
 <style scoped lang="scss">
@@ -279,18 +326,26 @@ export default {
     right: -1px;
     cursor: pointer;
   }
-}
-// 更多 + 多选
+} //选择类型
+.act_type {
+  font-size: 14px;
+  font-family: "Microsoft YaHei";
+  color: rgb(51, 51, 51);
+  font-weight: bold;
+  line-height: 1.857;
+} // 更多 + 多选
 .moreTitle {
   color: #606266;
   font-size: 14px;
   cursor: pointer;
   margin-top: 2px;
 }
+
 .titleRight {
   max-width: 1020px;
   line-height: 1.5;
 }
+
 .checkBoxBtn {
   border: 1px solid #d9d9d9;
   border-radius: 4px;
@@ -299,17 +354,6 @@ export default {
   font-size: 12px;
   cursor: pointer;
   margin-right: 20px;
-}
-
-.input-with-select {
-  height: 30px;
-} //选择类型
-.act_type {
-  font-size: 14px;
-  font-family: "Microsoft YaHei";
-  color: rgb(51, 51, 51);
-  font-weight: bold;
-  line-height: 1.857;
 }
 
 .type_item {
@@ -321,9 +365,9 @@ export default {
 } //活动列表
 .act_list {
   cursor: pointer;
-  width: 810px; // height: 180px;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
+  width: 810px;
+  height: 180px;
+  padding-bottom: 30px;
   border-bottom: 1px dashed #d9d9d9;
   position: relative;
 }
@@ -340,17 +384,13 @@ export default {
 .title_time {
   display: block;
   margin-top: 10px;
-  font-size: 14px;
-  font-family: "Microsoft YaHei";
-  color: rgb(153, 153, 153);
-  line-height: 1.714;
+  color: #666;
 }
 
 .focusNum {
   display: block;
-  font-family: "Microsoft YaHei";
-  color: rgb(204, 204, 204);
-  line-height: 2.5;
+  color: #ccc;
+  line-height: 2;
 }
 
 .current {
@@ -360,17 +400,6 @@ export default {
 
 .list {
   margin-left: 20px;
-}
-
-.listContent {
-  padding: 10px 0;
-  font-size: 14px;
-  font-family: "Microsoft YaHei";
-  color: rgb(153, 153, 153);
-  line-height: 2;
-  width: 780px;
-  // height: 33px;
-  z-index: 205;
 }
 
 .listbottom {
@@ -384,27 +413,37 @@ export default {
   font-family: "Microsoft YaHei";
   color: rgb(26, 26, 26);
   line-height: 1.333;
-  z-index: 204;
-  padding: 10px 0;
+  margin: 10px 0;
+  width: 700px;
+  overflow: hidden; /*超出部分隐藏*/
+  white-space: nowrap; /*不换行*/
+  text-overflow: ellipsis;
 }
 
 .list-contentName {
   // margin-left: 30px;
-  font-size: 18px;
+  font-size: 14px;
   font-family: "Microsoft YaHei";
-  color: #333;
+  color: #999;
 }
 
 .box_content {
   width: 395px;
   line-height: 2;
+  font-size: 14px !important;
 }
 
 .list-content {
   // margin-left: 30px;
-  font-size: 18px;
+  font-size: 14px;
   font-family: "Microsoft YaHei";
   color: #333;
+  display: inline-block;
+  width: 200px;
+  height: 21px;
+  overflow: hidden; /*超出部分隐藏*/
+  white-space: nowrap; /*不换行*/
+  text-overflow: ellipsis;
 }
 
 .list-content2 {
@@ -560,6 +599,7 @@ export default {
 }
 
 .mes_content {
+  cursor: pointer;
   padding: 20px 0;
   border-bottom: 1px dashed #d9d9d9;
   color: #d9d9d9;
@@ -607,7 +647,7 @@ export default {
   padding: 12px 20px;
   border-radius: 4px;
   position: absolute;
-  top: 10px;
+  bottom: 40px;
   right: 0;
 }
 

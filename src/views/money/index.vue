@@ -6,6 +6,7 @@
       <div v-if="success" class="toast_title">成功</div>
       <!-- <div v-else class="toast_content">失败</div> -->
       <p class="toast_title">{{hint}}</p>
+      <div v-if="no_project" @click="toMyproject" style="color:#f00;font-size:18px;cursor:pointer;text-align:center;">前去发布--></div>
     </el-dialog>
     <div class="w1200 clearfix">
       <div class="clearfix bread_search">
@@ -20,13 +21,34 @@
           <i @click="search"></i>
         </div>
       </div>
-      <div class="clearfix">
-        <div class="pd-15 fll industy">
+      <div class="clearfix" style="position:relative;">
+        <div class="pd-15 fll" v-if="!isCheck2">
+          <span class="act_type fll" style="margin-right:5px;">投资行业：</span>
+          <div class="titleRight fll" v-if="!isShowArea2">
+            <span
+              class="type_item"
+              v-for="(item , index) in investIndustryList.slice(0,9)"
+              :key="index"
+              @click="getInvestIndustryStatus(item.dataValue,index)"
+              :class="{active:item.checked}"
+            >{{item.dataName}}</span>
+          </div>
+          <div class="titleRight fll" v-else>
+            <span
+              class="type_item"
+              v-for="(item , index) in investIndustryList"
+              :key="index"
+              @click="getInvestIndustryStatus(item.dataValue,index)"
+              :class="{active:item.checked}"
+            >{{item.dataName}}</span>
+          </div>
+        </div>
+        <div class="pd-15 fll industy" v-else>
           <span class="act_type fll">投资行业：</span>
           <div class="titleRight fll">
             <template>
               <el-checkbox-group
-                v-if="!isShow"
+                v-if="!isShow2"
                 style="word-wrap: break-word;word-break: break-all;overflow: hidden;"
                 v-model="checkIndustry"
                 @change="investIndustryChange"
@@ -48,14 +70,23 @@
           </div>
         </div>
         <div v-show="investIndustryList.length > 15">
-          <div class="moreTitle flr" @click="handleclick" v-if="!isShow">
+          <div class="moreTitle flr" @click="handleclick" v-if="!isShow2">
             更多
             <i class="el-icon-arrow-down el-icon--right"></i>
           </div>
-          <div class="moreTitle flr" @click="handleclick2" v-else>
+          <div class="moreTitle flr" @click="handleclick3" v-else>
             收起
             <i class="el-icon-arrow-up el-icon--right"></i>
           </div>
+        </div>
+
+        <div class="flr checkBoxBtn" @click="handleCheck3" v-if="!isShowArea2">
+          多选
+          <i class="el-icon-plus"></i>
+        </div>
+        <div class="flr checkBoxBtn2" @click="handleCheck3" v-else>
+          多选
+          <i class="el-icon-plus"></i>
         </div>
       </div>
       <div class="pd-15">
@@ -237,46 +268,52 @@
                 <div class="focusNum flr" v-if="item&&item.followNum">{{item.followNum}}人关注</div>
               </div>
               <div class="clearfix">
-                <div class="fll">
-                  <div class="box_content">
+                <!-- <div class="fll"> -->
+                  <div class="box_content fll">
                     <span class="list-contentName">投资方式：</span>
-                    <span class="list-content" v-if="item&&item.investCase">{{item.investCase}}</span>
+                    <span class="list-content" v-if="item&&item.investWayName">{{item.investWayName}}</span>
+                    <span class="list-content" v-else>***</span>
                   </div>
-                  <div class="box_content">
+                  <div class="box_content fll">
                     <span class="list-contentName">投资地区：</span>
                     <span
                       class="list-content"
                       v-if="item&&item.investRegionNameStr"
                     >{{item.investRegionNameStr}}</span>
+                    <span class="list-content" v-else>***</span>
                   </div>
-                  <div class="box_content">
+                  <div class="box_content fll">
                     <span class="list-contentName">投资类型：</span>
                     <span
                       class="list-content"
                       v-if="item&&item.investTypeName"
                     >{{item.investTypeName}}</span>
+                    <span class="list-content" v-else>***</span>
                   </div>
-                </div>
-                <div class="fll">
-                  <div class="box_content">
+                <!-- </div>
+                <div class="fll"> -->
+                  <div class="box_content fll">
                     <span class="list-contentName">资金类型：</span>
                     <span class="list-content" v-if="item&&item.pawnTypeName">{{item.pawnTypeName}}</span>
+                    <span class="list-content" v-else>***</span>
                   </div>
-                  <div class="box_content">
+                  <div class="box_content fll">
                     <span class="list-contentName">投资行业：</span>
                     <span
                       class="list-content"
                       v-if="item&&item.investIndustryName"
                     >{{item.investIndustryName}}</span>
+                    <span class="list-content" v-else>***</span>
                   </div>
-                  <div class="box_content">
+                  <div class="box_content fll">
                     <span class="list-contentName">投资阶段：</span>
                     <span
                       class="list-content"
                       v-if="item&&item.investStageName"
                     >{{item.investStageName}}</span>
+                    <span class="list-content" v-else>***</span>
                   </div>
-                </div>
+                <!-- </div> -->
               </div>
             </div>
             <button class="subBtn" @click="applyPoject(item.id)">投递项目</button>
@@ -289,7 +326,7 @@
         >-------------------------------------------------没有更多资金了----------------------------------------------------</p>
       </div>
       <div class="w360 flr mes_list clearfix">
-        <img src="/static/img/money_list.jpg" alt class="act_timelist" @click="toMymoney">
+        <img src="/static/img/project_list.jpg" alt class="act_timelist" @click="toMyproject">
         <p class="mes">
           热门资讯
           <span class="mes_more flr" @click="toMessagePage">更多></span>
@@ -335,7 +372,7 @@
         <div v-else>
             <div class="toast_success" v-if="success"></div>
             <div class="toast_error" v-else></div>
-            <div v-if="success" class="toast_title">成功</div>
+            <!-- <div v-if="success" class="toast_title">成功</div> -->
             <!-- <div v-else class="toast_title">失败</div> -->
             <p class="toast_title">{{hint}}</p>
         </div>
@@ -354,33 +391,19 @@ export default {
     return {
       should_login:false,
       isShow: false,
+      isShow2: false,
       isShowArea: false,
       isShowArea1: false,
+      isShowArea2: false,
       isCheck: false,
       isCheck1: false,
+      isCheck2: false,
       loading: false,
       newsloading: false,
       dialogFormVisible: false,
       more: false,
       noMore: false,
-      actType: [
-        "股权投资",
-        "债权投资",
-        "金融投资",
-        "BT/BOT项目投资",
-        "其他投资",
-        "债权投资",
-        "债权投资",
-        "债权投资",
-        "债权投资",
-        "债权投资",
-        "债权投资",
-        "债权投资",
-        "债权投资",
-        "债权投资",
-        "债权投资",
-        "债权投资"
-      ],
+      actType: [],
       moneyType: [
         "个人资金",
         "企业资金",
@@ -538,13 +561,14 @@ export default {
       title: "",
       toast_show: false,
       success: true,
-      hint: "项目投递失败，请检查网络",
+      hint: "",
       myProject: [],
       projectId: "",
       moneyId: "",
       myProject_Count: 0,
       myProject_pagination: false,
       sub_project:true,
+      no_project:false,
     };
   },
   methods: {
@@ -749,6 +773,26 @@ export default {
         this.investAmounts
       );
     },
+    getInvestIndustryStatus(e,index){
+      this.investIndustrys = e;
+      if (this.investIndustryList[index].checked) {
+        this.investIndustryList[index].checked = !this.investIndustryList[index]
+          .checked;
+        this.investIndustrys = "";
+      } else {
+        this.investIndustryList.forEach(item => {
+          item.checked = false;
+        });
+        this.investIndustryList[index].checked = true;
+      }
+      this.getActData(
+        this.investIndustrys,
+        this.investTypes,
+        this.regions,
+        this.investRegions,
+        this.investAmounts
+      );    
+    },
     investIndustryChange(val) {
       let investIndustryList = [];
       val.forEach(item => {
@@ -807,26 +851,26 @@ export default {
       this.isShow = false;
     },
     handleclick() {
-      if (this.actType.length >= 9) {
-        this.isShow = true;
-      }
+      this.isShow2 = true;
     },
     handleclick2() {
       this.isShow = false;
     },
+    handleclick3() {
+      this.isShow2 = false;
+    },
+    handleclick4() {
+      this.isShow = true;
+    },
     handleAreaDown() {
-      if (this.investArea.length >= 9) {
         this.isShowArea = true;
-      }
     },
     handleAreaUp() {
       this.isShowArea = false;
       this.isCheck = false;
     },
     handleAreaDown1() {
-      if (this.investArea.length >= 9) {
         this.isShowArea1 = true;
-      }
     },
     handleAreaUp1() {
       this.isShowArea1 = false;
@@ -849,6 +893,19 @@ export default {
       this.isCheck1 = !this.isCheck1;
       if (!this.isCheck1) {
         this.investRegions = "";
+        this.getActData(
+          this.investIndustrys,
+          this.investTypes,
+          this.regions,
+          this.investRegions,
+          this.investAmount
+        );
+      }
+    },
+    handleCheck3(){
+      this.isCheck2 = !this.isCheck2;
+      if (!this.isCheck2) {
+        this.investIndustrys = "";
         this.getActData(
           this.investIndustrys,
           this.investTypes,
@@ -910,13 +967,25 @@ export default {
         this.$router.push("/login");
       }
     },
+    toMyproject(){
+        if(Cookies.get('userKey')){
+          let {href} = this.$router.resolve({
+            name: "applyProject",
+          });
+          window.open(href, '_blank');
+        } else {
+          this.$router.push('/login')
+        }
+      },
     applyPoject(id) {
       if (Cookies.get("userKey")) {
         if (this.myProject.length == 0) {
           this.success = false;
+          this.no_project = true
           this.hint = "您还没有发布项目，请先发布项目";
           this.toast_show = true;
         } else {
+          this.no_project = false
           this.dialogFormVisible = true;
           this.moneyId = id;
         }
@@ -924,6 +993,7 @@ export default {
         // this.success = false;
         // this.hint = "您未登录，请先登录";
         // this.toast_show = true;
+        this.no_project = false
         this.should_login = true
       }
     },
@@ -940,7 +1010,7 @@ export default {
             // this.dialogFormVisible = false;
           } else {
             this.success = false;
-            this.hint = "项目投递失败，请您检查网络或重试";
+            this.hint = res.message;
             this.sub_project = false;
           }
         });
@@ -1051,7 +1121,9 @@ export default {
   color: #606266;
   font-size: 12px;
   cursor: pointer;
-  margin-right: 20px;
+  position: absolute;
+  right: 70px;
+  bottom: 18px;
 }
 .checkBoxBtn2 {
   border: 1px solid #d9d9d9;
@@ -1143,6 +1215,9 @@ export default {
   width: 365px;
   line-height: 2;
   font-size: 14px !important;
+  overflow: hidden; /*超出部分隐藏*/
+  white-space: nowrap; /*不换行*/
+  text-overflow: ellipsis;
 }
 
 .list-content {
@@ -1150,12 +1225,7 @@ export default {
   font-size: 14px;
   font-family: "Microsoft YaHei";
   color: #333;
-  display: inline-block;
-  width: 200px;
-  height: 21px;
-  overflow: hidden; /*超出部分隐藏*/
-  white-space: nowrap; /*不换行*/
-  text-overflow: ellipsis;
+  // display: inline-block;
 }
 
 .list-content2 {

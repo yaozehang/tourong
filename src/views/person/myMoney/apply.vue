@@ -13,11 +13,11 @@
         <span class="project_">发布资金信息</span>
       </p>
       <el-form ref="formData" :model="formData" label-width="150px" :rules="rules">
-        <el-form-item label="投资主题" style="width:600px">
+        <el-form-item label="投资主题" style="width:600px" class="is-required" prop="title">
           <el-input v-model="formData.title"></el-input>
           <span style="color:#999">格式参考：广东某企业5000万元起寻互联网项目合作</span>
         </el-form-item>
-        <el-form-item label="所在地区">
+        <el-form-item label="所在地区" class="is-required">
           <v-distpicker
             :province="provinceStr"
             :city="cityStr"
@@ -25,7 +25,7 @@
             @selected="selected"
           ></v-distpicker>
         </el-form-item>
-        <el-form-item label="联系地址" style="width:600px">
+        <el-form-item label="联系地址" style="width:600px" class="is-required" prop="linkmanAddress">
           <el-input v-model="formData.linkmanAddress"></el-input>
         </el-form-item>
         <el-form-item label="资金主体">
@@ -37,13 +37,13 @@
             >{{capital.dataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="联系人姓名" class="w350">
+        <el-form-item label="联系人姓名" class="w350 is-required" prop="linkmanName">
           <el-input v-model="formData.linkmanName"></el-input>
         </el-form-item>
-        <el-form-item label="联系人电话" class="w350" prop="linkmanPhone">
+        <el-form-item label="联系人电话" class="w350 is-required" prop="linkmanPhone">
           <el-input v-model="formData.linkmanPhone"></el-input>
         </el-form-item>
-        <el-form-item label="投资地区">
+        <el-form-item label="投资地区" class="is-required">
           <v-distpicker
             :province="provinceStr1"
             :city="cityStr1"
@@ -51,7 +51,7 @@
             @selected="selected1"
           ></v-distpicker>
         </el-form-item>
-        <el-form-item label="投资金额">
+        <el-form-item label="投资金额" class="is-required" prop="investAmount">
           <el-select v-model="formData.investAmount" placeholder="请选择">
             <el-option
               v-for="item in investAmountList"
@@ -61,7 +61,7 @@
             >{{item.dataName}}</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="投资行业">
+        <el-form-item label="投资行业" class="is-required" prop="investIndustrys">
           <el-checkbox-group v-model="investIndustrys">
             <el-checkbox
               v-for="industry in investIndustryList"
@@ -71,7 +71,7 @@
             >{{industry.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="投资阶段">
+        <el-form-item label="投资阶段" class="is-required" prop="investStages">
           <el-checkbox-group v-model="investStages">
             <el-checkbox
               v-for="investStage in investStageList"
@@ -91,7 +91,7 @@
             >{{capitalSource.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="投资类型">
+        <el-form-item label="投资类型" class="is-required" prop="investTypes">
           <el-checkbox-group v-model="investTypes">
             <el-checkbox
               v-for="investType in investTypeList"
@@ -113,7 +113,7 @@
         <el-form-item label="最低回报要求" style="width:600px" prop="minRepay">
           <el-input v-model="formData.minRepay"></el-input>
         </el-form-item>
-        <el-form-item label="有效期限">
+        <el-form-item label="有效期限" class="is-required" prop="validStartTimeStr">
           <div style="width:28.16667%" class="fll">
             <el-date-picker
               type="year"
@@ -158,7 +158,7 @@
             >{{pawnType.dataName}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="抵押物折扣率" prop="pawnDiscountRateMin">
+        <el-form-item label="抵押物折扣率" prop="pawnDiscountRateMin" class="is-required">
           <div style="width:28.16667%" class="fll">
             <el-input v-model="formData.pawnDiscountRateMin"></el-input>
           </div>
@@ -214,18 +214,6 @@ import qs from "qs";
 export default {
   components: { VDistpicker },
   data() {
-    var checkPhone = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("联系人手机号不能为空"));
-      } else {
-        callback()
-      }
-      if (!/^1[34578]\d{9}$/.test(value)) {
-        callback("手机号码有误，请重填");
-      } else {
-        callback()
-      }
-    };
     var checkNumber = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("不能为空"));
@@ -239,12 +227,55 @@ export default {
         callback()
       }
     };
+    var has_value = (rule, value, callback) => {
+      if(!value){
+        return callback(new Error("不能为空"))
+      } else {
+        callback()
+      }
+    }
     return {
       templateData: "<p>lalala</p>",
       rules: {
-        minRepay: [{ validator: checkNumber, trigger: "blur" }],
+        title: [{ validator: has_value, trigger: "blur" }],
+        linkmanAddress: [{ validator: has_value, trigger: "blur" }],
+        investAmount: [{trigger: 'change'}],
+        investIndustrys: [{  trigger: 'change' }],
+        investStages: [{  trigger: 'change' }],
+        investTypes: [{  trigger: 'change' }],
+        validStartTimeStr: [{  trigger: 'change' }],
+        linkmanName: [{ validator: has_value, trigger: "blur" }],
+        minRepay: [
+          { 
+            validator: function(rule, value, callback) {
+              var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
+              if (!re.test(value)) {
+                callback(new Error("请输入数字值"));
+              } else {
+                callback()
+              }
+          },
+            trigger: "blur"  
+          }    
+        ],
         pawnDiscountRateMin: [{ validator: checkNumber, trigger: "blur" }],
-        linkmanPhone: [{ validator: checkPhone, trigger: "blur" }],
+        linkmanPhone: [
+          {
+            required: true,
+            message: "请输入手机号码",
+            trigger: "blur"
+          },
+          {
+            validator: function(rule, value, callback) {
+              if (/^1[34578]\d{9}$/.test(value) == false) {
+                callback(new Error("请输入正确的手机号"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ],
       },
       formData: {
         title: "",
@@ -252,12 +283,12 @@ export default {
         linkmanName: "",
         upfrontCost: "",
         linkmanAddress: "",
-        regionProvinceId: "",
-        regionCityId: "",
-        regionCountyId: "",
-        investRegionProvinceId: "",
-        investRegionCityId: "",
-        investRegionCountyId: "",
+        regionProvinceId: "110000",
+        regionCityId: "110100",
+        regionCountyId: "110114",
+        investRegionProvinceId: "110000",
+        investRegionCityId: "110100",
+        investRegionCountyId: "110114",
         investAmount: "",
         minRepay: "",
         validStartTimeStr: "",
@@ -533,7 +564,7 @@ export default {
                   }
                 } else {
                   this.success = false;
-                  this.hint = "提交失败，请检查网络或重试";
+                  this.hint = res.message;
                   this.toast_show = true;
                 }
               });
@@ -657,7 +688,25 @@ export default {
           }
         });
     },
-    vip() {}
+    vip() {
+      if(this.$store.state.userinfo.isVip == '0'){
+        this.$confirm('只有会员才能享受快速上传, 是否办理会员?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          let {href} = this.$router.resolve({
+                name: "member",
+            });
+          window.open(href, '_blank');
+        }).catch(() => {
+
+        });
+      } else {
+        this.$router.push({name:'uploadApplyMoney'})
+      }
+    }
   },
   created() {
     let id = this.$route.query.id;
@@ -825,6 +874,14 @@ export default {
     position: absolute;
     top: 7px;
     left: 4px;
+  }
+}
+
+/deep/ {
+  .el-radio {
+    min-width: 80px!important;
+    margin-left: 10px!important;
+    margin-bottom: 10px!important;
   }
 }
 </style>

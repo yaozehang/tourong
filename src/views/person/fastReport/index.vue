@@ -3,51 +3,100 @@
     <div class="person_content">
       <div class="fast_top">
         <span class="today">{{timeNow}}</span>
-        <router-link to="/person/weeklyReport">往期回顾</router-link>
+        <!-- <router-link to="/person/weeklyReport">往期回顾</router-link> -->
       </div>
       <p class="project_title">
         <span class="project_">项目精选</span>
-        <span class="project_more flr" @click="$router.push('/project')">更多></span>
+        <!-- <span class="project_more flr" @click="$router.push('/project')">更多></span> -->
       </p>
-      <div v-for="(item , index) in projectData.slice(0,2)" :key="index + 'project'" class="project_list clearfix">
-        <router-link :to="{name:'projectDetail'}">
-        <img :src="item.img" alt="" class="fll">
-        </router-link>        
+      <div v-for="(item , index) in projectData" :key="index + 'project'" class="project_list clearfix">
+        
+        <img :src="$url + item.imgPaths" alt="" class="fll" @click="toProjectDetailPage(item.resourceId)">
+             
         <div class="fll project_con">
-        <router-link :to="{name:'projectDetail'}">
-          <p class="title">{{item.title}}</p>
+        
+          <p class="title"  @click="toProjectDetailPage(item.resourceId)">{{item.title}}</p>
           <p class="content">{{item.content}}</p>
-        </router-link>        
+               
           <div>
-            <button class="noLikeBtn" @click="deletePro(index)"><i></i>不感兴趣</button>
-            <button class="likeBtn" @click="likePro(index)"><i></i>感兴趣</button>
+            <button class="noLikeBtn" @click="deletePro(index,item.id)"><i></i>不感兴趣</button>
+            <button class="islikeBtn" v-if="item.isLike == '1'"><i></i>感兴趣</button>
+            <button class="likeBtn" @click="likePro(index,item.id)" v-else ><i></i>感兴趣</button>
           </div>
         </div>
       </div>
       <p v-show="projectData.length == 0" class="noAtt">
-        您对什么项目都不感兴趣
+        暂无
       </p>
       <p class="project_title" style="margin-top:0;">
         <span class="project_">资金对接</span>
-        <span class="project_more flr"  @click="$router.push('/money')">更多></span>
+        <!-- <span class="project_more flr"  @click="$router.push('/money')">更多></span> -->
       </p>
-      <div v-for="(item , index) in moneyData.slice(0,2)" :key="index + 'money'" class="project_list clearfix lastborder">
-        <router-link :to="{name:'moneyDetail'}">
-        <img :src="item.img" alt="" class="fll">
-        </router-link>
+      <div v-for="(item , index) in moneyData" :key="index + 'money'" class="project_list clearfix lastborder">
+        
+        <img :src="$url + item.imgPaths" alt="" class="fll" @click="toMoneyDetailPage(item.resourceId)">
+        
         <div class="fll project_con">
-        <router-link :to="{name:'moneyDetail'}">
-          <p class="title">{{item.title}}</p>
+        
+          <p class="title" @click="toMoneyDetailPage(item.resourceId)">{{item.title}}</p>
           <p class="content">{{item.content}}</p>
-        </router-link>
+        
           <div>
-            <button class="noLikeBtn" @click="deleteMon(index)"><i></i>不感兴趣</button>
-            <button class="likeBtn" @click="likeMon(index)"><i></i>感兴趣</button>
+            <button class="noLikeBtn" @click="deleteMon(index,item.id)"><i></i>不感兴趣</button>
+            <button class="islikeBtn" v-if="item.isLike == '1'"><i></i>感兴趣</button>
+            <button class="likeBtn" @click="likeMon(index,item.id)" v-else ><i></i>感兴趣</button>
           </div>
         </div>
       </div>
       <p v-show="moneyData.length == 0" class="noAtt">
-        您对什么资金都不感兴趣
+        暂无
+      </p>
+      <p class="project_title" style="margin-top:0;">
+        <span class="project_">实时资讯</span>
+        <!-- <span class="project_more flr"  @click="$router.push('/money')">更多></span> -->
+      </p>
+      <div v-for="(item , index) in newsList" :key="index + 'news'" class="project_list clearfix lastborder">
+        
+        <img :src="$url + item.imgPaths" alt="" class="fll" @click="toMessageDetailPage(item.resourceId)">
+        
+        <div class="fll project_con">
+        
+          <p class="title" @click="toMessageDetailPage(item.resourceId)">{{item.title}}</p>
+          <p class="content">{{item.content}}</p>
+        
+          <div>
+            <button class="noLikeBtn" @click="deleteNews(index,item.id)"><i></i>不感兴趣</button>
+            <button class="islikeBtn" v-if="item.isLike == '1'"><i></i>感兴趣</button>
+            <button class="likeBtn" @click="likeNews(index,item.id)" v-else ><i></i>感兴趣</button>
+          </div>
+        </div>
+      </div>
+      <p v-show="moneyData.length == 0" class="noAtt">
+        暂无
+      </p>
+      <p class="project_title" style="margin-top:0;">
+        <span class="project_">精彩活动</span>
+        <!-- <span class="project_more flr"  @click="$router.push('/money')">更多></span> -->
+      </p>
+      <div v-for="(item , index) in activityList" :key="index + 'activity'" class="project_list clearfix lastborder">
+        
+        <img :src="$url + item.imgPaths" alt="" class="fll" @click="activityDetailPage(item.resourceId)">
+        
+        <div class="fll project_con">
+        
+          <p class="title" @click="activityDetailPage(item.resourceId)">{{item.title}}</p>
+          <!-- <p class="content">{{item.content}}</p> -->
+          <p class="content" v-html="item.content"></p>
+        
+          <div>
+            <button class="noLikeBtn" @click="deleteAct(index,item.id)"><i></i>不感兴趣</button>
+            <button class="islikeBtn" v-if="item.isLike == '1'"><i></i>感兴趣</button>
+            <button class="likeBtn" @click="likeAct(index,item.id)" v-else ><i></i>感兴趣</button>
+          </div>
+        </div>
+      </div>
+      <p v-show="moneyData.length == 0" class="noAtt">
+        暂无
       </p>
     </div>
   </div>
@@ -58,37 +107,21 @@ export default {
   data() {
     return {
       timeNow: "",
-      projectData:[
-        {
-          img:'/static/img/xiangmutou-1.jpg',
-          title:'增资扩股——长安汽车拟通过公开挂牌增资扩股引扩股引扩股引扩股引',
-          content:'即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重',
-          like:0,
-        },
-        {
-          img:'/static/img/xiangmutou-1.jpg',
-          title:'增资扩股——长安汽车拟通过公开挂牌增资扩股引扩股引扩股引扩股引',
-          content:'即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重',
-          like:0,
-        },
-      ],
-      moneyData:[
-        {
-          img:'/static/img/xiangmutou-1.jpg',
-          title:'增资扩股——长安汽车拟通过公开挂牌增资扩股引扩股引扩股引扩股引',
-          content:'即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重',
-          like:0,
-        },
-        {
-          img:'/static/img/xiangmutou-1.jpg',
-          title:'增资扩股——长安汽车拟通过公开挂牌增资扩股引扩股引扩股引扩股引',
-          content:'即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重即增资完成后，长安汽车持有新能源汽车科技公司的股权比例将不超过49%；投资方持有新能源汽车科技公司的股权比例将不低于51%。重',
-          like:0,
-        },
-      ]
+      projectData:[],
+      moneyData:[],
+      newsList:[],
+      activityList:[]
     };
   },
   methods: {
+    getData(){
+      this.$axios.get(`/jsp/wap/center/ctrl/jsonNewsflashList.jsp`).then(res => {
+        this.projectData = res.data.projectList
+        this.moneyData = res.data.capitalList
+        this.newsList = res.data.newsList
+        this.activityList = res.data.activityList
+      })
+    },
     now() {
       var month = new Date().getMonth() + 1;
       month = month < 10 ? "0" + month : "" + month;
@@ -99,21 +132,102 @@ export default {
       let time2 = time.join("-");
       this.timeNow = time2;
     },
-    deletePro(index){
-      this.projectData.splice(index,1)
+    deleteMon(index,id){
+      this.$axios.get(`/jsp/wap/center/do/unlikeNewsflash.jsp?id=${id}`).then(res => {
+        this.moneyData.splice(index,1)
+      })
     },
-    likePro(index){
-      console.log(index);
+    deletePro(index,id){
+      this.$axios.get(`/jsp/wap/center/do/unlikeNewsflash.jsp?id=${id}`).then(res => {
+        this.projectData.splice(index,1)
+      })
     },
-    deleteMon(index){
-      this.moneyData.splice(index,1)
+    deleteNews(index,id){
+      this.$axios.get(`/jsp/wap/center/do/unlikeNewsflash.jsp?id=${id}`).then(res => {
+        this.newsList.splice(index,1)
+      })
     },
-    likeMon(index){
-
-    }
+    deleteAct(index,id){
+      this.$axios.get(`/jsp/wap/center/do/unlikeNewsflash.jsp?id=${id}`).then(res => {
+        this.activityList.splice(index,1)
+      })
+    },
+    likePro(index,id){
+      this.$axios.get(`/jsp/wap/center/do/likeNewsflash.jsp?id=${id}`).then(res => {
+        this.projectData[index].isLike = '1'        
+      })
+    },
+    likeMon(index,id){
+      this.$axios.get(`/jsp/wap/center/do/likeNewsflash.jsp?id=${id}`).then(res => {
+        this.moneyData[index].isLike = '1'                
+      })
+    },
+    likeNews(index,id){
+      this.$axios.get(`/jsp/wap/center/do/likeNewsflash.jsp?id=${id}`).then(res => {
+        this.newsList[index].isLike = '1'                
+      })
+    },
+    likeAct(index,id){
+      this.$axios.get(`/jsp/wap/center/do/likeNewsflash.jsp?id=${id}`).then(res => {
+        this.activityList[index].isLike = '1'                 
+      })
+    },
+    toProjectDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "projectDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
+    toProject(){
+        let {href} = this.$router.resolve({
+            name: "project",
+        });
+        window.open(href, '_blank');
+    },
+    toMoneyDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "moneyDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
+    toMoney(){
+        let {href} = this.$router.resolve({
+            name: "money",
+        });
+        window.open(href, '_blank');
+    },
+    toMessage(){
+      let {href} = this.$router.resolve({
+            name: "message",
+        });
+        window.open(href, '_blank');
+    },
+    toMessageDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "messageDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
+      activity(){
+        let {href} = this.$router.resolve({
+            name: "activity",
+        });
+        window.open(href, '_blank');
+      },
+      activityDetailPage(id){
+        let {href} = this.$router.resolve({
+            name: "activityDetail",
+            query: {id}
+        });
+        window.open(href, '_blank');
+      },
   },
   created() {
     this.now();
+    this.getData()
   }
 };
 </script>
@@ -167,6 +281,7 @@ export default {
     width: 660px;
     margin-left: 20px;
     .title {
+      cursor: pointer;
       margin-top: 0;
       width: 550px;
       font-size: 18px;
@@ -276,11 +391,62 @@ export default {
       }
   }
   .likeBtn:active {
-    background: #409eff;
-    border-color: #409eff;
+    background: #005982;
+    border-color: #005982;
     color: #fff;
+    i {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: url(/static/img/hoingxin.png) no-repeat center;
+        background-size: contain;
+        position: absolute;
+        top: 7px;
+        left: 15px;
+      }
   }
 }
+
+.islikeBtn {
+      width: 110px;
+      height: 35px;
+      // color: #005982;
+      line-height: 0.425;
+      display: inline-block;
+      white-space: nowrap;
+      cursor: pointer;
+      // background: #fff;
+      border: 1.5px solid #005982;
+      border-color: #005982;
+      -webkit-appearance: none;
+      text-align: center;
+      box-sizing: border-box;
+      outline: none;
+      margin: 0;
+      margin-top: 20px;
+      margin-left: 15px;
+      transition: 0.1s;
+      font-weight: 500;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      padding: 12px 20px 12px 40px;
+      border-radius: 4px;
+      position: relative;
+      background: #005982;
+      border-color: #005982;
+      color: #fff;
+      i {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: url(/static/img/hoingxin.png) no-repeat center;
+        background-size: contain;
+        position: absolute;
+        top: 7px;
+        left: 15px;
+      }
+  }
 
 .person_content .lastborder:last-of-type {
   border: none;

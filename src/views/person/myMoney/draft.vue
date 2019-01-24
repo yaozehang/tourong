@@ -2,21 +2,13 @@
   <div class="fll">
     <div class="person_content">
       <p class="clearfix">
-        <span class="mine_money fll">我发布的投资</span>
-        <span class="flr clearfix">     
-          <button class="noLikeBtn" @click="applyMoney">
-            <i></i>添加投资
-          </button>
-          <button class="likeBtn flr" @click="uploadMoney">
-            <i></i>快速上传
-          </button>
-          <button class="draftBtn" @click="todraft">
-            <i></i>草稿箱
-          </button>
+        <span class="mine_money fll">资金草稿</span>
+        <span class="flr clearfix">
+          
         </span>
       </p>
       <p class="project_title">
-        <span class="project_">投资信息</span>
+        <span class="project_">草稿信息</span>
       </p>
       <div class="invest-menu clearfix">
         <div v-for="(item , index) in pageList" :key="index" class="invest-item fll clearfix">
@@ -58,7 +50,7 @@
             :class="item.status  == '5' ? ' being':'' + item.status == '10' ? ' already':'' + item.status == '15'? ' fail':''"
           >{{item.status == '5' ? '审核中':'' + item.status == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
           <span class="flr not" v-else>未发布</span>
-          <el-button title="添加动态"  class="flr manage" icon="el-icon-edit-outline" circle size="mini" @click="manage(item.id)"></el-button>
+          <!-- <el-button title="添加动态"  class="flr manage" icon="el-icon-edit-outline" circle size="mini" @click="manage(item.id)"></el-button> -->
           <el-button title="修改" type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button>
           <el-button title="删除" type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>
@@ -87,7 +79,7 @@ export default {
   },
   methods: {
     getData(pageNumber){
-        this.$axios.get('/jsp/wap/center/ctrl/jsonMyCapitalList.jsp',{params:{pageNumber,status:1}}).then(res => {
+        this.$axios.get('/jsp/wap/center/ctrl/jsonMyCapitalList.jsp',{params:{pageNumber,status:0}}).then(res => {
           if(res.success == 'true'){
             this.pageList = res.data.pageList
             this.count = Number(res.data.pagination.totalCount)
@@ -122,26 +114,10 @@ export default {
       window.open(href, '_blank');
     },
     uploadMoney(){
-      if(this.$store.state.userinfo.isVip == '0'){
-        this.$confirm('只有会员才能享受快速上传, 是否办理会员?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          let {href} = this.$router.resolve({
-                name: "member",
-            });
-          window.open(href, '_blank');
-        }).catch(() => {
-
-        });
-      } else {
-        let {href} = this.$router.resolve({
+      let {href} = this.$router.resolve({
               name: "uploadApplyMoney",
           });
-        window.open(href, '_blank');
-      }
+      window.open(href, '_blank');
     },
     delete_item(id,index){
       this.$confirm("即将删除资金, 是否继续?", "提示", {
@@ -162,12 +138,6 @@ export default {
           });
           window.open(href, '_blank');
     },
-    todraft(){
-      let {href} = this.$router.resolve({
-              name: "myMoneyDraft",
-          });
-      window.open(href, '_blank');
-    }
   },
   created(){
     this.getData()
@@ -343,43 +313,6 @@ export default {
         width: 15px;
         height: 15px;
         background: url(/static/img/shangchuan-1.png) no-repeat center;
-        background-size: contain;
-        position: absolute;
-        top: 9px;
-        left: 15px;
-      }
-  }
-
-  .draftBtn {
-    width: 110px;
-      height: 35px;
-      color: #005982;
-      line-height: 0.425;
-      display: inline-block;
-      white-space: nowrap;
-      cursor: pointer;
-      background: #fff;
-      border: 1.5px solid #005982;
-      border-color: #005982;
-      -webkit-appearance: none;
-      text-align: center;
-      box-sizing: border-box;
-      outline: none;
-      margin: 0;
-      margin-left: 12px;
-      transition: 0.1s;
-      font-weight: 500;
-      -moz-user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
-      padding: 12px 20px 12px 35px;
-      border-radius: 4px;
-      position: relative;
-      i {
-        display: inline-block;
-        width: 15px;
-        height: 15px;
-        background: url(/static/img/caogaoxiang.png) no-repeat center;
         background-size: contain;
         position: absolute;
         top: 9px;

@@ -23,8 +23,8 @@
           </el-upload>
         </el-form-item>
         <el-form-item>
-          <div class="subBtn" @click="onSave" style="margin-right:20px; margin-left:70px;">保存</div>
-          <div class="subBtn" @click="onSubmit(5)">提交</div>
+          <!-- <div class="subBtn" @click="onSave" style="margin-right:20px; margin-left:70px;">保存</div> -->
+          <div class="subBtn" @click="onSubmit(5,'ruleForm')" style="margin-left:400px;">提交</div>
         </el-form-item>
       </el-form>
       <div class="invest-menu clearfix" style="border-top: 1px solid #ededed;">
@@ -36,8 +36,12 @@
             </p>
           </div>
           <!-- <span class="flr" :class="item.check == 0 ? ' already':'' + item.check == 1 ? ' being':'' + item.check == 2 ? ' not':'' + item.check == 3 ? ' fail':''">{{item.check == 0 ? '已发布':'' + item.check == 1 ? '审核中':'' + item.check == 2 ? '未发布':''}}</span> -->
-          <span class="flr not" v-if="item.applyStatus == '0'">未发布</span>
-          <span class="flr" v-else :class="item.applyStatus  == '5' ? ' being':'' + item.applyStatus == '10' ? ' already':'' + item.applyStatus == '15'? ' fail':''">{{item.applyStatus  == '5' ? '审核中':'' + item.applyStatus == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
+          <span
+            class="flr"
+            v-if="item.applyStatus != '0'"
+            :class="item.applyStatus  == '5' ? ' being':'' + item.applyStatus == '10' ? ' already':'' + item.applyStatus == '15'? ' fail':''"
+          >{{item.applyStatus == '5' ? '审核中':'' + item.applyStatus == '10' ? '已发布':'' + item.status == '15'? '':''}}</span>
+          <span class="flr not" v-else>未发布</span>
           <!-- <el-button type="primary" icon="el-icon-edit" circle class="flr cancel1" size="mini" @click="amend(item.id)"></el-button> -->
           <el-button type="danger" icon="el-icon-delete" circle class="flr cancel2" size="mini" @click="delete_item(item.id,index)"></el-button>
         </div>
@@ -52,6 +56,16 @@
         ></el-pagination>
       </div>
     </div>
+    <el-dialog
+      :visible.sync="toast_show"
+      width="30%"
+      center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <div v-if="success" class="toast_title">成功</div>
+      <div v-else class="toast_title">失败</div>
+      <p class="toast_content">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
@@ -72,7 +86,10 @@ import qs from 'qs'
         },
         rules:{
           applyTitle:{ required: true, message: '请输入资金名称', trigger: 'blur' },
-        }
+        },
+        hint:"",
+        success:false,
+        toast_show:false,
       }
     },
     methods:{
@@ -85,40 +102,105 @@ import qs from 'qs'
         })
       },
       onSave() {
-        this.onSubmit(0);
-      },
-      onSubmit(applyStatus) {
-          this.$confirm("即将提交资金, 是否继续?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          }).then(() => {
-            var fileNames = this.fileNames.join(";=;");
-            var filePaths = this.filePaths.join(",");
-            var params = {
-                applyTitle:this.ruleForm.applyTitle,
+      this.onSubmit(0,'ruleForm');
+    },
+    onSubmit(applyStatus, formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          if (applyStatus == 0) {
+            this.$confirm("即将保存资金, 是否继续?", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              var fileNames = this.fileNames.join(";=;");
+              var filePaths = this.filePaths.join(",");
+              var params = {
+                applyTitle: this.ruleForm.applyTitle,
                 fileNames,
                 filePaths,
-                applyStatus,
-            };
-            this.$axios
-              .post(
-                "/jsp/wap/center/do/doCapitalDatumApply.jsp",
-                qs.stringify(params)
-              )
-              .then(res => {
-                if (res.success == "true") {
-                  if(applyStatus == 0){
-                    this.$message.success("保存成功")
+                applyStatus
+              };
+              this.$axios
+                .post(
+                  "/jsp/wap/center/do/doProjectDatumApply.jsp",
+                  qs.stringify(params)
+                )
+                .then(res => {
+                  if (res.success == "true") {
+                    if (applyStatus == 0) {
+                      this.success = true 
+                      this.hint = '保存成功'
+                      this.toast_show = true
+                      setTimeout(()=> {
+                        window.history.go(0)
+                      },1000)
+                    } else {
+                      this.success = true 
+                      this.hint = '上传资金成功'
+                      this.toast_show = true
+                      setTimeout(()=> {
+                        window.history.go(0)
+                      },1000)
+                    }
                   } else {
-                    this.$message.success("上传资金成功");
+                    this.success = false 
+                    this.hint = res.message
+                    this.toast_show = true
                   }
-                } else {
-                  this.$message.error("上传资金失败，请完善资金信息或检查网络");
-                }
-              });
-          })
-      },
+                });
+            });
+          } else {
+            this.$confirm("即将提交资金, 是否继续?", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              var fileNames = this.fileNames.join(";=;");
+              var filePaths = this.filePaths.join(",");
+              var params = {
+                applyTitle: this.ruleForm.applyTitle,
+                fileNames,
+                filePaths,
+                applyStatus
+              };
+              this.$axios
+                .post(
+                  "/jsp/wap/center/do/doProjectDatumApply.jsp",
+                  qs.stringify(params)
+                )
+                .then(res => {
+                  if (res.success == "true") {
+                    if (applyStatus == 0) {
+                      this.success = true 
+                      this.hint = '保存成功'
+                      this.toast_show = true
+                      setTimeout(()=> {
+                        window.history.go(0)
+                      },1000)
+                    } else {
+                      this.success = true 
+                      this.hint = '上传资金成功'
+                      this.toast_show = true
+                      // setTimeout(()=> {
+                      //   window.history.go(0)
+                      // },1000)
+                    }
+                  } else {
+                    this.success = false 
+                    this.hint = res.message
+                    this.toast_show = true
+                  }
+                });
+            });
+          }
+        } else {
+          console.log("error submit!!");
+          this.$message.error("请完善以下信息，方便我们更好的为您服务");
+          return false;
+        }
+      });
+    },
       uploadFlie(f) {
         let param = new FormData(); //创建form对象
         param.append("file", f.file); //通过append向form对象添加数据
@@ -132,7 +214,9 @@ import qs from 'qs'
               this.fileNames.push(res.data.originalName);
               this.filePaths.push(res.data.relativePath);
             } else {
-              this.$message.error("上传失败，请检查网络");
+              this.success = false 
+              this.hint = res.message
+              this.toast_show = true
             }
           });
       },

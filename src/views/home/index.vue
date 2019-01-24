@@ -41,13 +41,13 @@
                 投资资金：
                 <span class="invest-money" v-if="item&&item.investAmountName">{{item.investAmountName}}</span>
               </p>
-              <p class="invest-item-list w230 inb" v-if="item&&item.investCase">
+              <p class="invest-item-list w230 inb" v-if="item&&item.investWayName">
                 投资方式：
-                <span class="invest-content" v-if="item&&item.investCase">{{item.investCase}}</span>
+                <span class="invest-content" v-if="item&&item.investWayName">{{item.investWayName}}</span>
               </p>
-              <p class="invest-item-list inb w175" v-if="item&&item.investTypeName">
+              <p class="invest-item-list inb w175" v-if="item&&item.pawnTypeName">
                 资金类型：
-                <span class="invest-content" v-if="item&&item.investTypeName">{{item.investTypeName}}</span>
+                <span class="invest-content" v-if="item&&item.pawnTypeName">{{item.pawnTypeName}}</span>
               </p>
               <p class="invest-item-list w230 inb" v-if="item&&item.investRegionNameStr">
                 投资地区：
@@ -96,9 +96,11 @@
       <div class="w1200 clearfix">
         <img src="/static/img/fabuzijin.jpg" alt="" class="fll" width="400px" style="cursor:pointer" @click="tozijin">
         <img src="/static/img/fabuxiangmu.jpg" alt="" width="400px" style="cursor:pointer" @click="toxiangmu">
-        <img src="/static/img/chenweizhuanjia.jpg" alt="" class="flr" width="400px" style="cursor:pointer" @click="tozhuanjia">
+        <img src="/static/img/chengweizhuanjia.jpg" alt="" class="flr" width="400px" style="cursor:pointer" @click="tozhuanjia">
       </div>
     </div>
+    <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
+    <Login :should_login="should_login"></Login>
   </div>
 </template>
 
@@ -235,6 +237,7 @@ export default {
       categoryList:[],
       categorys:'',
       messageData:[],
+      should_login:false
     };
   },
   methods:{
@@ -298,7 +301,7 @@ export default {
     },
     getUserInfo(){
        this.$axios.get('/jsp/wap/center/ctrl/jsonUserInfo.jsp').then(res => {
-         this.$store.commit('CHANGE_USERINFO',res.data)
+         this.$store.commit('CHANGE_USERINFO',res.data.userinfo)
        })
     },
     //首页跳转打开新窗口
@@ -348,10 +351,7 @@ export default {
         });
         window.open(href, '_blank');
       } else {
-        let {href} = this.$router.resolve({
-          name: "login",
-        });
-        window.open(href, '_blank');
+        this.should_login = true        
       }
     },
     toxiangmu(){
@@ -361,23 +361,17 @@ export default {
         });
         window.open(href, '_blank');
       } else {
-        let {href} = this.$router.resolve({
-          name: "login",
-        });
-        window.open(href, '_blank');
+        this.should_login = true
       }  
     },
     tozhuanjia(){
       if(Cookies.get('userKey')){
         let {href} = this.$router.resolve({
-            name: "memberAttest",
+            name: "myDemand",
         });
         window.open(href, '_blank');
       } else {
-        let {href} = this.$router.resolve({
-          name: "login",
-        });
-        window.open(href, '_blank');
+        this.should_login = true
       }
     }
   },

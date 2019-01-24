@@ -2,7 +2,7 @@
   <div>
     <div class="mes_top">
       <p class="mes_type">
-        <span class="active">项目</span>
+        <span class="active">{{label}}</span>
       </p>
     </div>
     <div v-loading="loading">
@@ -100,13 +100,15 @@ export default {
         myMoney_pagination: false,
         sub_project:true,
         should_login:false,
+        label:'',
       }
     },
     methods:{
       getActData(){
         this.loading = true;
-        this.title = this.$route.query.title
-        this.$axios.get(`/jsp/wap/trProject/ctrl/jsonProjectPage.jsp?title=${this.title}`).then(res => {
+        this.labelId = this.$route.query.labelId
+        this.$axios.get(`/jsp/wap/trProject/ctrl/jsonProjectPage.jsp?labelId=${this.labelId}`).then(res => {
+            this.label = res.data.label.name
             this.pageList = res.data.pageList;
             this.totalCount = res.data.pagination.totalCount;
             this.pn = 1;

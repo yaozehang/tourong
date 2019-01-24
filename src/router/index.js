@@ -16,12 +16,14 @@ const components = {
   moneyDetail: () => import('@/views/moneyDetail'),     //资金详情
   project: () => import('@/views/project'),     //找项目
   investors: () => import('@/views/investors'),  // 投资人信息
+  pm : () => import('@/views/pm'),//项目人信息
   projectDetail: () => import('@/views/projectDetail'),     //项目详情
   person: () => import('@/views/person'), //个人中心视口
   personCenter: () => import('@/views/person/person'), //个人中心
   weeklyReport: () => import('@/views/person/weeklyReport'), //周报
   weeklyReportDetail: () => import('@/views/person/weeklyReport/detail'), //周报详情
   fastReport: () => import('@/views/person/fastReport'), //快报
+  myVip: () => import('@/views/person/Vip'), //会员权益中心
   memberAttest: () => import('@/views/person/memberAttest'), //会员认证
   myActivity: () => import('@/views/person/myActivity'), //我报名的活动
   myAttention: () => import('@/views/person/myAttention'), //我的关注
@@ -31,11 +33,13 @@ const components = {
   myData: () => import('@/views/person/myData'), //我的资料
   myDemand: () => import('@/views/person/myDemand'), //我的需求
   myMoney: () => import('@/views/person/myMoney'), //我的资金
+  myMoneyDraft: () => import('@/views/person/myMoney/draft'),//资金草稿
   applyMoney: () => import('@/views/person/myMoney/apply'), //发布资金
   uploadApplyMoney: () => import('@/views/person/myMoney/uploadApply'),//上传资金
   manageMoney: () => import('@/views/person/myMoney/manage'), //动态管理
   addDynamicMoney: () => import('@/views/person/myMoney/addDynamic'), //添加动态
   myProject: () => import('@/views/person/myProject'), //我的项目
+  myProjectDraft: () => import('@/views/person/myProject/draft'),//资金草稿
   applyProject: () => import('@/views/person/myProject/apply'), //发布项目
   manageProject: () => import('@/views/person/myProject/manage'), //进展管理
   uploadApplyProject: () => import('@/views/person/myProject/uploadApply'),//上传项目
@@ -45,6 +49,9 @@ const components = {
   search: () => import('@/views/search'), //搜索列表
   searchMoney: () => import('@/views/search/money'), //搜索资金
   searchProject: () => import('@/views/search/project'), //搜索项目
+  searchMessage: () => import('@/views/search/message'),//搜索资讯
+  searchLabelMoney: () => import('@/views/search/labelMoney'), //搜索资金标签
+  searchLabelProject: () => import('@/views/search/labelProject'), //搜索项目标签
   searchMessage: () => import('@/views/search/message'),//搜索资讯
   aboutUs: () => import('@/views/aboutUs'), //关于我们
   callUs: () => import('@/views/aboutUs/call'), //联系我们
@@ -145,11 +152,19 @@ const router = new Router({
           }
         },
         {
-          path:'/money/moneyDetail/investors',
+          path:'investors',
           name:'investors',
           component:components.investors,
           meta:{
-            title:'详情'
+            title:'更多资金'
+          }
+        },
+        {
+          path:'pm',
+          name:'pm',
+          component:components.pm,
+          meta:{
+            title:'更多项目'
           }
         },
         {
@@ -221,6 +236,22 @@ const router = new Router({
                 keepAlive:true
               },
             },
+            {
+              path:'searchLabelMoney',
+              name:'searchLabelMoney',
+              component:components.searchLabelMoney,
+              meta:{
+                title:'搜索列表-标签'
+              }
+            },
+            {
+              path:'searchLabelProject',
+              name:'searchLabelProject',
+              component:components.searchLabelProject,
+              meta:{
+                title:'搜索列表-标签'
+              }
+            }
           ]
         },
         {
@@ -286,6 +317,14 @@ const router = new Router({
               component:components.memberAttest,
               meta:{
                 title:'会员认证'
+              }
+            },
+            {
+              path:'myVip',
+              name:'myVip',
+              component:components.myVip,
+              meta:{
+                title:'会员权益中心'
               }
             },
             {
@@ -356,6 +395,14 @@ const router = new Router({
               }
             },
             {
+              path:'myMoneyDraft',
+              name:'myMoneyDraft',
+              component:components.myMoneyDraft,
+              meta:{
+                title:'我的资金 > 资金草稿'
+              }
+            },
+            {
               path:'manageMoney',
               name:'manageMoney',
               component:components.manageMoney,
@@ -401,6 +448,14 @@ const router = new Router({
               component:components.myProject,
               meta:{
                 title:'我的项目'
+              }
+            },
+            {
+              path:'myProjectDraft',
+              name:'myProjectDraft',
+              component:components.myProjectDraft,
+              meta:{
+                title:'我的项目 > 项目草稿'
               }
             },
             {

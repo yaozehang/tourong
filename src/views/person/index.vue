@@ -22,7 +22,7 @@
           </p>
           <p class="company" v-if="personData.authenticationName != ''">{{personData.authenticationName}}</p>
           <p class="company" v-else>暂未认证</p>
-          <p class="equity">
+          <p class="equity" @click="$router.push({name:'myVip'})">
             <i></i>会员权益中心
           </p>
         </div>
@@ -135,19 +135,20 @@ export default {
         this.login = false
         this.$router.push('/login')
      },
-    getData(){
-      if(this.$store.state.userinfo.headImgPath != ''){
-        this.personData.avatar = this.$store.state.userinfo.headImgPath
-      } 
-      if(this.$store.state.userinfo.name != '') {
-        this.personData.name = this.$store.state.userinfo.name
-      } 
-        this.personData.isVip = this.$store.state.userinfo.isVip
-        this.personData.authenticationName = this.$store.state.userinfo.authenticationName
-    }
+    getUserInfo(){
+       this.$axios.get('/jsp/wap/center/ctrl/jsonUserInfo.jsp').then(res => {
+         if(res.success == 'true'){
+          this.personData.avatar = res.data.userInfo.headImgPath
+          this.personData.name = res.data.userInfo.name
+          this.personData.isVip = res.data.userinfo.isVip
+          this.personData.authenticationName = res.data.userinfo.authenticationName
+          this.$store.commit('CHANGE_USERINFO',res.data.userInfo)
+         }
+       })
+    },
   },
   created(){
-    this.getData()
+    this.getUserInfo()
   }
 };
 </script>

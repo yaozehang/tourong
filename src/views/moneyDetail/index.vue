@@ -31,62 +31,65 @@
           <span class="list-content current">{{money.investAmountName}}</span>
         </div>
         <div class="clearfix">
-          <div class="fll">
-            <div class="box_content" v-if="money&&money.investCase">
+          <!-- <div class="fll"> -->
+            <div class="box_content fll" v-if="money&&money.investWayName">
               <span class="list-contentName">投资方式：</span>
-              <span class="list-content">{{money.investCase}}</span>
+              <span class="list-content">{{money.investWayName}}</span>
             </div>
-            <div class="box_content" v-if="money&&money.investRegionNameStr">
+            <div class="box_content fll" v-if="money&&money.investRegionNameStr">
               <span class="list-contentName">投资地区：</span>
               <span class="list-content">{{money.investRegionNameStr}}</span>
             </div>
-            <div class="box_content" v-if="money&&money.investTypeName">
+            <div class="box_content fll" v-if="money&&money.investTypeName">
               <span class="list-contentName">投资类型：</span>
               <span class="list-content">{{money.investTypeName}}</span>
             </div>
-            <div class="box_content" v-if="money&&money.paymentTypeName">
+            <div class="box_content fll" v-if="money&&money.paymentTypeName">
               <span class="list-contentName">支付方式：</span>
               <span class="list-content">{{money.paymentTypeName}}</span>
             </div>
-            <div class="box_content" v-if="money&&money.safeguardName">
+            <div class="box_content fll" v-if="money&&money.safeguardName">
               <span class="list-contentName">保障措施：</span>
               <span class="list-content">{{money.safeguardName}}</span>
             </div>
-          </div>
-          <div class="fll">
-            <div class="box_content" v-if="money&&money.pawnTypeName">
+          <!-- </div>
+          <div class="fll"> -->
+            <div class="box_content fll" v-if="money&&money.pawnTypeName">
               <span class="list-contentName">资金类型：</span>
               <span class="list-content">{{money.pawnTypeName}}</span>
             </div>
-            <div class="box_content" v-if="money&&money.investIndustryName">
+            <div class="box_content fll" v-if="money&&money.investIndustryName">
               <span class="list-contentName">投资行业：</span>
               <span class="list-content">{{money.investIndustryName}}</span>
             </div>
-            <div class="box_content" v-if="money&&money.investStageName">
+            <div class="box_content fll" v-if="money&&money.investStageName">
               <span class="list-contentName">投资阶段：</span>
               <span class="list-content">{{money.investStageName}}</span>
             </div>
-            <div class="box_content" v-if="money&&money.validStartTimeStr">
+            <div class="box_content fll" v-if="money&&money.validStartTimeStr">
               <span class="list-contentName">有效期限：</span>
               <span
                 class="list-content"
               >{{money.validStartTimeStr}}~{{money.validEndTimeStr}}</span>
             </div>
-          </div>
-          <div class="fll">
-            <div class="box_content">
+          <!-- </div>
+          <div class="fll"> -->
+            <div class="box_content fll" v-if="money&&money.capitalSourceName">
               <span class="list-contentName">资金来源：</span>
               <span class="list-content">{{money.capitalSourceName}}</span>
             </div>
-            <div class="box_content" v-if="money&&money.marketHotName">
+            <div class="box_content fll" v-if="money&&money.marketHotName">
               <span class="list-contentName">市场热点：</span>
               <span class="list-content">{{money.marketHotName}}</span>
             </div>
-            <div class="box_content" v-if="money&&money.areaHotName">
+            <div class="box_content fll" v-if="money&&money.areaHotName">
               <span class="list-contentName">区域热点：</span>
               <span class="list-content">{{money.areaHotName}}</span>
             </div>
-          </div>
+          <!-- </div> -->
+        </div>
+        <div style="margin-top:20px;">
+          <el-button type="primary" plain size="mini" v-for="(lab,idx) in money.labelList" :key="idx" @click="searchLabel(lab.labelId)">{{lab.labelName}}</el-button>
         </div>
       </div>
       <div class="w810">
@@ -107,41 +110,46 @@
     <div class="w360 flr mes_list clearfix">
       <el-card class="box-card">
         <div class="userImgBox">
-          <img class="userImg" src="static/img/userImg.jpg" alt>
+          <img class="userImg" :src="$url + memberInfo.photoImgPath" v-if="memberInfo&&memberInfo.photoImgPath" alt>
+          <img class="userImg" src="/static/img/avatar-1.png" v-else alt>
         </div>
-        <p class="username">李先生</p>
+        <p class="username" v-if="memberInfo&&memberInfo.name">{{memberInfo.name}}</p>
+        <p class="username" v-else>投融用户</p>
         <p>
           <span class="_666">职位：</span>
-          <span>董事长</span>
+          <span v-if="memberInfo&&memberInfo.job">{{memberInfo.job}}</span>
+          <span v-else>****</span>
         </p>
         <p>
           <span class="_666">企业名称：</span>
-          <span>北京开拓明天股份有限公司</span>
+          <span v-if="memberInfo.company">{{memberInfo.company}}</span>
+          <span v-else>****</span>
         </p>
         <p>
           <span class="_666">所属行业：</span>
-          <span>互联网</span>
+          <span v-if="memberInfo&&memberInfo.industryName">{{memberInfo.industryName}}</span>
+          <span v-else>****</span>
         </p>
-        <p>
+        <!-- <p>
           <span class="_666">关注行业：</span>
           <span>互联网、金融、节能环保</span>
-        </p>
-        <!-- <div class="lookBtnBox">
-                    <el-button class="lookBtn" @click="$router.push('/money/moneyDetail/investors')">查看联系方式</el-button>          
-        </div>-->
+        </p> -->
+        <div class="lookBtnBox">
+          <el-button class="lookBtn" @click="to_more_money">更多资金</el-button>          
+        </div>
       </el-card>
-      <p class="mes">他的更多资金</p>
+      <p class="mes">可能感兴趣的资金</p>
       <ul class="mes_title">
-        <router-link to="/">
-          <li v-for="(item,index) in mesData" :key="index" class="mes_content">
+        <div @click="toMoneyDetailPage(id)" style="cursor:pointer">
+          <li v-for="(item,index) in capitalList" :key="index" class="mes_content">
             <p class="mes_listTitle">{{item.title}}</p>
             <P>
               <span>投资金额：</span>
-              <span>{{investMoney[2]}}</span>
+              <span>{{item.investAmountName}}</span>
             </P>
-            <p>期权投资 | 成长期 | 扩张期 | 甘肃省</p>
+            <p style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{item.capitalSourceName.substr(0,4)}}| {{item.investStageName.substr(0,3)}} | {{item.investRegionNameStr}}</p>
           </li>
-        </router-link>
+        </div>
       </ul>
     </div>
     <el-dialog title="选择投递项目" :visible.sync="dialogFormVisible" width="30%" :before-close ="before_close">
@@ -182,9 +190,10 @@
     <el-dialog :visible.sync="toast_show" width="30%" center>
       <div class="toast_success" v-if="success"></div>
       <div class="toast_error" v-else></div>
-      <div v-if="success" class="toast_title">成功</div>
+      <!-- <div v-if="success" class="toast_title">成功</div> -->
       <!-- <div v-else class="toast_title">失败</div> -->
       <p class="toast_title">{{hint}}</p>
+      <div v-if="no_project" @click="toMyproject" style="color:#f00;font-size:18px;cursor:pointer;text-align:center;">前去发布--></div>
     </el-dialog>
 
     <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
@@ -198,74 +207,13 @@ export default {
   data() {
     return {
       should_login:false,
-      actType: [
-        "股权投资",
-        "债权投资",
-        "金融投资",
-        "BT/BOT项目投资",
-        "其他投资"
-      ],
-      moneyType: [
-        "个人资金",
-        "企业资金",
-        "天使投资",
-        "VC投资",
-        "PE投资",
-        "小额贷款",
-        "典当公司"
-      ],
-      area: ["北京", "上海", "广州", "深圳", "农大"],
-      investArea: ["不限", "北京", "上海", "广州", "深圳", "农大"],
-      investMoney: [
-        "不限",
-        "1-10W",
-        "10-20W",
-        "20-30W",
-        "30-50W",
-        "50-100W",
-        "100-200W",
-        "200-500W",
-        "500-1000W"
-      ],
-      actlist: [
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
-          investMoney: "1000万-9亿",
-          investType: "参股合作 收购/并购",
-          investIndustry: "互联网",
-          investStage: "成长期、成熟期",
-          beginTime: "2019-01-01",
-          endTime: "2049-10-01",
-          focus: "155人关注",
-          userName: "李先生",
-          company: "北京青创服务平台有限公司",
-          payType: "现金支付、股权对价",
-          whereMoney: "自由资金，募集资金",
-          measure: "包括但不限于业绩承诺(对赌)、回购、上市承诺",
-          hot: "人工智能、大数据、物联网",
-          hotArea: "京津冀 长三角"
-        }
-      ],
-      mesData: [
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作"
-        }
-      ],
+      actlist: [],
+      capitalList:[],
+      memberInfo:{},
       money: {},
       follow: 0,
       id: "",
+      memberId:"",
       success: true,
       hint: "",
       toast_show: false,
@@ -276,6 +224,7 @@ export default {
       myProject_pagination: false,
       dialogFormVisible:false,
       sub_project:true,
+      no_project:false,
     };
   },
   methods: {
@@ -286,6 +235,9 @@ export default {
         .get(`/jsp/wap/trCapital/ctrl/jsonCapitalDetail.jsp?id=${this.id}`)
         .then(res => {
           this.money = res.data.capital;
+          this.memberInfo = res.data.memberInfo
+          this.memberId = res.data.memberInfo.id
+          this.capitalList = res.data.capitalList
           this.loading = false;
         });
     },
@@ -352,9 +304,11 @@ export default {
       if (Cookies.get("userKey")) {
         if (this.myProject.length == 0) {
           this.success = false;
+          this.no_project = true
           this.hint = "您还没有发布项目，请先发布项目";
           this.toast_show = true;
         } else {
+          this.no_project = false
           this.dialogFormVisible = true;
           this.moneyId = this.$route.query.id;
         }
@@ -362,6 +316,7 @@ export default {
         // this.success = false;
         // this.hint = "您未登录，请先登录";
         // this.toast_show = true;
+        this.no_project = false
         this.should_login = true
       }
     },
@@ -378,7 +333,7 @@ export default {
             // this.dialogFormVisible = false;
           } else {
             this.success = false;
-            this.hint = "项目投递失败，请您检查网络或重试";
+            this.hint = res.message;
             this.sub_project = false;
           }
         });
@@ -389,8 +344,39 @@ export default {
          this.sub_project = true;
         },1000)
     },
+    toMoneyDetailPage(id) {
+      let { href } = this.$router.resolve({
+        name: "moneyDetail",
+        query: { id }
+      });
+      window.open(href, "_blank");
+    },
     handleCurrentChange(val) {
       this.getMyProject(val);
+    },
+    searchLabel(labelId){
+      let { href } = this.$router.resolve({
+        name: "searchLabelMoney",
+        query: {labelId}
+      });
+      window.open(href, "_blank");
+    },
+    toMyproject(){
+        if(Cookies.get('userKey')){
+          let {href} = this.$router.resolve({
+            name: "applyProject",
+          });
+          window.open(href, '_blank');
+        } else {
+          this.$router.push('/login')
+        }
+      },
+    to_more_money(){
+      let { href } = this.$router.resolve({
+        name: "investors",
+        query: {memberId:this.memberId}
+      });
+      window.open(href, "_blank");
     }
   },
   created() {
@@ -474,6 +460,8 @@ export default {
 .userImg {
   border-radius: 100%;
   text-align: center;
+  width: 100px;
+  height: 100px;
 }
 .username {
   text-align: center;
@@ -518,14 +506,16 @@ export default {
   font-size: 14px;
   font-family: "Microsoft YaHei";
   color: rgb(153, 153, 153);
+  display: inline-block;
 }
 
 .box_content {
   line-height: 2;
-  width: 250px;
-  overflow: hidden; /*超出部分隐藏*/
-  white-space: nowrap; /*不换行*/
-  text-overflow: ellipsis;
+  min-width: 300px;
+  // max-height: 50px;
+  // overflow: hidden; /*超出部分隐藏*/
+  // white-space: nowrap; /*不换行*/
+  // text-overflow: ellipsis;
 }
 
 .require {
@@ -550,10 +540,11 @@ export default {
 }
 
 .list-content {
-  // margin-left: 30px;
+  margin-right: 20px;
   font-size: 14px;
   font-family: "Microsoft YaHei";
   color: #333;
+  display: inline-block;
 }
 
 .list-content2 {
@@ -722,7 +713,7 @@ export default {
   color: #999;
 }
 
-.mes_content:hover {
+.mes_listTitle:hover {
   color: #005982;
 }
 

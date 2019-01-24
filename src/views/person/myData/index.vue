@@ -54,10 +54,23 @@
           <select name="month" id="month" v-model="month"></select>月
           <select name="day" id="day" v-model="day"></select>日
         </el-form-item>
-        <el-form-item label="公司名称" class="w320">
+        <el-form-item label="公司名称" class="w320" prop="company">
           <el-input v-model="formData.company"></el-input>
         </el-form-item>
-        <el-form-item label="所在地区">
+        <el-form-item label="职位" class="w320" prop="job">
+          <el-input v-model="formData.job"></el-input>
+        </el-form-item>
+        <el-form-item label="所属行业" class="w320" prop="industrys">
+          <el-select v-model="formData.industrys" placeholder="请选择">
+            <el-option
+              v-for="item in industryList"
+              :key="item.dataValue"
+              :label="item.dataName"
+              :value="item.dataValue">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在地区" required>
           <v-distpicker
             :province="provinceStr"
             :city="cityStr"
@@ -82,6 +95,14 @@
         </el-form-item>
       </el-form>
     </div>
+
+    <el-dialog :visible.sync="toast_show" width="30%" center>
+      <div class="toast_success" v-if="success"></div>
+      <div class="toast_error" v-else></div>
+      <!-- <div v-if="success" class="toast_title">成功</div> -->
+      <!-- <div v-else class="toast_content">失败</div> -->
+      <p class="toast_title">{{hint}}</p>
+    </el-dialog>
   </div>
 </template>
 
@@ -117,10 +138,13 @@ export default {
         userName: "",
         qq: "",
         email: "",
-        provinceId: "",
-        cityId: "",
-        countyId: "",
-        birthdayTimeStr: ""
+        provinceId: "110000",
+        cityId: "110100",
+        countyId: "110114",
+        isVip:"0",
+        birthdayTimeStr: "",
+        job:'',
+        industrys:''
       },
       rules: {
         name: [
@@ -137,6 +161,27 @@ export default {
             pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
             message: "你的身份证格式不正确"
           }
+        ],
+        company:[
+          {
+            required: true,
+            message: "请输入公司名称",
+            trigger: "blur"
+          },
+        ],
+        job:[
+          {
+            required: true,
+            message: "请输入职位",
+            trigger: "blur"
+          },
+        ],
+        industrys:[
+          {
+            required: true,
+            message: "请选择行业",
+            trigger: "blur"
+          },
         ],
         mobile: [
           {
@@ -163,14 +208,18 @@ export default {
             trigger: ["blur", "change"]
           }
         ]
-      }
+      },
+      industryList:[],
+      toast_show: false,
+      success: true,
+      hint: "",
     };
   },
   methods: {
     getDate() {
       this.$axios.get("/jsp/wap/center/ctrl/jsonUserInfo.jsp").then(res => {
-        console.log(res);
-        this.$store.commit("CHANGE_USERINFO", res.data);
+        this.$store.commit("CHANGE_USERINFO", res.data.userInfo);
+        this.industryList = res.data.industryList
         this.formData.userName = this.$store.state.userinfo.userName;
         this.formData.name = this.$store.state.userinfo.name;
         this.formData.headImgPath = this.$store.state.userinfo.headImgPath;
@@ -216,6 +265,10 @@ export default {
         this.formData.qq = this.$store.state.userinfo.qq;
         this.formData.address = this.$store.state.userinfo.address;
         this.formData.company = this.$store.state.userinfo.company;
+        this.formData.job = this.$store.state.userinfo.job
+        if (this.$store.state.userinfo.industry != "") {
+            this.formData.industrys = this.$store.state.userinfo.industry.replace(/[\[\]]/g, "");
+          }
       });
     },
     uploadImg(f) {
@@ -265,14 +318,23 @@ export default {
                 provinceId: this.formData.provinceId,
                 cityId: this.formData.cityId,
                 countyId: this.formData.countyId,
-                identity: this.formData.IDcard
+                identity: this.formData.IDcard,
+                job: this.formData.job,
+                industrys: this.formData.industrys
               }
             })
             .then(res => {
               if (res.success == "true") {
-                this.$message.success("信息上传成功");
+                this.success = true;
+                this.hint = "信息上传成功";
+                this.toast_show = true;
+                setTimeout(()=> {
+                  this.$router.push({name:'personCenter'})
+                },1000)
               } else {
-                this.$message.error("信息上传失败，请您检查网络");
+                this.success = false;
+                this.hint = res.message;
+                this.toast_show = true;
               }
             });
         } else {
