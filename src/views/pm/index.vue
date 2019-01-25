@@ -649,7 +649,7 @@ export default {
 } //活动列表
 .act_list {
   width: 810px;
-  height: 180px;
+  // height: 180px;
   padding-bottom: 30px;
   border-bottom: 1px dashed #d9d9d9;
   cursor: pointer;

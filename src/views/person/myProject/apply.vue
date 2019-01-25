@@ -87,8 +87,9 @@
             <span slot="append">万元</span>
           </el-input>
         </el-form-item>
+        <p style="margin-left:80px;font-weight:700;">股权结构</p>
         <el-form-item label="股权结构" class="w180 is-required">
-          <el-upload class="upload-demo" action :http-request="uploadImg" :show-file-list="false">
+          <!-- <el-upload class="upload-demo" action :http-request="uploadImg" :show-file-list="false">
             <el-button
               size="small"
               type="primary"
@@ -101,7 +102,7 @@
               :src="formData.stockStructureImgPath"
               style="max-width:500px;"
             >
-          </el-upload>
+          </el-upload> -->
         </el-form-item>
         </div>
         <div v-else-if="formData.financeBody == 65">
@@ -178,7 +179,7 @@
         <p>
           <span class="item_title">项目融资信息</span>
         </p>
-        <el-form-item label="融资方式">
+        <el-form-item label="融资方式" class="is-required" prop="financingWay">
           <div
             v-for="(item , index) in financingWayList"
             :key="index"
@@ -214,7 +215,7 @@
               >{{paymentType.dataName}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="有效期限" class=“is-required”>
+          <el-form-item label="有效期限" class="is-required">
             <div style="width:28.16667%" class="fll">
               <el-date-picker
                 value-format="yyyy-MM-dd"
@@ -249,7 +250,7 @@
             <el-form-item label="融资金额" class="w350 is-required">
               <el-input v-model="formData.financingMoney"></el-input>
             </el-form-item>
-            <el-form-item label="品种" class=“is-required”>
+            <el-form-item label="品种" class="is-required">
               <el-checkbox-group v-model="varietys">
                 <el-checkbox
                   v-for="variety in varietyList"
@@ -474,6 +475,7 @@ export default {
         pb: [{ validator: checkNumber, trigger: "blur" }],
         directorName: [{ validator: has_value, trigger: "blur" }],
         directorJob: [{ validator: has_value, trigger: "blur" }],
+        financingWay: [{ validator: has_value, trigger: "blur" }],
         directorPhone: [{ validator: checkPhone, trigger: "blur" }],
         directorAge: [{ validator: checkAge, trigger: "blur" }],
         averageAge: [{ validator: checkAge, trigger: "blur" }],

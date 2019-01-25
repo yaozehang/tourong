@@ -29,7 +29,7 @@
         <div v-if="sub_project"> 
             <el-form>
                 <el-form-item label="资金" label-width="100">
-                    <el-select v-model="moneyId" placeholder="请选择资金">
+                    <el-select v-model="capitalId" placeholder="请选择资金">
                     <el-option
                         v-for="item in myMoney"
                         :key="item.id"
@@ -94,8 +94,8 @@ export default {
         success:false,
         toast_show:false,
         myMoney:[],
-        projectId: "",
-        moneyId: "",
+        id: "",
+        capitalId: "",
         myMoney_Count: 0,
         myMoney_pagination: false,
         sub_project:true,
@@ -164,7 +164,7 @@ export default {
             this.myMoney = res.data.pageList;
             var myMoney = res.data.pageList
             if(myMoney.length > 0){
-            this.moneyId = myMoney[0].id
+            this.capitalId = myMoney[0].id
             }
             this.myMoney_Count = Number(res.data.pagination.totalCount);
             if (this.myMoney_Count > 10) {
@@ -180,7 +180,7 @@ export default {
           this.toast_show = true;
         } else {
           this.dialogFormVisible = true;
-          this.projectId = id;
+          this.id = id;
         }
       } else {
         // this.success = false;
@@ -192,7 +192,7 @@ export default {
     apply() {
       this.$axios
         .get("/jsp/wap/trCapital/do/doDeliver.jsp", {
-          params: { projectId: this.moneyId, id: this.projectId }
+          params: { capitalId: this.capitalId, id: this.id }
         })
         .then(res => {
           if (res.success == "true") {
