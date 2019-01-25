@@ -276,7 +276,8 @@ const router = new Router({
           redirect:'/person/personCenter',
           component:components.person,
           meta:{
-            title:'个人中心'
+            title:'个人中心',
+            authority:true
           },
           children:[
             {
@@ -284,15 +285,17 @@ const router = new Router({
               name:'personCenter',
               component:components.personCenter,
               meta:{
-                title:'个人中心'
-              }
+                title:'个人中心',
+                authority:true
+             }
             },
             {
               path:'weeklyReport',
               name:'weeklyReport',
               component:components.weeklyReport,
               meta:{
-                title:'周报'
+                title:'周报',
+                authority:true
               }
             },
             {
@@ -300,7 +303,8 @@ const router = new Router({
               name:'weeklyReportDetail',
               component:components.weeklyReportDetail,
               meta:{
-                title:'周报详情'
+                title:'周报详情',
+                authority:true
               }
             },
             {
@@ -308,7 +312,8 @@ const router = new Router({
               name:'fastReport',
               component:components.fastReport,
               meta:{
-                title:'及时快报'
+                title:'及时快报',
+                authority:true
               }
             },
             {
@@ -316,7 +321,8 @@ const router = new Router({
               name:'memberAttest',
               component:components.memberAttest,
               meta:{
-                title:'会员认证'
+                title:'会员认证',
+                authority:true
               }
             },
             {
@@ -324,7 +330,8 @@ const router = new Router({
               name:'myVip',
               component:components.myVip,
               meta:{
-                title:'会员权益中心'
+                title:'会员权益中心',
+                authority:true
               }
             },
             {
@@ -332,7 +339,8 @@ const router = new Router({
               name:'myActivity',
               component:components.myActivity,
               meta:{
-                title:'我报名的活动'
+                title:'我报名的活动',
+                authority:true
               }
             },
             {
@@ -341,7 +349,8 @@ const router = new Router({
               component:components.myAttention,
               redirect:'/person/myAttention/attentionProject',
               meta:{
-                title:'我的关注'
+                title:'我的关注',
+                authority:true
               },
               children:[
                 {
@@ -349,7 +358,8 @@ const router = new Router({
                   name:'attentionProject',
                   component:components.attentionProject,
                   meta:{
-                    title:'关注的项目'
+                    title:'关注的项目',
+                    authority:true
                   }
                 },
                 {
@@ -357,7 +367,8 @@ const router = new Router({
                   name:'attentionMoney',
                   component:components.attentionMoney,
                   meta:{
-                    title:'关注的资金'
+                    title:'关注的资金',
+                    authority:true
                   }
                 },
                 {
@@ -365,7 +376,8 @@ const router = new Router({
                   name:'label',
                   component:components.attentionlabel,
                   meta:{
-                    title:'标签设置'
+                    title:'标签设置',
+                    authority:true
                   }
                 },
               ]
@@ -375,7 +387,8 @@ const router = new Router({
               name:'myData',
               component:components.myData,
               meta:{
-                title:'我的资料'
+                title:'我的资料',
+                authority:true
               }
             },
             {
@@ -383,7 +396,8 @@ const router = new Router({
               name:'myDemand',
               component:components.myDemand,
               meta:{
-                title:'需求填报'
+                title:'需求填报',
+                authority:true
               }
             },
             {
@@ -391,7 +405,8 @@ const router = new Router({
               name:'myMoney',
               component:components.myMoney,
               meta:{
-                title:'我的资金'
+                title:'我的资金',
+                authority:true
               }
             },
             {
@@ -399,7 +414,8 @@ const router = new Router({
               name:'myMoneyDraft',
               component:components.myMoneyDraft,
               meta:{
-                title:'我的资金 > 资金草稿'
+                title:'我的资金 > 资金草稿',
+                authority:true
               }
             },
             {
@@ -407,7 +423,8 @@ const router = new Router({
               name:'manageMoney',
               component:components.manageMoney,
               meta:{
-                title:'我的资金 > 动态管理'
+                title:'我的资金 > 动态管理',
+                authority:true
               }
             },
             {
@@ -415,7 +432,8 @@ const router = new Router({
               name:'addDynamicMoney',
               component:components.addDynamicMoney,
               meta:{
-                title:'我的资金 > 资金动态'
+                title:'我的资金 > 资金动态',
+                authority:true
               }
             },
             {
@@ -423,7 +441,8 @@ const router = new Router({
               name:'applyMoney',
               component:components.applyMoney,
               meta:{
-                title:'我的资金 > 发布资金'
+                title:'我的资金 > 发布资金',
+                authority:true
               }
             },
             {
@@ -431,7 +450,8 @@ const router = new Router({
               name:'uploadApplyMoney',
               component:components.uploadApplyMoney,
               meta:{
-                title:'我的资金 > 上传资金'
+                title:'我的资金 > 上传资金',
+                authority:true
               }
             },
             {
@@ -439,7 +459,8 @@ const router = new Router({
               name:'uploadApplyProject',
               component:components.uploadApplyProject,
               meta:{
-                title:'我的项目 > 上传项目'
+                title:'我的项目 > 上传项目',
+                authority:true
               }
             },
             {
@@ -447,7 +468,8 @@ const router = new Router({
               name:'myProject',
               component:components.myProject,
               meta:{
-                title:'我的项目'
+                title:'我的项目',
+                authority:true
               }
             },
             {
@@ -455,7 +477,8 @@ const router = new Router({
               name:'myProjectDraft',
               component:components.myProjectDraft,
               meta:{
-                title:'我的项目 > 项目草稿'
+                title:'我的项目 > 项目草稿',
+                authority:true
               }
             },
             {
@@ -463,7 +486,8 @@ const router = new Router({
               name:'applyProject',
               component:components.applyProject,
               meta:{
-                title:'我的项目 > 发布项目'
+                title:'我的项目 > 发布项目',
+                authority:true
               }
             },
             {
@@ -471,7 +495,8 @@ const router = new Router({
               name:'manageProject',
               component:components.manageProject,
               meta:{
-                title:'我的项目 > 进展管理'
+                title:'我的项目 > 进展管理',
+                authority:true
               }
             },
             {
@@ -479,7 +504,8 @@ const router = new Router({
               name:'addDynamic',
               component:components.addDynamic,
               meta:{
-                title:'我的项目 > 项目进展'
+                title:'我的项目 > 项目进展',
+                authority:true
               }
             },
             {
@@ -487,7 +513,8 @@ const router = new Router({
               name:'inform',
               component:components.inform,
               meta:{
-                title:'消息通知'
+                title:'消息通知',
+                authority:true
               }
             },
             {
@@ -495,7 +522,8 @@ const router = new Router({
               name:'informDetail',
               component:components.informDetail,
               meta:{
-                title:'消息内容'
+                title:'消息内容',
+                authority:true
               }
             }
           ]

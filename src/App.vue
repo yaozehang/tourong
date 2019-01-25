@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import * as Cookies from 'js-cookie'
+
 export default {
   name: "App",
   // mounted(){
@@ -15,6 +17,13 @@ export default {
   //       window.scrollTo(0, 0)
   //   })
 
+  // }
+  // created(){
+  //   if(!Cookies.get('userKey')){
+  //     if(this.$route.meta.authority){
+  //       this.$router.push('/home')
+  //     }
+  //   }
   // }
 };
 </script>

@@ -121,12 +121,12 @@
               <span class="list-contentName">企业名称:</span>
               <span class="list-content" >{{project.companyName}}</span>
             </div>
-            <div class="box_content" v-if="project&&project.registeredCapital">
+            <div class="box_content" v-if="project&&project.registeredCapitalStr">
               <span class="list-contentName">注册资本:</span>
               <span
                 class="list-content"
                 
-              >{{project.registeredCapital}}万</span>
+              >{{project.registeredCapitalStr}}万</span>
             </div>
             <div class="box_content" v-if="project&&project.regionNameStr">
               <span class="list-contentName">所在地：</span>

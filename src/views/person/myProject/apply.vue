@@ -67,7 +67,7 @@
             >{{finance.dataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <div v-if="formData.financeBody == 64">
+        <div v-if="formData.financeBody == 64" class="bg-f2">
         <el-form-item label="单位全称" style="width:600px" class="is-required" prop="companyName">
           <el-input v-model="formData.companyName"></el-input>
         </el-form-item>
@@ -82,13 +82,36 @@
         <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
           <el-input v-model="formData.address"></el-input>
         </el-form-item>
-        <el-form-item label="注册资本" class="w350" prop="registeredCapital">
-          <el-input v-model="formData.registeredCapital">
-            <span slot="append">万元</span>
+        <el-form-item label="注册资本" style="width:400px" prop="registeredCapitalFormat">
+          <el-input v-model="formData.registeredCapitalFormat">
+            <el-select slot="append" v-model="formData.registeredCapitalType" placeholder="请选择" style="width:80px;">
+              <el-option
+                  v-for="item in unit"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
           </el-input>
         </el-form-item>
-        <p style="margin-left:80px;font-weight:700;">股权结构</p>
-        <el-form-item label="股权结构" class="w180 is-required">
+        <p style="margin-left:80px;font-weight:700;">
+          股权结构
+          <el-button @click="addSharehold" size="medium">新增股东</el-button>
+        </p>
+        <el-form-item 
+          label="股东" 
+          class="is-required"
+          v-for="(shareholding, index) in formData.shareholdingList"
+          :key="index"
+          >
+          <el-col :span="8">
+            <el-input v-model="shareholding.name"></el-input>
+          </el-col>
+          <el-col class="line" :span="2" style="margin-left:20px;color:#606266;" >持股比例:</el-col>
+          <el-col :span="8">
+            <el-input v-model="shareholding.value"></el-input>
+          </el-col>
+          <el-col :span="3" style="margin-left:20px;"><el-button @click.prevent="removeSharehold(shareholding)">删除</el-button></el-col>
           <!-- <el-upload class="upload-demo" action :http-request="uploadImg" :show-file-list="false">
             <el-button
               size="small"
@@ -105,7 +128,7 @@
           </el-upload> -->
         </el-form-item>
         </div>
-        <div v-else-if="formData.financeBody == 65">
+        <div v-else-if="formData.financeBody == 65" class="bg-f2">
           <el-form-item label="真实姓名" style="width:600px" class="is-required" prop="companyName">
           <el-input v-model="formData.companyName"></el-input>
         </el-form-item>
@@ -121,7 +144,7 @@
           <el-input v-model="formData.address"></el-input>
         </el-form-item>
         </div>
-        <div v-else-if="formData.financeBody == 66">
+        <div v-else-if="formData.financeBody == 66" class="bg-f2">
           <el-form-item label="单位全称" style="width:600px" class="is-required" prop="companyName">
           <el-input v-model="formData.companyName"></el-input>
         </el-form-item>
@@ -149,6 +172,65 @@
         <el-form-item label="行业地位" style="width:600px">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.position"></el-input>
         </el-form-item>
+        <el-form-item 
+          label="去年营业收入" 
+          class="is-required"
+          >
+          <el-col :span="8">
+            <el-input v-model="formData.yearTurnoverFormat">
+              <el-select slot="append" v-model="formData.yearTurnoverType" placeholder="请选择" style="width:80px;">
+              <el-option
+                  v-for="item in unit"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-input>
+          </el-col>
+          <el-col class="line" :span="2" style="margin-left:20px;color:#606266;" >同比增长:</el-col>
+          <el-col :span="8">
+            <el-input v-model="formData.yearTurnoverGrowth "></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item 
+          label="去年净利润" 
+          class="is-required"
+          >
+          <el-col :span="8">
+            <el-input v-model="formData.yearNetProfitFormat">
+              <el-select slot="append" v-model="formData.yearNetProfitType" placeholder="请选择" style="width:80px;">
+              <el-option
+                  v-for="item in unit"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-input>
+          </el-col>
+          <el-col class="line" :span="2" style="margin-left:20px;color:#606266;" >同比增长:</el-col>
+          <el-col :span="8">
+            <el-input v-model="formData.yearNetProfitGrowth "></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item 
+          label="去年净利润" 
+          class="is-required"
+          >
+          <el-col :span="8">
+            <el-input v-model="formData.netAssetsFormat">
+              <el-select slot="append" v-model="formData.netAssetsType" placeholder="请选择" style="width:80px;">
+              <el-option
+                  v-for="item in unit"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-input>
+          </el-col>
+        </el-form-item>
         <el-form-item label="近三年财务数据" style="width:600px">
           <el-input
             type="textarea"
@@ -159,7 +241,7 @@
         <el-form-item label="3-5年盈利预测" style="width:600px" class="is-required" prop="profitForecast">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.profitForecast"></el-input>
         </el-form-item>
-        <el-form-item label="团队平均年龄" class="w350" prop="averageAge">
+        <el-form-item label="团队平均年龄" class="w350">
           <el-input v-model="formData.averageAge"></el-input>
         </el-form-item>
         <el-form-item label="企业网址" class="w350">
@@ -322,7 +404,19 @@
         </div>
         <p>
           <span class="item_title">核心团队</span>
-        </p>
+          <el-button @click="addTeam" size="medium" style="margin-left:7px;">新增成员</el-button>
+        </p>  
+        <el-form-item 
+          label="成员介绍" 
+          class="is-required"
+          v-for="(team, index) in formData.teamList"
+          :key="index"
+          >
+          <el-col :span="14">
+            <el-input type="textarea" :autosize="{ minRows: 2}" v-model="team.introduce"></el-input>
+          </el-col>
+          <el-col :span="3" style="margin-left:20px;"><el-button @click.prevent="removeTeam(team)">删除</el-button></el-col>
+        </el-form-item>
         <el-form-item label="团队介绍" style="width:600px" class="is-required" prop="teamBrief">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.teamBrief"></el-input>
         </el-form-item>
@@ -450,6 +544,17 @@ export default {
         callback()
       }
     };
+    var checkEmail = (rule, value, callback) => {
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+      if (!value) {
+        return callback(new Error('邮箱不能为空'))
+      }
+        if (mailReg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的邮箱格式'))
+        }
+    }
     return {
       rules: {
         title: [{ validator: has_value, trigger: "blur" }],
@@ -463,13 +568,12 @@ export default {
         teamBrief: [{ validator: has_value, trigger: "blur" }],
         profitForecast: [{ validator: has_value, trigger: "blur" }],
         directorEmail: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
           {
-            type: "email",
+            validator:checkEmail,
             message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
+            trigger: "blur",
           }],
-        registeredCapital: [{ validator: checkNumber, trigger: "blur" }],
+        registeredCapitalFormat: [{ validator: checkNumber, trigger: "blur" }],
         companyAssessed: [{ validator: checkNumber, trigger: "blur" }],
         pe: [{ validator: checkNumber, trigger: "blur" }],
         pb: [{ validator: checkNumber, trigger: "blur" }],
@@ -503,7 +607,6 @@ export default {
         websiteUrl: "",
         weChat: "",
         companyFoundTimeStr: "",
-        registeredCapital: "",
         pe: "",
         pb: "",
         expiryDateStartTimeStr: "",
@@ -537,6 +640,18 @@ export default {
         guessSovency:'',
         financingExplain:'',
         companyAssessed:'',
+        shareholdingList:[{name:'',value:''}],
+        registeredCapitalType:'',
+        registeredCapitalFormat:'',
+        yearTurnoverFormat:"",
+        yearTurnoverType:'',
+        yearTurnoverGrowth:'',
+        yearNetProfitFormat:"",
+        yearNetProfitType:'',
+        yearNetProfitGrowth:'',
+        netAssetsFormat:'',
+        netAssetsType:'',
+        teamList:[]
       },
       financeBodyList: [],
       stageList: [],
@@ -576,6 +691,7 @@ export default {
       success:false,
       toast_show:false,
       fin_way:0,
+      unit:[{label:'万元',value:'2'},{label:'亿元',value:"1"}],
     };
   },
   methods: {
@@ -709,6 +825,10 @@ export default {
           } else if (this.formData.financingWay == '63') {
             this.fin_way = 2
           }
+
+          if(this.formData.shareholdingList == ''){
+            this.formData.shareholdingList = [{name:'',value:''}]
+          }
         });
     },
     get_type(index, dataValue) {
@@ -762,6 +882,23 @@ export default {
             var paymentTypes = this.paymentTypes.join(",");
             var varietys = this.varietys.join(",");
             var creditWays = this.creditWays.join(",");
+            var shareholdersArray = []
+            this.formData.shareholdingList.forEach(item => {
+              shareholdersArray.push(item.name)
+            })
+            var shareholders = shareholdersArray.join(",")
+            var shareholdingsArray = []
+            this.formData.shareholdingList.forEach(item => {
+              shareholdingsArray.push(item.name)
+            })
+            var shareholdings = shareholdingsArray.join(",")
+
+            var teamInfoArray = []
+            this.formData.teamList.forEach(item => {
+              teamInfoArray.push(item.introduce)
+            })
+            var teamInfo = teamInfoArray.join(";=;")
+
             if(this.$route.query.id != ''){
               var id = this.$route.query.id;
             } else {
@@ -775,7 +912,7 @@ export default {
                 financeBody: this.formData.financeBody,
                 companyName: this.formData.companyName,
                 address: this.formData.address,
-                registeredCapital: this.formData.registeredCapital,
+                registeredCapital: this.formData.registeredCapitalFormat,
                 owner: this.formData.owner,
                 business: this.formData.business,
                 brightSpot: this.formData.brightSpot,
@@ -786,7 +923,7 @@ export default {
                 websiteUrl: this.formData.websiteUrl,
                 weChat: this.formData.weChat,
                 companyFoundTimeStr: this.formData.companyFoundTimeStr,
-                registeredCapital: this.formData.registeredCapital,
+                registeredCapitalType: this.formData.registeredCapitalType,
                 pe: this.formData.pe,
                 pb: this.formData.pb,
                 expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
@@ -817,6 +954,14 @@ export default {
                 guessSovency: this.formData.guessSovency,
                 financingExplain: this.formData.financingExplain,
                 companyAssessed: this.formData.companyAssessed,
+                yearTurnover:this.formData.yearTurnoverFormat,
+                yearTurnoverGrowth:this.formData.yearTurnoverGrowth,
+                yearTurnoverType:this.formData.yearTurnoverType,
+                yearNetProfit:this.formData.yearNetProfitFormat,
+                yearNetProfitGrowth:this.formData.yearNetProfitGrowth,
+                yearNetProfitType:this.formData.yearNetProfitType,
+                netAssets:this.formData.netAssetsFormat,
+                netAssetsType: this.formData.netAssetsType,
                 industrys,
                 paymentTypes,
                 fileNames,
@@ -825,6 +970,9 @@ export default {
                 varietys,
                 creditWays,
                 intentCapitals,
+                shareholders,
+                shareholdings,
+                teamInfo,
               };
             } else {
               var params = {
@@ -833,7 +981,7 @@ export default {
                 financeBody: this.formData.financeBody,
                 companyName: this.formData.companyName,
                 address: this.formData.address,
-                registeredCapital: this.formData.registeredCapital,
+                registeredCapital: this.formData.registeredCapitalFormat,
                 owner: this.formData.owner,
                 business: this.formData.business,
                 brightSpot: this.formData.brightSpot,
@@ -844,7 +992,7 @@ export default {
                 websiteUrl: this.formData.websiteUrl,
                 weChat: this.formData.weChat,
                 companyFoundTimeStr: this.formData.companyFoundTimeStr,
-                registeredCapital: this.formData.registeredCapital,
+                registeredCapitalType: this.formData.registeredCapitalType,
                 pe: this.formData.pe,
                 pb: this.formData.pb,
                 expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
@@ -875,6 +1023,14 @@ export default {
                 guessSovency: this.formData.guessSovency,
                 financingExplain: this.formData.financingExplain,
                 companyAssessed: this.formData.companyAssessed,
+                yearTurnover:this.formData.yearTurnoverFormat,
+                yearTurnoverGrowth:this.formData.yearTurnoverGrowth,
+                yearTurnoverType:this.formData.yearTurnoverType,
+                yearNetProfit:this.formData.yearNetProfitFormat,
+                yearNetProfitGrowth:this.formData.yearNetProfitGrowth,
+                yearNetProfitType:this.formData.yearNetProfitType,
+                netAssets:this.formData.netAssetsFormat,
+                netAssetsType: this.formData.netAssetsType,
                 industrys,
                 paymentTypes,
                 fileNames,
@@ -883,6 +1039,9 @@ export default {
                 varietys,
                 creditWays,
                 intentCapitals,
+                shareholders,
+                shareholdings,
+                teamInfo,
               };
             }
             this.$axios
@@ -920,6 +1079,23 @@ export default {
             var creditWays = this.creditWays.join(",");
             var varietys = this.varietys.join(",");
             var paymentTypes = this.paymentTypes.join(",");
+            var shareholdersArray = []
+            this.formData.shareholdingList.forEach(item => {
+              shareholdersArray.push(item.name)
+            })
+            var shareholders = shareholdersArray.join(",")
+            var shareholdingsArray = []
+            this.formData.shareholdingList.forEach(item => {
+              shareholdingsArray.push(item.name)
+            })
+            var shareholdings = shareholdingsArray.join(",")
+
+            var teamInfoArray = []
+            this.formData.teamList.forEach(item => {
+              teamInfoArray.push(item.introduce)
+            })
+            var teamInfo = teamInfoArray.join(";=;")
+
             var id = this.$route.query.id;
             if (id != "") {
               var params = {
@@ -929,7 +1105,7 @@ export default {
                 financeBody: this.formData.financeBody,
                 companyName: this.formData.companyName,
                 address: this.formData.address,
-                registeredCapital: this.formData.registeredCapital,
+                registeredCapital: this.formData.registeredCapitalFormat,
                 owner: this.formData.owner,
                 business: this.formData.business,
                 brightSpot: this.formData.brightSpot,
@@ -940,7 +1116,7 @@ export default {
                 websiteUrl: this.formData.websiteUrl,
                 weChat: this.formData.weChat,
                 companyFoundTimeStr: this.formData.companyFoundTimeStr,
-                registeredCapital: this.formData.registeredCapital,
+                registeredCapitalType: this.formData.registeredCapitalType,
                 pe: this.formData.pe,
                 pb: this.formData.pb,
                 expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
@@ -971,6 +1147,14 @@ export default {
                 guessSovency: this.formData.guessSovency,
                 financingExplain: this.formData.financingExplain,
                 companyAssessed: this.formData.companyAssessed,
+                yearTurnover:this.formData.yearTurnoverFormat,
+                yearTurnoverGrowth:this.formData.yearTurnoverGrowth,
+                yearTurnoverType:this.formData.yearTurnoverType,
+                yearNetProfit:this.formData.yearNetProfitFormat,
+                yearNetProfitGrowth:this.formData.yearNetProfitGrowth,
+                yearNetProfitType:this.formData.yearNetProfitType,
+                netAssets:this.formData.netAssetsFormat,
+                netAssetsType: this.formData.netAssetsType,
                 industrys,
                 paymentTypes,
                 fileNames,
@@ -979,6 +1163,9 @@ export default {
                 varietys,
                 creditWays,
                 intentCapitals,
+                shareholders,
+                shareholdings,
+                teamInfo,
               };
             } else {
               var params = {
@@ -987,7 +1174,7 @@ export default {
                 financeBody: this.formData.financeBody,
                 companyName: this.formData.companyName,
                 address: this.formData.address,
-                registeredCapital: this.formData.registeredCapital,
+                registeredCapital: this.formData.registeredCapitalFormat,
                 owner: this.formData.owner,
                 business: this.formData.business,
                 brightSpot: this.formData.brightSpot,
@@ -998,7 +1185,7 @@ export default {
                 websiteUrl: this.formData.websiteUrl,
                 weChat: this.formData.weChat,
                 companyFoundTimeStr: this.formData.companyFoundTimeStr,
-                registeredCapital: this.formData.registeredCapital,
+                registeredCapitalType: this.formData.registeredCapitalType,
                 pe: this.formData.pe,
                 pb: this.formData.pb,
                 expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
@@ -1029,6 +1216,14 @@ export default {
                 guessSovency: this.formData.guessSovency,
                 financingExplain: this.formData.financingExplain,
                 companyAssessed: this.formData.companyAssessed,
+                yearTurnover:this.formData.yearTurnoverFormat,
+                yearTurnoverGrowth:this.formData.yearTurnoverGrowth,
+                yearTurnoverType:this.formData.yearTurnoverType,
+                yearNetProfit:this.formData.yearNetProfitFormat,
+                yearNetProfitGrowth:this.formData.yearNetProfitGrowth,
+                yearNetProfitType:this.formData.yearNetProfitType,
+                netAssets:this.formData.netAssetsFormat,
+                netAssetsType: this.formData.netAssetsType,
                 industrys,
                 paymentTypes,
                 fileNames,
@@ -1037,6 +1232,9 @@ export default {
                 varietys,
                 creditWays,
                 intentCapitals,
+                shareholders,
+                shareholdings,
+                teamInfo,
               };
             }
             this.$axios
@@ -1122,7 +1320,30 @@ export default {
       } else {
         this.$router.push({name:'uploadApplyProject'})
       }
-    }
+    },
+    removeSharehold(item) {
+        var index = this.formData.shareholdingList.indexOf(item)
+        if (index !== -1) {
+          this.formData.shareholdingList.splice(index, 1)
+        }
+      },
+    addSharehold() {
+        this.formData.shareholdingList.push({
+          name:'',
+          value: '',
+        });
+      },
+  removeTeam(item) {
+        var index = this.formData.teamList.indexOf(item)
+        if (index !== -1) {
+          this.formData.teamList.splice(index, 1)
+        }
+      },
+  addTeam() {
+        this.formData.teamList.push({
+          introduce:'',
+        });
+      }
   },
   created() {
     let id = this.$route.query.id;
@@ -1295,6 +1516,12 @@ export default {
     top: 7px;
     left: 4px;
   }
+}
+
+.bg-f2 {
+  background:#f2f2f2;
+  padding:20px 0;
+  margin-bottom:20px;
 }
 
 //融资方式

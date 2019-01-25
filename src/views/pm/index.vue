@@ -79,7 +79,7 @@
         </p>
         <p>
           <span>注册资本：</span>
-          <span>{{memberInfo.job}}</span>
+          <span>{{memberInfo.registeredCapitalStr}}</span>
           <span v-else>****</span>
         </p>
         <p>

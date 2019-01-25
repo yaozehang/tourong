@@ -125,7 +125,7 @@ export default {
         attest: 1,
         name: "投融用户",
         authenticationName: '',
-        isVip:'0'
+        isVip:'0',
       }
     };
   },
@@ -149,7 +149,7 @@ export default {
   },
   created(){
     this.getUserInfo()
-  }
+  },
 };
 </script>
 
