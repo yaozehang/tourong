@@ -4,14 +4,14 @@
     <Login :should_login="should_login" :login_show="login_show"></Login>
     <div class="bg-89">
       <div class="w1200">
-        <span class="txt-202" v-show="login">您好，请
+        <span class="txt-202" v-show="!login">您好，请
           <span @click="login_in" style="cursor:pointer">登录</span>!
         </span>
-        <span class="txt-202" v-show="!login">
+        <span class="txt-202" v-show="login">
           您好，欢迎您
         </span>
-        <span class="txt-202 register" @click="login_re" v-show="login">免费注册</span>
-        <span class="txt-202 register"  v-show="!login" style="color:#fff;" @click="login_out">退出登录</span>
+        <span class="txt-202 register" @click="login_re" v-show="!login">免费注册</span>
+        <span class="txt-202 register"  v-show="login" style="color:#fff;" @click="login_out">退出登录</span>
         <el-dropdown placement="bottom">
           <span class="invest el-dropdown-link">
             <i></i>
@@ -90,14 +90,15 @@ export default {
       login:false,
       type:'1',
       title:'',
+　　　timer: null
     }
   },
   methods:{
     login_now(){
        if(Cookies.get('userKey')){
-         this.login = false
-       } else {
          this.login = true
+       } else {
+         this.login = false
        }
      },
     login_out(){
@@ -199,9 +200,18 @@ export default {
         name: "login"
       });
       window.open(href, "_blank");
-    }
+    },
+    setTimer: function () {
+　　　　this.timer = setInterval( () => {
+          if(Cookies.get("userKey") == undefined && this.$route.meta.authority){
+              this.login = false
+              this.$router.push({name:'home'})
+          }
+　　　　}, 1000)
+　　}
   },
   created(){
+    this.setTimer()
     this.login_now()
   }
 };

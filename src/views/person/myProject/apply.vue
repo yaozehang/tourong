@@ -452,6 +452,15 @@
         <p>
           <span class="item_title">保密设置</span>
         </p>
+        <el-form-item label="发布来源">
+          <el-radio-group v-model="formData.issuerSecrecyType">
+            <el-radio
+              v-for="issuerSecrecyType in issuerSecrecyTypeList"
+              :key="issuerSecrecyType.dataValue"
+              :label="issuerSecrecyType.dataValue"
+            >{{issuerSecrecyType.dataName}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="融资主体信息">
           <el-radio-group v-model="formData.bodySecrecyType">
             <el-radio
@@ -651,7 +660,8 @@ export default {
         yearNetProfitGrowth:'',
         netAssetsFormat:'',
         netAssetsType:'',
-        teamList:[]
+        teamList:[],
+        issuerSecrecyType:'',
       },
       financeBodyList: [],
       stageList: [],
@@ -671,6 +681,12 @@ export default {
         { dataValue: "3", dataName: "保密，仅对后台管理员公开" }
       ],
       contactSecrecyTypeList: [
+        { dataValue: "0", dataName: "全部可见" },
+        { dataValue: "1", dataName: "登录用户可见" },
+        { dataValue: "2", dataName: "仅对VIP会员公开" },
+        { dataValue: "3", dataName: "保密，仅对后台管理员公开" }
+      ],
+      issuerSecrecyTypeList: [
         { dataValue: "0", dataName: "全部可见" },
         { dataValue: "1", dataName: "登录用户可见" },
         { dataValue: "2", dataName: "仅对VIP会员公开" },
@@ -973,6 +989,7 @@ export default {
                 shareholders,
                 shareholdings,
                 teamInfo,
+                issuerSecrecyType
               };
             } else {
               var params = {
@@ -1042,6 +1059,7 @@ export default {
                 shareholders,
                 shareholdings,
                 teamInfo,
+                issuerSecrecyType
               };
             }
             this.$axios
@@ -1166,6 +1184,7 @@ export default {
                 shareholders,
                 shareholdings,
                 teamInfo,
+                issuerSecrecyType
               };
             } else {
               var params = {
@@ -1235,6 +1254,7 @@ export default {
                 shareholders,
                 shareholdings,
                 teamInfo,
+                issuerSecrecyType
               };
             }
             this.$axios

@@ -6,12 +6,12 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state:{
-    userinfo:{}
+    userinfo:{},
   },
   mutations:{
     CHANGE_USERINFO(state, userinfo){
       state.userinfo = userinfo
-    }
+    },
   },
   actions:{},
   plugins: [createPersistedState({
