@@ -1,5 +1,5 @@
 <template>
-  <div class="w1200">
+  <div class="w1200" style="line-height:2;">
     <p>
 	<p class="MsoNormal" align="center" style="text-align:center;vertical-align:baseline;">
 		<b>投融连线服务协议</b>

@@ -140,8 +140,8 @@ export default {
          if(res.success == 'true'){
           this.personData.avatar = res.data.userInfo.headImgPath
           this.personData.name = res.data.userInfo.name
-          this.personData.isVip = res.data.userinfo.isVip
-          this.personData.authenticationName = res.data.userinfo.authenticationName
+          this.personData.isVip = res.data.userInfo.isVip
+          this.personData.authenticationName = res.data.userInfo.authenticationName
           this.$store.commit('CHANGE_USERINFO',res.data.userInfo)
          }
        })

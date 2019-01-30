@@ -71,7 +71,7 @@
           </div>
         </div>
       </div>
-      <p v-show="moneyData.length == 0" class="noAtt">
+      <p v-show="newsList.length == 0" class="noAtt">
         暂无
       </p>
       <p class="project_title" style="margin-top:0;">
@@ -95,7 +95,7 @@
           </div>
         </div>
       </div>
-      <p v-show="moneyData.length == 0" class="noAtt">
+      <p v-show="activityList.length == 0" class="noAtt">
         暂无
       </p>
     </div>

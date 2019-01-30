@@ -51,8 +51,8 @@
       <div class="w1200 nav clearfix">
         <img src="/static/img/logo-1.png" alt="投融连线" class="fll" @click="$router.push('/home')" style="cursor:pointer">
         <div class="navMenu fll"><router-link to="/home">首页</router-link></div>
-        <div class="navMenu fll"><router-link to="/money">找资金</router-link></div>
-        <div class="navMenu fll"><router-link to="/project">选项目</router-link></div>
+        <div class="navMenu fll"><router-link to="/money" @click.native="flushCom1">找资金</router-link></div>
+        <div class="navMenu fll"><router-link to="/project" @click.native="flushCom2">选项目</router-link></div>
         <div class="navMenu fll"><router-link to="/message">投融资讯</router-link></div>
         <div class="navMenu fll"><router-link to="/activity">活动</router-link></div>
         <div class="navMenu fll"><router-link to="/member">会员</router-link></div>   
@@ -208,7 +208,21 @@ export default {
               this.$router.push({name:'home'})
           }
 　　　　}, 1000)
-　　}
+　　},
+    flushCom1(){
+      if(this.$route.name == 'money'){
+　　　  this.$router.go(0);  
+      } else {
+        this.$router.push('/money')
+      }
+　　},
+    flushCom2(){
+    if(this.$route.name == 'project'){
+　　　  this.$router.go(0);  
+      } else {
+        this.$router.push('/project')
+      }
+　　},
   },
   created(){
     this.setTimer()
@@ -310,7 +324,7 @@ a {
   padding: 30px 0;
 }
 .navMenu {
-  padding: 10px 0 10px 30px;
+  margin: 10px 0 10px 30px;
   font-size: 18px;
   font-family: "Microsoft YaHei";
   color: rgb(62, 58, 57);

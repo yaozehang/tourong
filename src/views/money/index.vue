@@ -404,144 +404,12 @@ export default {
       more: false,
       noMore: false,
       actType: [],
-      moneyType: [
-        "个人资金",
-        "企业资金",
-        "天使投资",
-        "VC投资",
-        "PE投资",
-        "小额贷款",
-        "典当公司"
-      ],
-      area: ["北京", "上海", "广州", "深圳", "农大"],
-      investArea: [
-        "不限",
-        "北京",
-        "上海",
-        "广州",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳",
-        "深圳"
-      ],
-      investMoney: [
-        "不限",
-        "1-10W",
-        "10-20W",
-        "20-30W",
-        "30-50W",
-        "50-100W",
-        "100-200W",
-        "200-500W",
-        "500-1000W"
-      ],
-      actlist: [
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
-          investMoney: "1000万-9亿",
-          investType: "参股合作 收购/并购",
-          investIndustry: "互联网",
-          investStage: "成长期、成熟期",
-          beginTime: "2019/01/01",
-          focus: "155人关注"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
-          investMoney: "1000万-9亿",
-          beginTime: "2019/01/01",
-          investType: "参股合作 收购/并购",
-          investIndustry: "互联网",
-          investStage: "成长期、成熟期",
-          focus: "155人关注"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
-          investMoney: "1000万-9亿",
-          investType: "参股合作 收购/并购",
-          investIndustry: "互联网",
-          investStage: "成长期、成熟期",
-          beginTime: "2019/01/01",
-          focus: "155人关注"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
-          investMoney: "1000万-9亿",
-          investType: "参股合作 收购/并购",
-          investIndustry: "互联网",
-          investStage: "成长期、成熟期",
-          beginTime: "2019/01/01",
-          focus: "155人关注"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
-          investMoney: "1000万-9亿",
-          investType: "参股合作 收购/并购",
-          investIndustry: "互联网",
-          investStage: "成长期、成熟期",
-          beginTime: "2019/01/01",
-          focus: "155人关注"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
-          investMoney: "1000万-9亿",
-          investType: "参股合作 收购/并购",
-          investIndustry: "互联网",
-          investStage: "成长期、成熟期",
-          beginTime: "2019/01/01",
-          focus: "155人关注"
-        },
-        {
-          title: "北京某企资金1000万-9亿元寻求全国优质实体项目合作",
-          investMoney: "1000万-9亿",
-          investType: "参股合作 收购/并购",
-          investIndustry: "互联网",
-          investStage: "成长期、成熟期",
-          beginTime: "2019/01/01",
-          focus: "155人关注"
-        }
-      ],
-      mesData: [
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        },
-        {
-          content:
-            "“ofo小黄车退了么”成为了关注焦点；中移动受让中国民航信息5.01%股权"
-        }
-      ],
+      moneyType: [],
+      area: [],
+      investArea: [],
+      investMoney: [],
+      actlist: [],
+      mesData: [],
       checkIndustry: [],
       checkArea: [],
       checkInvestArea: [],
@@ -609,6 +477,7 @@ export default {
           }
         });
     },
+    //按分类获取数据
     getActData(investIndustrys,investTypes,regions,investRegions,investAmounts) {
       this.loading = true;
       this.$axios
@@ -639,6 +508,7 @@ export default {
           }
         });
     },
+    //获取热评
     getNewsList() {
       this.newsloading = true;
       this.$axios.get("/jsp/wap/trNews/ctrl/jsonHotNewsList.jsp").then(res => {
@@ -648,6 +518,7 @@ export default {
         }
       });
     },
+    //获取我发布的项目
     getMyProject(pn) {
       this.$axios
         .get("/jsp/wap/center/ctrl/jsonIssueProjectList.jsp", {
@@ -665,6 +536,7 @@ export default {
           }
         });
     },
+    //获取更多
     morePage() {
       this.pn += 1;
       this.loading = true;
@@ -694,6 +566,7 @@ export default {
           }
         });
     },
+    //通过投资类型获取数据
     getInvestTypeStatus(e, index) {
       this.investTypes = e;
       if (this.investTypeList[index].checked) {
@@ -714,6 +587,7 @@ export default {
         this.investAmounts
       );
     },
+    //通过所属地区获取数据
     getRegionStatus(e, index) {
       this.regions = e;
       if (this.regionList[index].checked) {
@@ -733,6 +607,7 @@ export default {
         this.investAmounts
       );
     },
+    //通过投资地区获取数据
     getInvestRegionStatus(e, index) {
       this.investRegions = e;
       if (this.investRegionList[index].checked) {
@@ -753,6 +628,7 @@ export default {
         this.investAmounts
       );
     },
+    //通过投资金额获取数据
     getInvestAmountStatus(e, index) {
       this.investAmounts = e;
       if (this.investAmountList[index].checked) {
@@ -773,6 +649,7 @@ export default {
         this.investAmounts
       );
     },
+    //通过投资行业获取数据
     getInvestIndustryStatus(e,index){
       this.investIndustrys = e;
       if (this.investIndustryList[index].checked) {
@@ -793,6 +670,7 @@ export default {
         this.investAmounts
       );    
     },
+    //单选类型改变
     investIndustryChange(val) {
       let investIndustryList = [];
       val.forEach(item => {
@@ -977,6 +855,7 @@ export default {
           this.$router.push('/login')
         }
       },
+    //投递项目
     applyPoject(id) {
       if (Cookies.get("userKey")) {
         if (this.myProject.length == 0) {

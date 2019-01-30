@@ -82,6 +82,7 @@ export default {
     };
   },
   methods: {
+    //获取分类数据
     getTypeData(){
       this.$axios.get('/jsp/wap/trNews/ctrl/jsonCategoryList.jsp').then(res => {
         if(res.success == "true"){
@@ -98,6 +99,7 @@ export default {
         }
       })
     },
+    //获取数据
     getData(categorys,pageNumber){
       this.loading = true
       this.$axios.get('/jsp/wap/trNews/ctrl/jsonNewsPage.jsp',{params:{dataValues:categorys,pageNumber}}).then(res => {
@@ -106,6 +108,7 @@ export default {
         this.loading = false
       })
     },
+    //通过类型获取数据
     getType(e,index) {
       this.categorys = e
       this.categoryList.forEach(item => {
@@ -115,6 +118,7 @@ export default {
       this.current_page = 1
       this.getData(this.categorys)
     },
+    //获取热评
     getNewsList(){
       this.newsloading = true;
       this.$axios
@@ -159,15 +163,18 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
+    //翻页
     handleCurrentChange(val) {
       this.getData(this.categorys,val)
     },
+    //去资讯页
     toMessagePage(){
       let {href} = this.$router.resolve({
           name: "message",
       });
       window.open(href, '_blank');
     },
+    //去资讯详情页
     toMessageDetailPage(id){
       let {href} = this.$router.resolve({
           name: "messageDetail",
@@ -250,7 +257,7 @@ export default {
   border-left: 3px solid #005982;
   margin-bottom: 0;
   .type {
-    padding-left: 30px;
+    margin-left: 30px;
     cursor: pointer;
     -moz-user-select: none;
     -webkit-user-select: none;

@@ -32,14 +32,28 @@
           <p class="login" @click="login_in" v-else>登录</p>
           <textarea name="" id="" style="width:785px;" rows="3" placeholder="来说两句吧..." v-model="content"></textarea>
         </div>
-        <div class="clearfix">
-          <span class="face"></span>
+        <div class="clearfix icon">
+          <i class="face" @click="showEmoji = !showEmoji"></i>
           <div class="flr submitBtn" @click="submit_common">发布留言</div>
+          <transition name="fade" mode="">
+            <div class="emoji-box" v-if="showEmoji" >
+              <el-button 
+                class="pop-close" 
+                :plain="true" 
+                type="text"
+                icon="el-icon-close"
+                @click="showEmoji = false"></el-button>
+                <vue-emoji
+                  @select="selectEmoji">
+                </vue-emoji>
+              <span class="pop-arrow arrow"></span>
+            </div>       
+          </transition>
         </div>
         <div class="common_line">
           <span class="common">评论</span>
         </div>
-        <p class="common_title" v-show="commonData">最新评论</p>
+        <p class="common_title" v-show="!com_show">最新评论</p>
         <div class="common_list clearfix" v-for="(item , index) in commonData" :key="index">
           <img :src="$url + item.headImgPath" alt="" class="common_img fll" v-if="item.headImgPath != ''">
           <img :src="avatar" alt="" class="common_img fll" v-else>
@@ -49,7 +63,7 @@
               <span class="location fll ">[{{item.provinceStr}}网友]</span>
               <span class="beforeTime flr">{{item.beforeTime}}前</span>
             </div>
-            <p class="content">{{item.content}}</p>
+            <p class="content" v-html="emoji(item.content)"></p>
             <div class="clearfix">
               <span class="fll from">{{item.addTimeStr}}</span>
               <!-- <span class="flr reply" @click="sub_com_com(index)">回复</span> -->
@@ -132,8 +146,12 @@
 
 <script>
 import * as Cookies from 'js-cookie'
+import vueEmoji from '../../components/emoji.vue'
 
 export default {
+  components: {
+    vueEmoji
+  },
   data(){
     return {
       should_login:false,
@@ -244,7 +262,8 @@ export default {
       count:0,
       memberName:'投融用户',
       provinceStr:'中国',
-      common_content:''
+      common_content:'',
+      showEmoji: false,
     }
   },
   methods:{
@@ -259,6 +278,9 @@ export default {
       })
       if(Cookies.get('userKey')){
         this.avatar_show = true
+        this.$axios.get("/jsp/wap/center/ctrl/jsonUserInfo.jsp").then(res => {
+          this.$store.commit("CHANGE_USERINFO", res.data.userInfo);
+        });
       }
       if(Cookies.get('userKey') && this.$store.state.userinfo.headImgPath != ''){
         this.avatar = this.$store.state.userinfo.headImgPath
@@ -270,6 +292,7 @@ export default {
         this.provinceStr = this.$store.state.userinfo.provinceStr
       }
     },
+    //获取当前登录用户是否点赞
     getLike(){
       let id = this.$route.query.id
       this.$axios.get(`/jsp/wap/trNews/do/isGreat.jsp?id=${id}`).then(res => {
@@ -282,6 +305,7 @@ export default {
         }
       })
     },
+    //获取新闻热评
     getNewsList(){
       this.newsloading = true;
       this.$axios
@@ -293,6 +317,7 @@ export default {
           }
         });
     },
+    //获取评论的内容
     getCommonData(pn){
       let id = this.$route.query.id
       this.$axios.get(`/jsp/wap/trNews/ctrl/jsonCommentPage.jsp?id=${id}`,{params:{pageNumber:pn}}).then(res => {
@@ -325,6 +350,7 @@ export default {
                 provinceStr:this.provinceStr,
                 memberName:this.memberName
               }
+              this.com_show = false
               this.commonData.unshift(newCommon)
               this.content = ''
               this.count += 1
@@ -364,9 +390,11 @@ export default {
         this.should_login = true
       }
     },
+    //换页
     handleCurrentChange(val) {
       this.getCommonData(val)
     },
+    //获取发布时间差
     get_time_diff(time) {
       var diff = '';
       var time_diff = new Date().getTime() - time; //时间差的毫秒数 
@@ -431,6 +459,7 @@ export default {
       });
       window.open(href, '_blank');
     },
+    //资讯页详情
     toMessageDetailPage(id){
       let {href} = this.$router.resolve({
           name: "messageDetail",
@@ -438,6 +467,7 @@ export default {
       });
       window.open(href, '_blank');
     },
+    //点赞
     like(){
       if(Cookies.get('userKey')) {
           let id = this.$route.query.id
@@ -458,6 +488,7 @@ export default {
         this.should_login = true
       }
     },
+    //取消点赞
     nolike(){
         if(Cookies.get('userKey')) {
           let id = this.$route.query.id
@@ -484,7 +515,12 @@ export default {
       // });
       // window.open(href, "_blank");
         this.should_login = true
-    }
+    },
+    //表情
+    selectEmoji (code) {
+      this.showEmoji = false
+      this.content += code
+    },
   },
   created(){
     this.getData()
@@ -844,6 +880,12 @@ export default {
   -ms-user-select: none;
 }
 
+/deep/ {
+  .contentHtml {
+    line-height: 1.5!important;
+  }
+}
+
 //分页
 .mes_page {
   margin: 70px 0 60px;
@@ -861,4 +903,48 @@ export default {
     }
   }
 }
+
+//表情
+.face {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: url(/static/img/biaoqing.png)no-repeat center;
+  background-size: contain;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.icon {
+  position: relative;
+}
+
+.emoji-box {
+      position: absolute;
+      z-index: 10;
+      left: -10px;
+      top: 24px;
+      box-shadow: 0 4px 20px 1px rgba(0, 0, 0, 0.2);
+      background: white;
+      .el-button {
+        position: absolute;
+        border: none;
+        right: 12px;
+        top: 0;
+        z-index: 10;
+      }
+      .arrow {
+        left: 10px;
+      }
+    }
+
+    
+.fade-enter-active, .fade-leave-active { transition: opacity .5s; }
+.fade-enter, .fade-leave-active { opacity: 0; }
+.fade-move { transition: transform .4s; }
+
+.list-enter-active, .list-leave-active { transition: all .5s; }
+.list-enter, .list-leave-active { opacity: 0; transform: translateX(30px); }
+.list-leave-active { position: absolute !important; }
+.list-move { transition: all .5s;}
 </style>

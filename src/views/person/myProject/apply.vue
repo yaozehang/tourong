@@ -17,10 +17,10 @@
         <!-- <el-tooltip class="item" effect="dark" placement="bottom">
           <div slot="content" v-html="templateData"></div>
           <span class="pro_template">参考模板</span>
-        </el-tooltip> -->
+        </el-tooltip>-->
       </p>
       <el-form ref="formData" :model="formData" label-width="150px" :rules="rules">
-        <el-form-item label="项目名称" style="width:600px" class="is-required" prop="title"> 
+        <el-form-item label="项目名称" style="width:600px" class="is-required" prop="title">
           <el-input v-model="formData.title"></el-input>
         </el-form-item>
         <el-form-item label="所属行业" class="is-required" prop="industrys">
@@ -68,51 +68,57 @@
           </el-radio-group>
         </el-form-item>
         <div v-if="formData.financeBody == 64" class="bg-f2">
-        <el-form-item label="单位全称" style="width:600px" class="is-required" prop="companyName">
-          <el-input v-model="formData.companyName"></el-input>
-        </el-form-item>
-        <el-form-item label="所在地区" required>
-          <v-distpicker
-            :province="provinceStr"
-            :city="cityStr"
-            :area="countyStr"
-            @selected="selected"
-          ></v-distpicker>
-        </el-form-item>
-        <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
-          <el-input v-model="formData.address"></el-input>
-        </el-form-item>
-        <el-form-item label="注册资本" style="width:400px" prop="registeredCapitalFormat">
-          <el-input v-model="formData.registeredCapitalFormat">
-            <el-select slot="append" v-model="formData.registeredCapitalType" placeholder="请选择" style="width:80px;">
-              <el-option
+          <el-form-item label="单位全称" style="width:600px" class="is-required" prop="companyName">
+            <el-input v-model="formData.companyName"></el-input>
+          </el-form-item>
+          <el-form-item label="所在地区" required>
+            <v-distpicker
+              :province="provinceStr"
+              :city="cityStr"
+              :area="countyStr"
+              @selected="selected"
+            ></v-distpicker>
+          </el-form-item>
+          <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
+            <el-input v-model="formData.address"></el-input>
+          </el-form-item>
+          <el-form-item label="注册资本" style="width:400px" prop="registeredCapitalFormat">
+            <el-input v-model="formData.registeredCapitalFormat">
+              <el-select
+                slot="append"
+                v-model="formData.registeredCapitalType"
+                placeholder="请选择"
+                style="width:80px;"
+              >
+                <el-option
                   v-for="item in unit"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
-                </el-option>
+                  :value="item.value"
+                ></el-option>
               </el-select>
-          </el-input>
-        </el-form-item>
-        <p style="margin-left:80px;font-weight:700;">
-          股权结构
-          <el-button @click="addSharehold" size="medium">新增股东</el-button>
-        </p>
-        <el-form-item 
-          label="股东" 
-          class="is-required"
-          v-for="(shareholding, index) in formData.shareholdingList"
-          :key="index"
+            </el-input>
+          </el-form-item>
+          <p style="margin-left:80px;font-weight:700;">股权结构
+            <el-button @click="addSharehold" size="medium">新增股东</el-button>
+          </p>
+          <el-form-item
+            label="股东"
+            class="is-required"
+            v-for="(shareholding, index) in formData.shareholdingList"
+            :key="index"
           >
-          <el-col :span="8">
-            <el-input v-model="shareholding.name"></el-input>
-          </el-col>
-          <el-col class="line" :span="2" style="margin-left:20px;color:#606266;" >持股比例:</el-col>
-          <el-col :span="8">
-            <el-input v-model="shareholding.value"></el-input>
-          </el-col>
-          <el-col :span="3" style="margin-left:20px;"><el-button @click.prevent="removeSharehold(shareholding)">删除</el-button></el-col>
-          <!-- <el-upload class="upload-demo" action :http-request="uploadImg" :show-file-list="false">
+            <el-col :span="8">
+              <el-input v-model="shareholding.name"></el-input>
+            </el-col>
+            <el-col class="line" :span="2" style="margin-left:20px;color:#606266;">持股比例:</el-col>
+            <el-col :span="8">
+              <el-input v-model="shareholding.value"></el-input>
+            </el-col>
+            <el-col :span="3" style="margin-left:20px;">
+              <el-button @click.prevent="removeSharehold(shareholding)">删除</el-button>
+            </el-col>
+            <!-- <el-upload class="upload-demo" action :http-request="uploadImg" :show-file-list="false">
             <el-button
               size="small"
               type="primary"
@@ -125,40 +131,40 @@
               :src="formData.stockStructureImgPath"
               style="max-width:500px;"
             >
-          </el-upload> -->
-        </el-form-item>
+            </el-upload>-->
+          </el-form-item>
         </div>
         <div v-else-if="formData.financeBody == 65" class="bg-f2">
           <el-form-item label="真实姓名" style="width:600px" class="is-required" prop="companyName">
-          <el-input v-model="formData.companyName"></el-input>
-        </el-form-item>
-        <el-form-item label="所在地区" required>
-          <v-distpicker
-            :province="provinceStr"
-            :city="cityStr"
-            :area="countyStr"
-            @selected="selected"
-          ></v-distpicker>
-        </el-form-item>
-        <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
-          <el-input v-model="formData.address"></el-input>
-        </el-form-item>
+            <el-input v-model="formData.companyName"></el-input>
+          </el-form-item>
+          <el-form-item label="所在地区" required>
+            <v-distpicker
+              :province="provinceStr"
+              :city="cityStr"
+              :area="countyStr"
+              @selected="selected"
+            ></v-distpicker>
+          </el-form-item>
+          <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
+            <el-input v-model="formData.address"></el-input>
+          </el-form-item>
         </div>
         <div v-else-if="formData.financeBody == 66" class="bg-f2">
           <el-form-item label="单位全称" style="width:600px" class="is-required" prop="companyName">
-          <el-input v-model="formData.companyName"></el-input>
-        </el-form-item>
-        <el-form-item label="所在地区" required>
-          <v-distpicker
-            :province="provinceStr"
-            :city="cityStr"
-            :area="countyStr"
-            @selected="selected"
-          ></v-distpicker>
-        </el-form-item>
-        <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
-          <el-input v-model="formData.address"></el-input>
-        </el-form-item>
+            <el-input v-model="formData.companyName"></el-input>
+          </el-form-item>
+          <el-form-item label="所在地区" required>
+            <v-distpicker
+              :province="provinceStr"
+              :city="cityStr"
+              :area="countyStr"
+              @selected="selected"
+            ></v-distpicker>
+          </el-form-item>
+          <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
+            <el-input v-model="formData.address"></el-input>
+          </el-form-item>
         </div>
         <el-form-item label="实际控制人" class="w180">
           <el-input v-model="formData.owner"></el-input>
@@ -172,61 +178,67 @@
         <el-form-item label="行业地位" style="width:600px">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.position"></el-input>
         </el-form-item>
-        <el-form-item 
-          label="去年营业收入" 
-          class="is-required"
-          >
+        <el-form-item label="去年营业收入" class="is-required">
           <el-col :span="8">
             <el-input v-model="formData.yearTurnoverFormat">
-              <el-select slot="append" v-model="formData.yearTurnoverType" placeholder="请选择" style="width:80px;">
-              <el-option
+              <el-select
+                slot="append"
+                v-model="formData.yearTurnoverType"
+                placeholder="请选择"
+                style="width:80px;"
+              >
+                <el-option
                   v-for="item in unit"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
-                </el-option>
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-input>
           </el-col>
-          <el-col class="line" :span="2" style="margin-left:20px;color:#606266;" >同比增长:</el-col>
+          <el-col class="line" :span="2" style="margin-left:20px;color:#606266;">同比增长:</el-col>
           <el-col :span="8">
             <el-input v-model="formData.yearTurnoverGrowth "></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item 
-          label="去年净利润" 
-          class="is-required"
-          >
+        <el-form-item label="去年净利润" class="is-required">
           <el-col :span="8">
             <el-input v-model="formData.yearNetProfitFormat">
-              <el-select slot="append" v-model="formData.yearNetProfitType" placeholder="请选择" style="width:80px;">
-              <el-option
+              <el-select
+                slot="append"
+                v-model="formData.yearNetProfitType"
+                placeholder="请选择"
+                style="width:80px;"
+              >
+                <el-option
                   v-for="item in unit"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
-                </el-option>
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-input>
           </el-col>
-          <el-col class="line" :span="2" style="margin-left:20px;color:#606266;" >同比增长:</el-col>
+          <el-col class="line" :span="2" style="margin-left:20px;color:#606266;">同比增长:</el-col>
           <el-col :span="8">
             <el-input v-model="formData.yearNetProfitGrowth "></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item 
-          label="去年净利润" 
-          class="is-required"
-          >
+        <el-form-item label="去年净利润" class="is-required">
           <el-col :span="8">
             <el-input v-model="formData.netAssetsFormat">
-              <el-select slot="append" v-model="formData.netAssetsType" placeholder="请选择" style="width:80px;">
-              <el-option
+              <el-select
+                slot="append"
+                v-model="formData.netAssetsType"
+                placeholder="请选择"
+                style="width:80px;"
+              >
+                <el-option
                   v-for="item in unit"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value">
-                </el-option>
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-input>
           </el-col>
@@ -238,7 +250,12 @@
             v-model="formData.trienniumFinancialData"
           ></el-input>
         </el-form-item>
-        <el-form-item label="3-5年盈利预测" style="width:600px" class="is-required" prop="profitForecast">
+        <el-form-item
+          label="3-5年盈利预测"
+          style="width:600px"
+          class="is-required"
+          prop="profitForecast"
+        >
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.profitForecast"></el-input>
         </el-form-item>
         <el-form-item label="团队平均年龄" class="w350">
@@ -272,61 +289,61 @@
         </el-form-item>
         <div class="way">
           <div v-if="fin_way == 0">
-          <el-form-item label="公司估值" class="w350 is-required" prop="companyAssessed">
-            <el-input v-model="formData.companyAssessed">
-              <span slot="append">万元</span>
-            </el-input>
-          </el-form-item>
-          <el-form-item label="市盈率（P/E）" class="w350 is-required" prop="pe">
-            <el-input v-model="formData.pe">
-              <!-- <span slot="append">万元</span> -->
-            </el-input>
-          </el-form-item>
-          <el-form-item label="市净率（P/B）" class="w350 is-required" prop="pb">
-            <el-input v-model="formData.pb">
-              <!-- <span slot="append">万元</span> -->
-            </el-input>
-          </el-form-item>
-          <el-form-item label="支付方式" class=“is-required”>
-            <el-checkbox-group v-model="paymentTypes">
-              <el-checkbox
-                v-for="paymentType in paymentTypeList"
-                :label="paymentType.dataValue"
-                :key="paymentType.dataValue"
-                name="type"
-              >{{paymentType.dataName}}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="有效期限" class="is-required">
-            <div style="width:28.16667%" class="fll">
-              <el-date-picker
-                value-format="yyyy-MM-dd"
-                type="date"
-                placeholder="选择日期"
-                v-model="formData.expiryDateStartTimeStr"
-              ></el-date-picker>
-            </div>
-            <el-col class="line" :span="1" style="text-align:center;">~</el-col>
-            <el-col :span="7">
-              <el-date-picker
-                value-format="yyyy-MM-dd"
-                type="date"
-                placeholder="选择日期"
-                v-model="formData.expiryDateEndTimeStr"
-              ></el-date-picker>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="保障措施" style="width:600px">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 4}"
-              placeholder="请填写保障措施，例如业绩承诺、回购、上市承诺等"
-              v-model="formData.safeguard"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="交易对手简介" style="width:600px">
-            <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.opponentBrief"></el-input>
-          </el-form-item>
+            <el-form-item label="公司估值" class="w350 is-required" prop="companyAssessed">
+              <el-input v-model="formData.companyAssessed">
+                <span slot="append">万元</span>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="市盈率（P/E）" class="w350 is-required" prop="pe">
+              <el-input v-model="formData.pe">
+                <!-- <span slot="append">万元</span> -->
+              </el-input>
+            </el-form-item>
+            <el-form-item label="市净率（P/B）" class="w350 is-required" prop="pb">
+              <el-input v-model="formData.pb">
+                <!-- <span slot="append">万元</span> -->
+              </el-input>
+            </el-form-item>
+            <el-form-item label="支付方式" class="“is-required”">
+              <el-checkbox-group v-model="paymentTypes">
+                <el-checkbox
+                  v-for="paymentType in paymentTypeList"
+                  :label="paymentType.dataValue"
+                  :key="paymentType.dataValue"
+                  name="type"
+                >{{paymentType.dataName}}</el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+            <el-form-item label="有效期限" class="is-required">
+              <div style="width:28.16667%" class="fll">
+                <el-date-picker
+                  value-format="yyyy-MM-dd"
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="formData.expiryDateStartTimeStr"
+                ></el-date-picker>
+              </div>
+              <el-col class="line" :span="1" style="text-align:center;">~</el-col>
+              <el-col :span="7">
+                <el-date-picker
+                  value-format="yyyy-MM-dd"
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="formData.expiryDateEndTimeStr"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="保障措施" style="width:600px">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 4}"
+                placeholder="请填写保障措施，例如业绩承诺、回购、上市承诺等"
+                v-model="formData.safeguard"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="交易对手简介" style="width:600px">
+              <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.opponentBrief"></el-input>
+            </el-form-item>
           </div>
           <div v-if="fin_way == 1">
             <el-form-item label="融资金额" class="w350 is-required">
@@ -365,57 +382,67 @@
               <el-input v-model="formData.repaymentsSource"></el-input>
             </el-form-item>
             <el-form-item label="有效期限">
-            <div style="width:28.16667%" class="fll">
-              <el-date-picker
-                value-format="yyyy-MM-dd"
-                type="date"
-                placeholder="选择日期"
-                v-model="formData.expiryDateStartTimeStr"
-              ></el-date-picker>
-            </div>
-            <el-col class="line" :span="1" style="text-align:center;">~</el-col>
-            <el-col :span="7">
-              <el-date-picker
-                value-format="yyyy-MM-dd"
-                type="date"
-                placeholder="选择日期"
-                v-model="formData.expiryDateEndTimeStr"
-              ></el-date-picker>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="项目建设合规性" style="width:600px" class="is-required">
+              <div style="width:28.16667%" class="fll">
+                <el-date-picker
+                  value-format="yyyy-MM-dd"
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="formData.expiryDateStartTimeStr"
+                ></el-date-picker>
+              </div>
+              <el-col class="line" :span="1" style="text-align:center;">~</el-col>
+              <el-col :span="7">
+                <el-date-picker
+                  value-format="yyyy-MM-dd"
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="formData.expiryDateEndTimeStr"
+                ></el-date-picker>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="项目建设合规性" style="width:600px" class="is-required">
               <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.standard"></el-input>
-          </el-form-item>
-          <el-form-item label="资金来源及落实情况" style="width:600px" class="is-required">
+            </el-form-item>
+            <el-form-item label="资金来源及落实情况" style="width:600px" class="is-required">
               <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.sourcesFunds"></el-input>
-          </el-form-item>
-          <el-form-item label="项目产品及竞争能力分析" style="width:600px" class="is-required">
-              <el-input type="textarea" :autosize="{ minRows: 2}" v-model="formData.marketCompetitivePower"></el-input>
-          </el-form-item>
-          <el-form-item label="项目效益测算及偿债能力分析" style="width:600px" class="is-required">
+            </el-form-item>
+            <el-form-item label="项目产品及竞争能力分析" style="width:600px" class="is-required">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 2}"
+                v-model="formData.marketCompetitivePower"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="项目效益测算及偿债能力分析" style="width:600px" class="is-required">
               <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.guessSovency"></el-input>
-          </el-form-item>
+            </el-form-item>
           </div>
           <div v-if="fin_way == 2">
             <el-form-item label="其他融资" style="width:600px">
-              <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.financingExplain"></el-input>
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 4}"
+                v-model="formData.financingExplain"
+              ></el-input>
             </el-form-item>
           </div>
         </div>
         <p>
           <span class="item_title">核心团队</span>
           <el-button @click="addTeam" size="medium" style="margin-left:7px;">新增成员</el-button>
-        </p>  
-        <el-form-item 
-          label="成员介绍" 
+        </p>
+        <el-form-item
+          label="成员介绍"
           class="is-required"
           v-for="(team, index) in formData.teamList"
           :key="index"
-          >
+        >
           <el-col :span="14">
             <el-input type="textarea" :autosize="{ minRows: 2}" v-model="team.introduce"></el-input>
           </el-col>
-          <el-col :span="3" style="margin-left:20px;"><el-button @click.prevent="removeTeam(team)">删除</el-button></el-col>
+          <el-col :span="3" style="margin-left:20px;">
+            <el-button @click.prevent="removeTeam(team)">删除</el-button>
+          </el-col>
         </el-form-item>
         <el-form-item label="团队介绍" style="width:600px" class="is-required" prop="teamBrief">
           <el-input type="textarea" :autosize="{ minRows: 4}" v-model="formData.teamBrief"></el-input>
@@ -431,12 +458,45 @@
         </el-form-item>
         <!-- <el-form-item label="年龄" class="w350" prop="directorAge">
           <el-input v-model="formData.directorAge"></el-input>
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item label="电话" class="w350 is-required" prop="directorPhone">
           <el-input v-model="formData.directorPhone"></el-input>
         </el-form-item>
         <el-form-item label="Email" class="w350 is-required" prop="directorEmail">
           <el-input v-model="formData.directorEmail"></el-input>
+        </el-form-item>
+        <p>
+          <span class="item_title">个人信息展示</span>
+        </p>
+        <el-form-item label="姓名" class="w350 is-required" prop="name">
+          <el-input v-model="formData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="职务" class="w350 is-required">
+          <el-input v-model="formData.job"></el-input>
+        </el-form-item>
+        <el-form-item label="公司名称" class="w350 is-required">
+          <el-input v-model="formData.company"></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="所在地区" class="is-required">
+          <v-distpicker
+            :province="provinceStr1"
+            :city="cityStr1"
+            :area="countyStr1"
+            @selected="selected1"
+          ></v-distpicker>
+        </el-form-item> -->
+        <el-form-item label="所属行业" class="w320 is-required">
+          <el-select v-model="formData.userIndustrys " placeholder="请选择">
+            <el-option
+              v-for="item in industryList"
+              :key="item.dataValue"
+              :label="item.dataName"
+              :value="item.dataValue">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="资金意向" class="w350 is-required" prop="name">
+          <el-input v-model="formData.intention"></el-input>
         </el-form-item>
         <p>
           <span class="item_title">附件上传</span>
@@ -494,10 +554,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog
-      :visible.sync="toast_show"
-      width="30%"
-      center>
+    <el-dialog :visible.sync="toast_show" width="30%" center>
       <div class="toast_success" v-if="success"></div>
       <div class="toast_error" v-else></div>
       <div v-if="success" class="toast_title">成功</div>
@@ -547,23 +604,23 @@ export default {
       }
     };
     var has_value = (rule, value, callback) => {
-      if(!value){
-        return callback(new Error("不能为空"))
+      if (!value) {
+        return callback(new Error("不能为空"));
       } else {
-        callback()
+        callback();
       }
     };
     var checkEmail = (rule, value, callback) => {
-      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
       if (!value) {
-        return callback(new Error('邮箱不能为空'))
+        return callback(new Error("邮箱不能为空"));
       }
-        if (mailReg.test(value)) {
-          callback()
-        } else {
-          callback(new Error('请输入正确的邮箱格式'))
-        }
-    }
+      if (mailReg.test(value)) {
+        callback();
+      } else {
+        callback(new Error("请输入正确的邮箱格式"));
+      }
+    };
     return {
       rules: {
         title: [{ validator: has_value, trigger: "blur" }],
@@ -578,10 +635,11 @@ export default {
         profitForecast: [{ validator: has_value, trigger: "blur" }],
         directorEmail: [
           {
-            validator:checkEmail,
+            validator: checkEmail,
             message: "请输入正确的邮箱地址",
-            trigger: "blur",
-          }],
+            trigger: "blur"
+          }
+        ],
         registeredCapitalFormat: [{ validator: checkNumber, trigger: "blur" }],
         companyAssessed: [{ validator: checkNumber, trigger: "blur" }],
         pe: [{ validator: checkNumber, trigger: "blur" }],
@@ -592,7 +650,8 @@ export default {
         directorPhone: [{ validator: checkPhone, trigger: "blur" }],
         directorAge: [{ validator: checkAge, trigger: "blur" }],
         averageAge: [{ validator: checkAge, trigger: "blur" }],
-        companyFoundTimeStr: [{  trigger: 'change' }],
+        companyFoundTimeStr: [{ trigger: "change" }],
+        name: [{ validator: has_value, trigger: "blur" }]
       },
       loading: false,
       templateData: "<p>lalala</p>",
@@ -602,7 +661,7 @@ export default {
       formData: {
         title: "",
         brief: "",
-        financeBody: '',
+        financeBody: "",
         companyName: "",
         address: "",
         registeredCapital: "",
@@ -634,35 +693,46 @@ export default {
         regionProvinceId: "110000",
         regionCityId: "110100",
         regionCountyId: "110114",
+        provinceId: "110000",
+        cityId: "110100",
+        countyId: "110114",
         financingWay: "",
         stage: "",
         industryName: "",
         stockStructureImgPath: "",
-        financingMoney:'',
-        dueTime:"",
-        interestRates:"",
-        loanUses:'',
-        repaymentsSource:'',
-        standard:'',
-        sourcesFunds:'',
-        marketCompetitivePower:'',
-        guessSovency:'',
-        financingExplain:'',
-        companyAssessed:'',
-        shareholdingList:[{name:'',value:''}],
-        registeredCapitalType:'',
-        registeredCapitalFormat:'',
-        yearTurnoverFormat:"",
-        yearTurnoverType:'',
-        yearTurnoverGrowth:'',
-        yearNetProfitFormat:"",
-        yearNetProfitType:'',
-        yearNetProfitGrowth:'',
-        netAssetsFormat:'',
-        netAssetsType:'',
-        teamList:[],
-        issuerSecrecyType:'',
+        financingMoney: "",
+        dueTime: "",
+        interestRates: "",
+        loanUses: "",
+        repaymentsSource: "",
+        standard: "",
+        sourcesFunds: "",
+        marketCompetitivePower: "",
+        guessSovency: "",
+        financingExplain: "",
+        companyAssessed: "",
+        shareholdingList: [{ name: "", value: "" }],
+        registeredCapitalType: "",
+        registeredCapitalFormat: "",
+        yearTurnoverFormat: "",
+        yearTurnoverType: "",
+        yearTurnoverGrowth: "",
+        yearNetProfitFormat: "",
+        yearNetProfitType: "",
+        yearNetProfitGrowth: "",
+        netAssetsFormat: "",
+        netAssetsType: "",
+        teamList: [],
+        issuerSecrecyType: "",
+        name: "",
+        job: "",
+        company: "",
+        userIndustrys :'',
+        intention: ''
       },
+      countyStr1: "昌平区",
+      provinceStr1: "北京市",
+      cityStr1: "北京城区",
       financeBodyList: [],
       stageList: [],
       industryList: [],
@@ -697,17 +767,17 @@ export default {
       fileNames: [],
       filePaths: [],
       fileList: [],
-      varietyList:[],
-      varietys:[],
-      creditWayList:[],
-      creditWays:[],
-      intentCapitalList:[],
-      intentCapitals:[],
-      hint:"",
-      success:false,
-      toast_show:false,
-      fin_way:0,
-      unit:[{label:'万元',value:'2'},{label:'亿元',value:"1"}],
+      varietyList: [],
+      varietys: [],
+      creditWayList: [],
+      creditWays: [],
+      intentCapitalList: [],
+      intentCapitals: [],
+      hint: "",
+      success: false,
+      toast_show: false,
+      fin_way: 0,
+      unit: [{ label: "万元", value: "2" }, { label: "亿元", value: "1" }]
     };
   },
   methods: {
@@ -733,12 +803,12 @@ export default {
             }
             this.countyStr = project.regionNameStr.split(",")[2];
           }
-          this.varietyList = res.data.varietyList
+          this.varietyList = res.data.varietyList;
           this.financeBodyList = res.data.financeBodyList;
           this.industryList = res.data.industryList;
           this.paymentTypeList = res.data.paymentTypeList;
           this.creditWayList = res.data.creditWayList;
-          this.intentCapitalList = res.data.intentCapitalList
+          this.intentCapitalList = res.data.intentCapitalList;
           var stageList = res.data.stageList;
           if (this.formData.stage == "") {
             stageList.forEach(item => {
@@ -808,10 +878,14 @@ export default {
             this.financingWayList = financingWayList;
           }
           if (res.data.project.industry != "") {
-            this.industrys = res.data.project.industry.replace(/[\[\]]/g, "").split(",");
+            this.industrys = res.data.project.industry
+              .replace(/[\[\]]/g, "")
+              .split(",");
           }
-          if (res.data.project.intentCapital != ''){
-            this.intentCapitals = res.data.project.intentCapital.replace(/[\[\]]/g, "").split(",");
+          if (res.data.project.intentCapital != "") {
+            this.intentCapitals = res.data.project.intentCapital
+              .replace(/[\[\]]/g, "")
+              .split(",");
           }
           if (res.data.project.paymentType != "") {
             this.paymentTypes = res.data.project.paymentType
@@ -819,10 +893,14 @@ export default {
               .split(",");
           }
           if (res.data.project.variety != "") {
-            this.varietys = res.data.project.variety.replace(/[\[\]]/g, "").split(",");
+            this.varietys = res.data.project.variety
+              .replace(/[\[\]]/g, "")
+              .split(",");
           }
           if (res.data.project.creditWay != "") {
-            this.creditWays = res.data.project.creditWay.replace(/[\[\]]/g, "").split(",");
+            this.creditWays = res.data.project.creditWay
+              .replace(/[\[\]]/g, "")
+              .split(",");
           }
           var file = {};
           var fileList = [];
@@ -834,16 +912,20 @@ export default {
             });
             this.fileList.push(file);
           }
-          if (this.formData.financingWay == '61') {
-            this.fin_way = 0
-          } else if (this.formData.financingWay == '62') {
-            this.fin_way = 1
-          } else if (this.formData.financingWay == '63') {
-            this.fin_way = 2
+          if (this.formData.financingWay == "61") {
+            this.fin_way = 0;
+          } else if (this.formData.financingWay == "62") {
+            this.fin_way = 1;
+          } else if (this.formData.financingWay == "63") {
+            this.fin_way = 2;
           }
 
-          if(this.formData.shareholdingList == ''){
-            this.formData.shareholdingList = [{name:'',value:''}]
+          if (this.formData.shareholdingList == "") {
+            this.formData.shareholdingList = [{ name: "", value: "" }];
+          }
+
+          if (res.data.project.userIndustryStr != "") {
+            this.formData.userIndustrys = res.data.project.userIndustryStr;
           }
         });
     },
@@ -871,414 +953,444 @@ export default {
         this.formData.financingWay = dataValue;
       }
 
-      if(index == 0){
-        this.fin_way = 0
+      if (index == 0) {
+        this.fin_way = 0;
       } else if (index == 1) {
-        this.fin_way = 1
+        this.fin_way = 1;
       } else if (index == 2) {
-        this.fin_way = 2
+        this.fin_way = 2;
       }
     },
     onSave(formName) {
-      this.onSubmit(0,formName);
+      this.onSubmit(0, formName);
     },
     onSubmit(status, formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if(status == 0) {
+          if (status == 0) {
             this.$confirm("即将保存项目, 是否继续?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          }).then(() => {
-            var fileNames = this.fileNames.join(";=;");
-            var filePaths = this.filePaths.join(",");
-            var industrys = this.industrys.join(",");
-            var intentCapitals = this.intentCapitals.join(",");
-            var paymentTypes = this.paymentTypes.join(",");
-            var varietys = this.varietys.join(",");
-            var creditWays = this.creditWays.join(",");
-            var shareholdersArray = []
-            this.formData.shareholdingList.forEach(item => {
-              shareholdersArray.push(item.name)
-            })
-            var shareholders = shareholdersArray.join(",")
-            var shareholdingsArray = []
-            this.formData.shareholdingList.forEach(item => {
-              shareholdingsArray.push(item.name)
-            })
-            var shareholdings = shareholdingsArray.join(",")
-
-            var teamInfoArray = []
-            this.formData.teamList.forEach(item => {
-              teamInfoArray.push(item.introduce)
-            })
-            var teamInfo = teamInfoArray.join(";=;")
-
-            if(this.$route.query.id != ''){
-              var id = this.$route.query.id;
-            } else {
-
-            }
-            if (id != "") {
-              var params = {
-                id,
-                title: this.formData.title,
-                brief: this.formData.brief,
-                financeBody: this.formData.financeBody,
-                companyName: this.formData.companyName,
-                address: this.formData.address,
-                registeredCapital: this.formData.registeredCapitalFormat,
-                owner: this.formData.owner,
-                business: this.formData.business,
-                brightSpot: this.formData.brightSpot,
-                position: this.formData.position,
-                trienniumFinancialData: this.formData.trienniumFinancialData,
-                profitForecast: this.formData.profitForecast,
-                averageAge: this.formData.averageAge,
-                websiteUrl: this.formData.websiteUrl,
-                weChat: this.formData.weChat,
-                companyFoundTimeStr: this.formData.companyFoundTimeStr,
-                registeredCapitalType: this.formData.registeredCapitalType,
-                pe: this.formData.pe,
-                pb: this.formData.pb,
-                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
-                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
-                safeguard: this.formData.safeguard,
-                opponentBrief: this.formData.opponentBrief,
-                teamBrief: this.formData.teamBrief,
-                directorName: this.formData.directorName,
-                directorJob: this.formData.directorJob,
-                directorAge: this.formData.directorAge,
-                directorPhone: this.formData.directorPhone,
-                directorEmail: this.formData.directorEmail,
-                bodySecrecyType: this.formData.bodySecrecyType,
-                infoSecrecyType: this.formData.infoSecrecyType,
-                contactSecrecyType: this.formData.contactSecrecyType,
-                regionProvinceId: this.formData.regionProvinceId,
-                regionCityId: this.formData.regionCityId,
-                regionCountyId: this.formData.regionCountyId,
-                financingWay: this.formData.financingWay,
-                stage: this.formData.stage,
-                stockStructureImgPath: this.formData.stockStructureImgPath,
-                dueTime: this.formData.dueTime,
-                interestRates: this.formData.interestRates,
-                loanUses: this.formData.loanUses,
-                standard: this.formData.standard,
-                sourcesFunds: this.formData.sourcesFunds,
-                marketCompetitivePower: this.formData.marketCompetitivePower,
-                guessSovency: this.formData.guessSovency,
-                financingExplain: this.formData.financingExplain,
-                companyAssessed: this.formData.companyAssessed,
-                yearTurnover:this.formData.yearTurnoverFormat,
-                yearTurnoverGrowth:this.formData.yearTurnoverGrowth,
-                yearTurnoverType:this.formData.yearTurnoverType,
-                yearNetProfit:this.formData.yearNetProfitFormat,
-                yearNetProfitGrowth:this.formData.yearNetProfitGrowth,
-                yearNetProfitType:this.formData.yearNetProfitType,
-                netAssets:this.formData.netAssetsFormat,
-                netAssetsType: this.formData.netAssetsType,
-                industrys,
-                paymentTypes,
-                fileNames,
-                filePaths,
-                status,
-                varietys,
-                creditWays,
-                intentCapitals,
-                shareholders,
-                shareholdings,
-                teamInfo,
-                issuerSecrecyType
-              };
-            } else {
-              var params = {
-                title: this.formData.title,
-                brief: this.formData.brief,
-                financeBody: this.formData.financeBody,
-                companyName: this.formData.companyName,
-                address: this.formData.address,
-                registeredCapital: this.formData.registeredCapitalFormat,
-                owner: this.formData.owner,
-                business: this.formData.business,
-                brightSpot: this.formData.brightSpot,
-                position: this.formData.position,
-                trienniumFinancialData: this.formData.trienniumFinancialData,
-                profitForecast: this.formData.profitForecast,
-                averageAge: this.formData.averageAge,
-                websiteUrl: this.formData.websiteUrl,
-                weChat: this.formData.weChat,
-                companyFoundTimeStr: this.formData.companyFoundTimeStr,
-                registeredCapitalType: this.formData.registeredCapitalType,
-                pe: this.formData.pe,
-                pb: this.formData.pb,
-                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
-                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
-                safeguard: this.formData.safeguard,
-                opponentBrief: this.formData.opponentBrief,
-                teamBrief: this.formData.teamBrief,
-                directorName: this.formData.directorName,
-                directorJob: this.formData.directorJob,
-                directorAge: this.formData.directorAge,
-                directorPhone: this.formData.directorPhone,
-                directorEmail: this.formData.directorEmail,
-                bodySecrecyType: this.formData.bodySecrecyType,
-                infoSecrecyType: this.formData.infoSecrecyType,
-                contactSecrecyType: this.formData.contactSecrecyType,
-                regionProvinceId: this.formData.regionProvinceId,
-                regionCityId: this.formData.regionCityId,
-                regionCountyId: this.formData.regionCountyId,
-                financingWay: this.formData.financingWay,
-                stage: this.formData.stage,
-                stockStructureImgPath: this.formData.stockStructureImgPath,
-                dueTime: this.formData.dueTime,
-                interestRates: this.formData.interestRates,
-                loanUses: this.formData.loanUses,
-                standard: this.formData.standard,
-                sourcesFunds: this.formData.sourcesFunds,
-                marketCompetitivePower: this.formData.marketCompetitivePower,
-                guessSovency: this.formData.guessSovency,
-                financingExplain: this.formData.financingExplain,
-                companyAssessed: this.formData.companyAssessed,
-                yearTurnover:this.formData.yearTurnoverFormat,
-                yearTurnoverGrowth:this.formData.yearTurnoverGrowth,
-                yearTurnoverType:this.formData.yearTurnoverType,
-                yearNetProfit:this.formData.yearNetProfitFormat,
-                yearNetProfitGrowth:this.formData.yearNetProfitGrowth,
-                yearNetProfitType:this.formData.yearNetProfitType,
-                netAssets:this.formData.netAssetsFormat,
-                netAssetsType: this.formData.netAssetsType,
-                industrys,
-                paymentTypes,
-                fileNames,
-                filePaths,
-                status,
-                varietys,
-                creditWays,
-                intentCapitals,
-                shareholders,
-                shareholdings,
-                teamInfo,
-                issuerSecrecyType
-              };
-            }
-            this.$axios
-              .post(
-                "/jsp/wap/center/do/doEditProject.jsp",
-                qs.stringify(params)
-              )
-              .then(res => {
-                if (res.success == "true") {
-                  if(status == 0){
-                    this.success = true;
-                    this.hint = "保存项目成功";
-                    this.toast_show = true;
-                    setTimeout(()=> {
-                      this.$router.push("/person/myProject");
-                    },1000)
-                  } 
-                } else {
-                  this.success = false;
-                  this.hint = res.message;
-                  this.toast_show = true;
-                }
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              var fileNames = this.fileNames.join(";=;");
+              var filePaths = this.filePaths.join(",");
+              var industrys = this.industrys.join(",");
+              var intentCapitals = this.intentCapitals.join(",");
+              var paymentTypes = this.paymentTypes.join(",");
+              var varietys = this.varietys.join(",");
+              var creditWays = this.creditWays.join(",");
+              var shareholdersArray = [];
+              this.formData.shareholdingList.forEach(item => {
+                shareholdersArray.push(item.name);
               });
-          });
+              var shareholders = shareholdersArray.join(",");
+              var shareholdingsArray = [];
+              this.formData.shareholdingList.forEach(item => {
+                shareholdingsArray.push(item.name);
+              });
+              var shareholdings = shareholdingsArray.join(",");
+
+              var teamInfoArray = [];
+              this.formData.teamList.forEach(item => {
+                teamInfoArray.push(item.introduce);
+              });
+              var teamInfo = teamInfoArray.join(";=;");
+
+              if (this.$route.query.id != "") {
+                var id = this.$route.query.id;
+              } else {
+              }
+              if (id != "") {
+                var params = {
+                  id,
+                  title: this.formData.title,
+                  brief: this.formData.brief,
+                  financeBody: this.formData.financeBody,
+                  companyName: this.formData.companyName,
+                  address: this.formData.address,
+                  registeredCapital: this.formData.registeredCapitalFormat,
+                  owner: this.formData.owner,
+                  business: this.formData.business,
+                  brightSpot: this.formData.brightSpot,
+                  position: this.formData.position,
+                  trienniumFinancialData: this.formData.trienniumFinancialData,
+                  profitForecast: this.formData.profitForecast,
+                  averageAge: this.formData.averageAge,
+                  websiteUrl: this.formData.websiteUrl,
+                  weChat: this.formData.weChat,
+                  companyFoundTimeStr: this.formData.companyFoundTimeStr,
+                  registeredCapitalType: this.formData.registeredCapitalType,
+                  pe: this.formData.pe,
+                  pb: this.formData.pb,
+                  expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
+                  expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                  safeguard: this.formData.safeguard,
+                  opponentBrief: this.formData.opponentBrief,
+                  teamBrief: this.formData.teamBrief,
+                  directorName: this.formData.directorName,
+                  directorJob: this.formData.directorJob,
+                  directorAge: this.formData.directorAge,
+                  directorPhone: this.formData.directorPhone,
+                  directorEmail: this.formData.directorEmail,
+                  bodySecrecyType: this.formData.bodySecrecyType,
+                  infoSecrecyType: this.formData.infoSecrecyType,
+                  contactSecrecyType: this.formData.contactSecrecyType,
+                  regionProvinceId: this.formData.regionProvinceId,
+                  regionCityId: this.formData.regionCityId,
+                  regionCountyId: this.formData.regionCountyId,
+                  provinceId: this.formData.provinceId,
+                  cityId: this.formData.cityId,
+                  countyId: this.formData.countyId,
+                  financingWay: this.formData.financingWay,
+                  stage: this.formData.stage,
+                  stockStructureImgPath: this.formData.stockStructureImgPath,
+                  dueTime: this.formData.dueTime,
+                  interestRates: this.formData.interestRates,
+                  loanUses: this.formData.loanUses,
+                  standard: this.formData.standard,
+                  sourcesFunds: this.formData.sourcesFunds,
+                  marketCompetitivePower: this.formData.marketCompetitivePower,
+                  guessSovency: this.formData.guessSovency,
+                  financingExplain: this.formData.financingExplain,
+                  companyAssessed: this.formData.companyAssessed,
+                  yearTurnover: this.formData.yearTurnoverFormat,
+                  yearTurnoverGrowth: this.formData.yearTurnoverGrowth,
+                  yearTurnoverType: this.formData.yearTurnoverType,
+                  yearNetProfit: this.formData.yearNetProfitFormat,
+                  yearNetProfitGrowth: this.formData.yearNetProfitGrowth,
+                  yearNetProfitType: this.formData.yearNetProfitType,
+                  netAssets: this.formData.netAssetsFormat,
+                  netAssetsType: this.formData.netAssetsType,
+                  name: this.formData.name,
+                  job: this.formData.job,
+                  company: this.formData.company,
+                  userIndustrys : this.formData.userIndustrys,
+                  intention: this.formData.intention,
+                  issuerSecrecyType:this.formData.issuerSecrecyType,
+                  industrys,
+                  paymentTypes,
+                  fileNames,
+                  filePaths,
+                  status,
+                  varietys,
+                  creditWays,
+                  intentCapitals,
+                  shareholders,
+                  shareholdings,
+                  teamInfo,
+                };
+              } else {
+                var params = {
+                  title: this.formData.title,
+                  brief: this.formData.brief,
+                  financeBody: this.formData.financeBody,
+                  companyName: this.formData.companyName,
+                  address: this.formData.address,
+                  registeredCapital: this.formData.registeredCapitalFormat,
+                  owner: this.formData.owner,
+                  business: this.formData.business,
+                  brightSpot: this.formData.brightSpot,
+                  position: this.formData.position,
+                  trienniumFinancialData: this.formData.trienniumFinancialData,
+                  profitForecast: this.formData.profitForecast,
+                  averageAge: this.formData.averageAge,
+                  websiteUrl: this.formData.websiteUrl,
+                  weChat: this.formData.weChat,
+                  companyFoundTimeStr: this.formData.companyFoundTimeStr,
+                  registeredCapitalType: this.formData.registeredCapitalType,
+                  pe: this.formData.pe,
+                  pb: this.formData.pb,
+                  expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
+                  expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                  safeguard: this.formData.safeguard,
+                  opponentBrief: this.formData.opponentBrief,
+                  teamBrief: this.formData.teamBrief,
+                  directorName: this.formData.directorName,
+                  directorJob: this.formData.directorJob,
+                  directorAge: this.formData.directorAge,
+                  directorPhone: this.formData.directorPhone,
+                  directorEmail: this.formData.directorEmail,
+                  bodySecrecyType: this.formData.bodySecrecyType,
+                  infoSecrecyType: this.formData.infoSecrecyType,
+                  contactSecrecyType: this.formData.contactSecrecyType,
+                  regionProvinceId: this.formData.regionProvinceId,
+                  regionCityId: this.formData.regionCityId,
+                  regionCountyId: this.formData.regionCountyId,
+                  provinceId: this.formData.provinceId,
+                  cityId: this.formData.cityId,
+                  countyId: this.formData.countyId,
+                  financingWay: this.formData.financingWay,
+                  stage: this.formData.stage,
+                  stockStructureImgPath: this.formData.stockStructureImgPath,
+                  dueTime: this.formData.dueTime,
+                  interestRates: this.formData.interestRates,
+                  loanUses: this.formData.loanUses,
+                  standard: this.formData.standard,
+                  sourcesFunds: this.formData.sourcesFunds,
+                  marketCompetitivePower: this.formData.marketCompetitivePower,
+                  guessSovency: this.formData.guessSovency,
+                  financingExplain: this.formData.financingExplain,
+                  companyAssessed: this.formData.companyAssessed,
+                  yearTurnover: this.formData.yearTurnoverFormat,
+                  yearTurnoverGrowth: this.formData.yearTurnoverGrowth,
+                  yearTurnoverType: this.formData.yearTurnoverType,
+                  yearNetProfit: this.formData.yearNetProfitFormat,
+                  yearNetProfitGrowth: this.formData.yearNetProfitGrowth,
+                  yearNetProfitType: this.formData.yearNetProfitType,
+                  netAssets: this.formData.netAssetsFormat,
+                  netAssetsType: this.formData.netAssetsType,
+                  name: this.formData.name,
+                  job: this.formData.job,
+                  company: this.formData.company,
+                  userIndustrys : this.formData.userIndustrys,
+                  intention: this.formData.intention,
+                  issuerSecrecyType:this.formData.issuerSecrecyType,
+                  industrys,
+                  paymentTypes,
+                  fileNames,
+                  filePaths,
+                  status,
+                  varietys,
+                  creditWays,
+                  intentCapitals,
+                  shareholders,
+                  shareholdings,
+                  teamInfo,
+                };
+              }
+              this.$axios
+                .post(
+                  "/jsp/wap/center/do/doEditProject.jsp",
+                  qs.stringify(params)
+                )
+                .then(res => {
+                  if (res.success == "true") {
+                    if (status == 0) {
+                      this.success = true;
+                      this.hint = "保存项目成功";
+                      this.toast_show = true;
+                      setTimeout(() => {
+                        this.$router.push("/person/myProject");
+                      }, 1000);
+                    }
+                  } else {
+                    this.success = false;
+                    this.hint = res.message;
+                    this.toast_show = true;
+                  }
+                });
+            });
           } else {
             this.$confirm("即将提交项目, 是否继续?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          }).then(() => {
-            var fileNames = this.fileNames.join(";=;");
-            var filePaths = this.filePaths.join(",");
-            var industrys = this.industrys.join(",");
-            var intentCapitals = this.intentCapitals.join(",");
-            var creditWays = this.creditWays.join(",");
-            var varietys = this.varietys.join(",");
-            var paymentTypes = this.paymentTypes.join(",");
-            var shareholdersArray = []
-            this.formData.shareholdingList.forEach(item => {
-              shareholdersArray.push(item.name)
-            })
-            var shareholders = shareholdersArray.join(",")
-            var shareholdingsArray = []
-            this.formData.shareholdingList.forEach(item => {
-              shareholdingsArray.push(item.name)
-            })
-            var shareholdings = shareholdingsArray.join(",")
-
-            var teamInfoArray = []
-            this.formData.teamList.forEach(item => {
-              teamInfoArray.push(item.introduce)
-            })
-            var teamInfo = teamInfoArray.join(";=;")
-
-            var id = this.$route.query.id;
-            if (id != "") {
-              var params = {
-                id,
-                title: this.formData.title,
-                brief: this.formData.brief,
-                financeBody: this.formData.financeBody,
-                companyName: this.formData.companyName,
-                address: this.formData.address,
-                registeredCapital: this.formData.registeredCapitalFormat,
-                owner: this.formData.owner,
-                business: this.formData.business,
-                brightSpot: this.formData.brightSpot,
-                position: this.formData.position,
-                trienniumFinancialData: this.formData.trienniumFinancialData,
-                profitForecast: this.formData.profitForecast,
-                averageAge: this.formData.averageAge,
-                websiteUrl: this.formData.websiteUrl,
-                weChat: this.formData.weChat,
-                companyFoundTimeStr: this.formData.companyFoundTimeStr,
-                registeredCapitalType: this.formData.registeredCapitalType,
-                pe: this.formData.pe,
-                pb: this.formData.pb,
-                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
-                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
-                safeguard: this.formData.safeguard,
-                opponentBrief: this.formData.opponentBrief,
-                teamBrief: this.formData.teamBrief,
-                directorName: this.formData.directorName,
-                directorJob: this.formData.directorJob,
-                directorAge: this.formData.directorAge,
-                directorPhone: this.formData.directorPhone,
-                directorEmail: this.formData.directorEmail,
-                bodySecrecyType: this.formData.bodySecrecyType,
-                infoSecrecyType: this.formData.infoSecrecyType,
-                contactSecrecyType: this.formData.contactSecrecyType,
-                regionProvinceId: this.formData.regionProvinceId,
-                regionCityId: this.formData.regionCityId,
-                regionCountyId: this.formData.regionCountyId,
-                financingWay: this.formData.financingWay,
-                stage: this.formData.stage,
-                stockStructureImgPath: this.formData.stockStructureImgPath,
-                dueTime: this.formData.dueTime,
-                interestRates: this.formData.interestRates,
-                loanUses: this.formData.loanUses,
-                standard: this.formData.standard,
-                sourcesFunds: this.formData.sourcesFunds,
-                marketCompetitivePower: this.formData.marketCompetitivePower,
-                guessSovency: this.formData.guessSovency,
-                financingExplain: this.formData.financingExplain,
-                companyAssessed: this.formData.companyAssessed,
-                yearTurnover:this.formData.yearTurnoverFormat,
-                yearTurnoverGrowth:this.formData.yearTurnoverGrowth,
-                yearTurnoverType:this.formData.yearTurnoverType,
-                yearNetProfit:this.formData.yearNetProfitFormat,
-                yearNetProfitGrowth:this.formData.yearNetProfitGrowth,
-                yearNetProfitType:this.formData.yearNetProfitType,
-                netAssets:this.formData.netAssetsFormat,
-                netAssetsType: this.formData.netAssetsType,
-                industrys,
-                paymentTypes,
-                fileNames,
-                filePaths,
-                status,
-                varietys,
-                creditWays,
-                intentCapitals,
-                shareholders,
-                shareholdings,
-                teamInfo,
-                issuerSecrecyType
-              };
-            } else {
-              var params = {
-                title: this.formData.title,
-                brief: this.formData.brief,
-                financeBody: this.formData.financeBody,
-                companyName: this.formData.companyName,
-                address: this.formData.address,
-                registeredCapital: this.formData.registeredCapitalFormat,
-                owner: this.formData.owner,
-                business: this.formData.business,
-                brightSpot: this.formData.brightSpot,
-                position: this.formData.position,
-                trienniumFinancialData: this.formData.trienniumFinancialData,
-                profitForecast: this.formData.profitForecast,
-                averageAge: this.formData.averageAge,
-                websiteUrl: this.formData.websiteUrl,
-                weChat: this.formData.weChat,
-                companyFoundTimeStr: this.formData.companyFoundTimeStr,
-                registeredCapitalType: this.formData.registeredCapitalType,
-                pe: this.formData.pe,
-                pb: this.formData.pb,
-                expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
-                expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
-                safeguard: this.formData.safeguard,
-                opponentBrief: this.formData.opponentBrief,
-                teamBrief: this.formData.teamBrief,
-                directorName: this.formData.directorName,
-                directorJob: this.formData.directorJob,
-                directorAge: this.formData.directorAge,
-                directorPhone: this.formData.directorPhone,
-                directorEmail: this.formData.directorEmail,
-                bodySecrecyType: this.formData.bodySecrecyType,
-                infoSecrecyType: this.formData.infoSecrecyType,
-                contactSecrecyType: this.formData.contactSecrecyType,
-                regionProvinceId: this.formData.regionProvinceId,
-                regionCityId: this.formData.regionCityId,
-                regionCountyId: this.formData.regionCountyId,
-                financingWay: this.formData.financingWay,
-                stage: this.formData.stage,
-                stockStructureImgPath: this.formData.stockStructureImgPath,
-                dueTime: this.formData.dueTime,
-                interestRates: this.formData.interestRates,
-                loanUses: this.formData.loanUses,
-                standard: this.formData.standard,
-                sourcesFunds: this.formData.sourcesFunds,
-                marketCompetitivePower: this.formData.marketCompetitivePower,
-                guessSovency: this.formData.guessSovency,
-                financingExplain: this.formData.financingExplain,
-                companyAssessed: this.formData.companyAssessed,
-                yearTurnover:this.formData.yearTurnoverFormat,
-                yearTurnoverGrowth:this.formData.yearTurnoverGrowth,
-                yearTurnoverType:this.formData.yearTurnoverType,
-                yearNetProfit:this.formData.yearNetProfitFormat,
-                yearNetProfitGrowth:this.formData.yearNetProfitGrowth,
-                yearNetProfitType:this.formData.yearNetProfitType,
-                netAssets:this.formData.netAssetsFormat,
-                netAssetsType: this.formData.netAssetsType,
-                industrys,
-                paymentTypes,
-                fileNames,
-                filePaths,
-                status,
-                varietys,
-                creditWays,
-                intentCapitals,
-                shareholders,
-                shareholdings,
-                teamInfo,
-                issuerSecrecyType
-              };
-            }
-            this.$axios
-              .post(
-                "/jsp/wap/center/do/doEditProject.jsp",
-                qs.stringify(params)
-              )
-              .then(res => {
-                if (res.success == "true") {    
-                  this.success = true;
-                  this.hint = "上传项目成功";
-                  this.toast_show = true;
-                  setTimeout(()=> {
-                      this.$router.push("/person/myProject");
-                  },1000)
-                } else {
-                  this.success = false;
-                  this.hint = res.message;
-                  this.toast_show = true;
-                }
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              var fileNames = this.fileNames.join(";=;");
+              var filePaths = this.filePaths.join(",");
+              var industrys = this.industrys.join(",");
+              var intentCapitals = this.intentCapitals.join(",");
+              var creditWays = this.creditWays.join(",");
+              var varietys = this.varietys.join(",");
+              var paymentTypes = this.paymentTypes.join(",");
+              var shareholdersArray = [];
+              this.formData.shareholdingList.forEach(item => {
+                shareholdersArray.push(item.name);
               });
-          });
+              var shareholders = shareholdersArray.join(",");
+              var shareholdingsArray = [];
+              this.formData.shareholdingList.forEach(item => {
+                shareholdingsArray.push(item.name);
+              });
+              var shareholdings = shareholdingsArray.join(",");
+
+              var teamInfoArray = [];
+              this.formData.teamList.forEach(item => {
+                teamInfoArray.push(item.introduce);
+              });
+              var teamInfo = teamInfoArray.join(";=;");
+
+              var id = this.$route.query.id;
+              if (id != "") {
+                var params = {
+                  id,
+                  title: this.formData.title,
+                  brief: this.formData.brief,
+                  financeBody: this.formData.financeBody,
+                  companyName: this.formData.companyName,
+                  address: this.formData.address,
+                  registeredCapital: this.formData.registeredCapitalFormat,
+                  owner: this.formData.owner,
+                  business: this.formData.business,
+                  brightSpot: this.formData.brightSpot,
+                  position: this.formData.position,
+                  trienniumFinancialData: this.formData.trienniumFinancialData,
+                  profitForecast: this.formData.profitForecast,
+                  averageAge: this.formData.averageAge,
+                  websiteUrl: this.formData.websiteUrl,
+                  weChat: this.formData.weChat,
+                  companyFoundTimeStr: this.formData.companyFoundTimeStr,
+                  registeredCapitalType: this.formData.registeredCapitalType,
+                  pe: this.formData.pe,
+                  pb: this.formData.pb,
+                  expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
+                  expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                  safeguard: this.formData.safeguard,
+                  opponentBrief: this.formData.opponentBrief,
+                  teamBrief: this.formData.teamBrief,
+                  directorName: this.formData.directorName,
+                  directorJob: this.formData.directorJob,
+                  directorAge: this.formData.directorAge,
+                  directorPhone: this.formData.directorPhone,
+                  directorEmail: this.formData.directorEmail,
+                  bodySecrecyType: this.formData.bodySecrecyType,
+                  infoSecrecyType: this.formData.infoSecrecyType,
+                  contactSecrecyType: this.formData.contactSecrecyType,
+                  regionProvinceId: this.formData.regionProvinceId,
+                  regionCityId: this.formData.regionCityId,
+                  regionCountyId: this.formData.regionCountyId,
+                  provinceId: this.formData.provinceId,
+                  cityId: this.formData.cityId,
+                  countyId: this.formData.countyId,
+                  financingWay: this.formData.financingWay,
+                  stage: this.formData.stage,
+                  stockStructureImgPath: this.formData.stockStructureImgPath,
+                  dueTime: this.formData.dueTime,
+                  interestRates: this.formData.interestRates,
+                  loanUses: this.formData.loanUses,
+                  standard: this.formData.standard,
+                  sourcesFunds: this.formData.sourcesFunds,
+                  marketCompetitivePower: this.formData.marketCompetitivePower,
+                  guessSovency: this.formData.guessSovency,
+                  financingExplain: this.formData.financingExplain,
+                  companyAssessed: this.formData.companyAssessed,
+                  yearTurnover: this.formData.yearTurnoverFormat,
+                  yearTurnoverGrowth: this.formData.yearTurnoverGrowth,
+                  yearTurnoverType: this.formData.yearTurnoverType,
+                  yearNetProfit: this.formData.yearNetProfitFormat,
+                  yearNetProfitGrowth: this.formData.yearNetProfitGrowth,
+                  yearNetProfitType: this.formData.yearNetProfitType,
+                  netAssets: this.formData.netAssetsFormat,
+                  netAssetsType: this.formData.netAssetsType,
+                  name: this.formData.name,
+                  job: this.formData.job,
+                  company: this.formData.company,
+                  userIndustrys : this.formData.userIndustrys,
+                  intention: this.formData.intention,
+                  issuerSecrecyType:this.formData.issuerSecrecyType,
+                  industrys,
+                  paymentTypes,
+                  fileNames,
+                  filePaths,
+                  status,
+                  varietys,
+                  creditWays,
+                  intentCapitals,
+                  shareholders,
+                  shareholdings,
+                  teamInfo,
+                };
+              } else {
+                var params = {
+                  title: this.formData.title,
+                  brief: this.formData.brief,
+                  financeBody: this.formData.financeBody,
+                  companyName: this.formData.companyName,
+                  address: this.formData.address,
+                  registeredCapital: this.formData.registeredCapitalFormat,
+                  owner: this.formData.owner,
+                  business: this.formData.business,
+                  brightSpot: this.formData.brightSpot,
+                  position: this.formData.position,
+                  trienniumFinancialData: this.formData.trienniumFinancialData,
+                  profitForecast: this.formData.profitForecast,
+                  averageAge: this.formData.averageAge,
+                  websiteUrl: this.formData.websiteUrl,
+                  weChat: this.formData.weChat,
+                  companyFoundTimeStr: this.formData.companyFoundTimeStr,
+                  registeredCapitalType: this.formData.registeredCapitalType,
+                  pe: this.formData.pe,
+                  pb: this.formData.pb,
+                  expiryDateStartTimeStr: this.formData.expiryDateStartTimeStr,
+                  expiryDateEndTimeStr: this.formData.expiryDateEndTimeStr,
+                  safeguard: this.formData.safeguard,
+                  opponentBrief: this.formData.opponentBrief,
+                  teamBrief: this.formData.teamBrief,
+                  directorName: this.formData.directorName,
+                  directorJob: this.formData.directorJob,
+                  directorAge: this.formData.directorAge,
+                  directorPhone: this.formData.directorPhone,
+                  directorEmail: this.formData.directorEmail,
+                  bodySecrecyType: this.formData.bodySecrecyType,
+                  infoSecrecyType: this.formData.infoSecrecyType,
+                  contactSecrecyType: this.formData.contactSecrecyType,
+                  regionProvinceId: this.formData.regionProvinceId,
+                  regionCityId: this.formData.regionCityId,
+                  regionCountyId: this.formData.regionCountyId,
+                  provinceId: this.formData.provinceId,
+                  cityId: this.formData.cityId,
+                  countyId: this.formData.countyId,
+                  financingWay: this.formData.financingWay,
+                  stage: this.formData.stage,
+                  stockStructureImgPath: this.formData.stockStructureImgPath,
+                  dueTime: this.formData.dueTime,
+                  interestRates: this.formData.interestRates,
+                  loanUses: this.formData.loanUses,
+                  standard: this.formData.standard,
+                  sourcesFunds: this.formData.sourcesFunds,
+                  marketCompetitivePower: this.formData.marketCompetitivePower,
+                  guessSovency: this.formData.guessSovency,
+                  financingExplain: this.formData.financingExplain,
+                  companyAssessed: this.formData.companyAssessed,
+                  yearTurnover: this.formData.yearTurnoverFormat,
+                  yearTurnoverGrowth: this.formData.yearTurnoverGrowth,
+                  yearTurnoverType: this.formData.yearTurnoverType,
+                  yearNetProfit: this.formData.yearNetProfitFormat,
+                  yearNetProfitGrowth: this.formData.yearNetProfitGrowth,
+                  yearNetProfitType: this.formData.yearNetProfitType,
+                  netAssets: this.formData.netAssetsFormat,
+                  netAssetsType: this.formData.netAssetsType,
+                  name: this.formData.name,
+                  job: this.formData.job,
+                  company: this.formData.company,
+                  userIndustrys : this.formData.userIndustrys,
+                  intention: this.formData.intention,
+                  issuerSecrecyType:this.formData.issuerSecrecyType,
+                  industrys,
+                  paymentTypes,
+                  fileNames,
+                  filePaths,
+                  status,
+                  varietys,
+                  creditWays,
+                  intentCapitals,
+                  shareholders,
+                  shareholdings,
+                  teamInfo,
+                };
+              }
+              this.$axios
+                .post(
+                  "/jsp/wap/center/do/doEditProject.jsp",
+                  qs.stringify(params)
+                )
+                .then(res => {
+                  if (res.success == "true") {
+                    this.success = true;
+                    this.hint = "上传项目成功";
+                    this.toast_show = true;
+                    setTimeout(() => {
+                      this.$router.push("/person/myProject");
+                    }, 1000);
+                  } else {
+                    this.success = false;
+                    this.hint = res.message;
+                    this.toast_show = true;
+                  }
+                });
+            });
           }
-          
         } else {
           console.log("error submit!!");
           this.$message.error("请完善以下信息，方便我们更好的为您服务");
@@ -1323,55 +1435,60 @@ export default {
         });
     },
     vip() {
-      if(this.$store.state.userinfo.isVip == '0'){
-        this.$confirm('只有会员才能享受快速上传, 是否办理会员?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
+      if (this.$store.state.userinfo.isVip == "0") {
+        this.$confirm("只有会员才能享受快速上传, 是否办理会员?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
           center: true
-        }).then(() => {
-          let {href} = this.$router.resolve({
-                name: "member",
+        })
+          .then(() => {
+            let { href } = this.$router.resolve({
+              name: "member"
             });
-          window.open(href, '_blank');
-        }).catch(() => {
-
-        });
+            window.open(href, "_blank");
+          })
+          .catch(() => {});
       } else {
-        this.$router.push({name:'uploadApplyProject'})
+        this.$router.push({ name: "uploadApplyProject" });
       }
     },
     removeSharehold(item) {
-        var index = this.formData.shareholdingList.indexOf(item)
-        if (index !== -1) {
-          this.formData.shareholdingList.splice(index, 1)
-        }
-      },
-    addSharehold() {
-        this.formData.shareholdingList.push({
-          name:'',
-          value: '',
-        });
-      },
-  removeTeam(item) {
-        var index = this.formData.teamList.indexOf(item)
-        if (index !== -1) {
-          this.formData.teamList.splice(index, 1)
-        }
-      },
-  addTeam() {
-        this.formData.teamList.push({
-          introduce:'',
-        });
+      var index = this.formData.shareholdingList.indexOf(item);
+      if (index !== -1) {
+        this.formData.shareholdingList.splice(index, 1);
       }
+    },
+    addSharehold() {
+      this.formData.shareholdingList.push({
+        name: "",
+        value: ""
+      });
+    },
+    removeTeam(item) {
+      var index = this.formData.teamList.indexOf(item);
+      if (index !== -1) {
+        this.formData.teamList.splice(index, 1);
+      }
+    },
+    addTeam() {
+      this.formData.teamList.push({
+        introduce: ""
+      });
+    },
+    selected1(e) {
+      this.formData.provinceId = e.province.code;
+      this.formData.cityId = e.city.code;
+      this.formData.countyId = e.area.code;
+    }
   },
   created() {
     let id = this.$route.query.id;
     this.getData(id);
   },
   watch: {
-    'fin_way'(){
-      this.$refs.formData.clearValidate()
+    fin_way() {
+      this.$refs.formData.clearValidate();
     }
   }
 };
@@ -1539,21 +1656,21 @@ export default {
 }
 
 .bg-f2 {
-  background:#f2f2f2;
-  padding:20px 0;
-  margin-bottom:20px;
+  background: #f2f2f2;
+  padding: 20px 0;
+  margin-bottom: 20px;
 }
 
 //融资方式
 .way {
-  background:#f2f2f2;
-  padding:10px 0;
-  margin-bottom:20px;
+  background: #f2f2f2;
+  padding: 10px 0;
+  margin-bottom: 20px;
 }
 
 /deep/ {
-    .el-checkbox+.el-checkbox {
-      margin-left: 20px !important;
+  .el-checkbox + .el-checkbox {
+    margin-left: 20px !important;
   }
 }
 </style>

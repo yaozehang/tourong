@@ -1,5 +1,5 @@
 <template>
-  <div class="w1200">
+  <div class="w1200" style="line-height:2;">
     <p class="MsoNormal" align="center" style="text-align:center;background:white;">免责声明
       <span></span>
     </p>

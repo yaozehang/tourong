@@ -1,6 +1,6 @@
 <template>
   <div>
-    <swiper v-if="swiperSlides.length > 0" :options="swiperOption" class="home-swiper" >
+    <swiper v-if="swiperSlides.length > 0" :options="swiperOption" class="home-swiper">
       <swiper-slide v-for="(slide, index) in swiperSlides" :key="index">
         <img :src="$url + slide.imgPath" width="100%" height="100%" class="swiper-img">
       </swiper-slide>
@@ -14,56 +14,106 @@
       <div class="project clearfix">
         <div class="project-title" @click="toProductPage">
           优质项目
-          <i ></i>
+          <i></i>
         </div>
         <div class="project-menu">
-          <div v-for="(item , index) in projectData.slice(0,6)" :key="index" class="project-item fll" @click="toProjectDetailPage(item.id)">
-              <img :src="$url + item.recommendImgPath" alt width="360px" height="120px" style="cursor:pointer" v-if="item&&item.recommendImgPath">
-              <p class="project-item-title" v-if="item&&item.title">{{item.title}}</p>
-              <p class="project-item-content" v-if="item&&item.brief">{{item.brief}}</p>
+          <div
+            v-for="(item , index) in projectData.slice(0,6)"
+            :key="index"
+            class="project-item fll"
+            @click="toProjectDetailPage(item.id)"
+          >
+            <img
+              :src="$url + item.recommendImgPath"
+              alt
+              width="360px"
+              height="120px"
+              style="cursor:pointer"
+              v-if="item&&item.recommendImgPath"
+            >
+            <p class="project-item-title" v-if="item&&item.title">{{item.title}}</p>
+            <p class="project-item-content" v-if="item&&item.brief">{{item.brief}}</p>
           </div>
         </div>
       </div>
     </div>
-    <img src="/static/img/touronglianxian.png" alt width="100%" style="display:block;min-width: 1200px;">
+    <img
+      src="/static/img/touronglianxian.png"
+      alt
+      width="100%"
+      style="display:block;min-width: 1200px;"
+    >
     <div class="bg-f2f2f3">
       <div class="w1200 clearfix">
         <div class="invest-title" @click="toMoneyPage">
           投资信息
-          <i ></i>
+          <i></i>
         </div>
         <div class="invest-menu">
-          <div v-for="(item , index) in investData.slice(0,4)" :key="index" class="invest-item fll clearfix" @click="toMoneyDetailPage(item.id)">
-            <img :src="$url + item.recommendImgPath" alt width="140px" height="180px" class="fll" style="cursor:pointer">
+          <div
+            v-for="(item , index) in investData.slice(0,4)"
+            :key="index"
+            class="invest-item fll clearfix"
+            @click="toMoneyDetailPage(item.id)"
+          >
+            <img
+              :src="$url + item.recommendImgPath"
+              alt
+              width="140px"
+              height="180px"
+              class="fll"
+              style="cursor:pointer"
+            >
             <div class="invest-text fll">
               <p class="invest-item-title" v-if="item&&item.title">{{item.title}}</p>
               <p class="invest-item-list" v-if="item&&item.investAmountName">
                 投资资金：
-                <span class="invest-money" v-if="item&&item.investAmountName">{{item.investAmountName}}</span>
+                <span
+                  class="invest-money"
+                  v-if="item&&item.investAmountName"
+                >{{item.investAmountName}}</span>
               </p>
               <p class="invest-item-list w230 inb" v-if="item&&item.investWayName">
                 投资方式：
-                <span class="invest-content" v-if="item&&item.investWayName">{{item.investWayName}}</span>
+                <span
+                  class="invest-content"
+                  v-if="item&&item.investWayName"
+                >{{item.investWayName}}</span>
               </p>
               <p class="invest-item-list inb w175" v-if="item&&item.pawnTypeName">
                 资金类型：
-                <span class="invest-content" v-if="item&&item.pawnTypeName">{{item.pawnTypeName}}</span>
+                <span
+                  class="invest-content"
+                  v-if="item&&item.pawnTypeName"
+                >{{item.pawnTypeName}}</span>
               </p>
               <p class="invest-item-list w230 inb" v-if="item&&item.investRegionNameStr">
                 投资地区：
-                <span class="invest-content" v-if="item&&item.investRegionNameStr">{{item.investRegionNameStr}}</span>
+                <span
+                  class="invest-content"
+                  v-if="item&&item.investRegionNameStr"
+                >{{item.investRegionNameStr}}</span>
               </p>
               <p class="invest-item-list inb w175" v-if="item&&item.investIndustryName">
                 投资行业：
-                <span class="invest-content" v-if="item&&item.investIndustryName">{{item.investIndustryName}}</span>
+                <span
+                  class="invest-content"
+                  v-if="item&&item.investIndustryName"
+                >{{item.investIndustryName}}</span>
               </p>
               <p class="invest-item-list w230 inb" v-if="item&&item.investTypeName">
                 投资类型：
-                <span class="invest-content" v-if="item&&item.investTypeName">{{item.investTypeName}}</span>
+                <span
+                  class="invest-content"
+                  v-if="item&&item.investTypeName"
+                >{{item.investTypeName}}</span>
               </p>
               <p class="invest-item-list inb w175" v-if="item&&item.investStageName">
                 投资阶段：
-                <span class="invest-content" v-if="item&&item.investStageName">{{item.investStageName}}</span>
+                <span
+                  class="invest-content"
+                  v-if="item&&item.investStageName"
+                >{{item.investStageName}}</span>
               </p>
             </div>
           </div>
@@ -73,30 +123,56 @@
     <div class="w1200" style="padding-bottom:80px;">
       <div class="message-title" @click="toMessagePage">
         投融资讯
-        <i ></i>
+        <i></i>
       </div>
       <div class="mes-title">
-        <span class="mes-title-item"
+        <span
+          class="mes-title-item"
           v-for="(item , index) in categoryList"
           :key="index"
           @click="getType(item.dataValue,index)"
           :class="{active:item.checked}"
         >{{item.dataName}}</span>
-      <div class="mes-content clearfix">
-        <ul class="clearfix">
-          <li v-for="(item,index) in messageData.slice(0,18)" :key="index" class="fll mes-list" @click="toMessageDetailPage(item.id)">
+        <div class="mes-content clearfix">
+          <ul class="clearfix">
+            <li
+              v-for="(item,index) in messageData.slice(0,18)"
+              :key="index"
+              class="fll mes-list"
+              @click="toMessageDetailPage(item.id)"
+            >
               <span class="mes-text fll" v-if="item&&item.title">{{item.title}}</span>
-              <span class="mes-time" v-if="item&&item.addTimeStr">{{item.addTimeStr.slice(0,10)}}</span>
-          </li>
-        </ul>
+              <span class="mes-time" v-if="item&&item.addTimeStr">{{item.addTimeStr.substr(0,10)}}</span>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
     </div>
     <div class="enter">
       <div class="w1200 clearfix">
-        <img src="/static/img/fabuzijin.jpg" alt="" class="fll" width="400px" style="cursor:pointer" @click="tozijin">
-        <img src="/static/img/fabuxiangmu.jpg" alt="" width="400px" style="cursor:pointer" @click="toxiangmu">
-        <img src="/static/img/chengweizhuanjia.jpg" alt="" class="flr" width="400px" style="cursor:pointer" @click="tozhuanjia">
+        <img
+          src="/static/img/fabuzijin.jpg"
+          alt
+          class="fll"
+          width="400px"
+          style="cursor:pointer"
+          @click="tozijin"
+        >
+        <img
+          src="/static/img/fabuxiangmu.jpg"
+          alt
+          width="400px"
+          style="cursor:pointer"
+          @click="toxiangmu"
+        >
+        <img
+          src="/static/img/chengweizhuanjia.jpg"
+          alt
+          class="flr"
+          width="400px"
+          style="cursor:pointer"
+          @click="tozhuanjia"
+        >
       </div>
     </div>
     <div class="lg_box" v-show="should_login" @click="should_login = false"></div>
@@ -107,7 +183,7 @@
 <script>
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
-import * as Cookies from 'js-cookie'
+import * as Cookies from "js-cookie";
 
 let vm = null;
 
@@ -127,263 +203,176 @@ export default {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev"
         },
-        // autoplay:true,
-        autoplay:{
-            delay: 2500,
-            disableOnInteraction: false,
+        autoplay: {
+          delay: 2500,
+          disableOnInteraction: false
         },
         loop: true,
         on: {
-          // function(swiper){
-          //   var x = JSON.parse(swiper.clickedSlide.attributes["data-href"].nodeValue)
-          //   console.log(x);
-          //   vm.toSwiper(x.resourceTypeStr,x.id);
-          // }
-          click(){
+          click() {
             const realIndex = this.realIndex;
             vm.toSwiper(realIndex);
-            // var x = JSON.parse(swiper.clickedSlide.attributes["data-href"].nodeValue)
-            // console.log(x);
-            // vm.toSwiper(x.resourceTypeStr,x.id);
           }
-        },
+        }
       },
       // swiperSlides: ["/static/img/lunbo-1.png"],
       swiperSlides: [],
-      projectData: [
-        // {
-        //   recommendImgPath:'/static/img/pro-1.jpg',
-        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-        //   brief:
-        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        // },
-        // {
-        //   recommendImgPath:'/static/img/pro-1.jpg',
-        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-        //   brief:
-        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        // },
-        // {
-        //   recommendImgPath:'/static/img/pro-1.jpg',
-        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-        //   brief:
-        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        // },
-        // {
-        //   recommendImgPath:'/static/img/pro-1.jpg',
-        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-        //   brief:
-        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        // },
-        // {
-        //   recommendImgPath:'/static/img/pro-1.jpg',
-        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-        //   brief:
-        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        // },
-        // {
-        //   recommendImgPath:'/static/img/pro-1.jpg',
-        //   title: "北京某互联网创新创业服务平台项目股创业项目，新技术",
-        //   brief:
-        //     "本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设本人在天津研发净化空气的设备，有实用新型专利和发明专利，两个合伙人，目前已经入驻天津的工业园区，有厂房和办公场地，也有一部分设"
-        // }
-      ],
-      investData: [
-        // {
-        //   recommendImgPath:'/static/img/touzi-1.png',
-        //   title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-        //   investAmountName: "200-500W",
-        //   investCase: "股权投资",
-        //   moneyType: "企业资金",
-        //   region: "不限",
-        //   trade: "互联网",
-        //   investType: "参股合作 收购/并购",
-        //   stage: "成长期、成熟期"
-        // },
-        // {
-        //   recommendImgPath:'/static/img/touzi-1.png',
-        //   title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-        //   investAmountName: "200-500W",
-        //   investCase: "股权投资",
-        //   moneyType: "企业资金",
-        //   region: "不限",
-        //   trade: "互联网",
-        //   investType: "参股合作 收购/并购",
-        //   stage: "成长期、成熟期"
-        // },
-        // {
-        //   recommendImgPath:'/static/img/touzi-1.png',
-        //   title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-        //   investAmountName: "200-500W",
-        //   investCase: "股权投资",
-        //   moneyType: "企业资金",
-        //   region: "不限",
-        //   trade: "互联网",
-        //   investType: "参股合作 收购/并购",
-        //   stage: "成长期、成熟期"
-        // },
-        // {
-        //   recommendImgPath:'/static/img/touzi-1.png',
-        //   title: "北京某企资金1000万-9亿元寻求全国优质实体 项目合作",
-        //   investAmountName: "200-500W",
-        //   investCase: "股权投资",
-        //   moneyType: "企业资金",
-        //   region: "不限",
-        //   trade: "互联网",
-        //   investType: "参股合作 收购/并购",
-        //   stage: "成长期、成熟期"
-        // }
-      ],
-      categoryList:[],
-      categorys:'',
-      messageData:[],
-      should_login:false
+      projectData: [],
+      investData: [],
+      categoryList: [],
+      categorys: "",
+      messageData: [],
+      should_login: false
     };
   },
-  methods:{
-     toSwiper(index){
-      let id = this.swiperSlides[index].resourceId
-      let type = this.swiperSlides[index].resourceType
-      if(type == '1'){
-        this.toProjectDetailPage(id)
-      } else if (type == '2') {
-        this.toMoneyDetailPage(id)
-      } else if (type == '3') {
-        this.toMessageDetailPage(id)
-      } else if (type == '4') {
-          let {href} = this.$router.resolve({
-              name: "activityDetail",
-              query: {id}
-          });
-          window.open(href, '_blank');
+  methods: {
+    toSwiper(index) {
+      let id = this.swiperSlides[index].resourceId;
+      let type = this.swiperSlides[index].resourceType;
+      if (type == "1") {
+        this.toProjectDetailPage(id);
+      } else if (type == "2") {
+        this.toMoneyDetailPage(id);
+      } else if (type == "3") {
+        this.toMessageDetailPage(id);
+      } else if (type == "4") {
+        let { href } = this.$router.resolve({
+          name: "activityDetail",
+          query: { id }
+        });
+        window.open(href, "_blank");
       }
     },
-     getData(){
-      this.$axios.get('/jsp/wap/index/ctrl/jsonIndex.jsp').then(res => {
-        this.swiperSlides = res.data.banner
+    getData() {
+      this.$axios.get("/jsp/wap/index/ctrl/jsonIndex.jsp").then(res => {
+        this.swiperSlides = res.data.banner;
         this.investData = res.data.capitalList;
-         this.projectData = res.data.projectList
+        this.projectData = res.data.projectList;
         // let banner = res.data.banner
         // banner.forEach(item => {
-        //   this.swiperSlides.push(item.imgPath)          
+        //   this.swiperSlides.push(item.imgPath)
         // });
-      })
+      });
     },
-    getTypeData(){
-      this.$axios.get('/jsp/wap/trNews/ctrl/jsonCategoryList.jsp').then(res => {
-        if(res.success == "true"){
-          let categoryList = res.data
+    getTypeData() {
+      this.$axios.get("/jsp/wap/trNews/ctrl/jsonCategoryList.jsp").then(res => {
+        if (res.success == "true") {
+          let categoryList = res.data;
           categoryList.forEach(item => {
-            this.$set(item, 'checked', false)
+            this.$set(item, "checked", false);
           });
           categoryList.forEach(item => {
-            if(item.dataValue == this.categorys){
-              item.checked = true
+            if (item.dataValue == this.categorys) {
+              item.checked = true;
             }
-          })
-          this.categoryList = categoryList
+          });
+          this.categoryList = categoryList;
         }
-      })
-    },
-    getMessageData(categorys,pageNumber){
-      this.$axios.get('/jsp/wap/trNews/ctrl/jsonNewsPage.jsp',{params:{dataValues:categorys,pageNumber}}).then(res => {
-        this.messageData = res.data.pageList
-      })
-    },
-    getType(e,index) {
-      this.categorys = e
-      this.categoryList.forEach(item => {
-          item.checked = false
       });
-      this.categoryList[index].checked = true
-      this.getData(this.categorys)
-      this.getMessageData(this.categorys)
     },
-    getUserInfo(){
-       this.$axios.get('/jsp/wap/center/ctrl/jsonUserInfo.jsp').then(res => {
-         this.$store.commit('CHANGE_USERINFO',res.data.userinfo)
-       })
+    getMessageData(categorys, pageNumber) {
+      this.$axios
+        .get("/jsp/wap/trNews/ctrl/jsonNewsPage.jsp", {
+          params: { dataValues: categorys, pageNumber }
+        })
+        .then(res => {
+          this.messageData = res.data.pageList;
+        });
+    },
+    getType(e, index) {
+      this.categorys = e;
+      this.categoryList.forEach(item => {
+        item.checked = false;
+      });
+      this.categoryList[index].checked = true;
+      this.getData(this.categorys);
+      this.getMessageData(this.categorys);
+    },
+    getUserInfo() {
+      this.$axios.get("/jsp/wap/center/ctrl/jsonUserInfo.jsp").then(res => {
+        this.$store.commit("CHANGE_USERINFO", res.data.userInfo);
+      });
     },
     //首页跳转打开新窗口
-    toProductPage(){
-      let {href} = this.$router.resolve({
-          name: "project",
+    toProductPage() {
+      let { href } = this.$router.resolve({
+        name: "project"
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    toMoneyPage(){
-      let {href} = this.$router.resolve({
-          name: "money",
+    toMoneyPage() {
+      let { href } = this.$router.resolve({
+        name: "money"
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    toMessagePage(){
-      let {href} = this.$router.resolve({
-          name: "message",
+    toMessagePage() {
+      let { href } = this.$router.resolve({
+        name: "message"
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    toProjectDetailPage(id){
-      let {href} = this.$router.resolve({
-          name: "projectDetail",
-          query: {id}
+    toProjectDetailPage(id) {
+      let { href } = this.$router.resolve({
+        name: "projectDetail",
+        query: { id }
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    toMoneyDetailPage(id){
-      let {href} = this.$router.resolve({
-          name: "moneyDetail",
-          query: {id}
+    toMoneyDetailPage(id) {
+      let { href } = this.$router.resolve({
+        name: "moneyDetail",
+        query: { id }
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    toMessageDetailPage(id){
-      let {href} = this.$router.resolve({
-          name: "messageDetail",
-          query: {id}
+    toMessageDetailPage(id) {
+      let { href } = this.$router.resolve({
+        name: "messageDetail",
+        query: { id }
       });
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     },
-    tozijin(){
-      if(Cookies.get('userKey')){
-        let {href} = this.$router.resolve({
-            name: "applyMoney",
+    tozijin() {
+      if (Cookies.get("userKey")) {
+        let { href } = this.$router.resolve({
+          name: "applyMoney"
         });
-        window.open(href, '_blank');
+        window.open(href, "_blank");
       } else {
-        this.should_login = true        
+        this.should_login = true;
       }
     },
-    toxiangmu(){
-      if(Cookies.get('userKey')){
-        let {href} = this.$router.resolve({
-            name: "applyProject",
+    toxiangmu() {
+      if (Cookies.get("userKey")) {
+        let { href } = this.$router.resolve({
+          name: "applyProject"
         });
-        window.open(href, '_blank');
+        window.open(href, "_blank");
       } else {
-        this.should_login = true
-      }  
+        this.should_login = true;
+      }
     },
-    tozhuanjia(){
-      if(Cookies.get('userKey')){
-        let {href} = this.$router.resolve({
-            name: "myDemand",
+    tozhuanjia() {
+      if (Cookies.get("userKey")) {
+        let { href } = this.$router.resolve({
+          name: "myDemand"
         });
-        window.open(href, '_blank');
+        window.open(href, "_blank");
       } else {
-        this.should_login = true
+        this.should_login = true;
       }
     }
   },
-  created(){
-    this.getData()
-    this.getTypeData()
-    this.getMessageData()
+  created() {
+    this.getData();
+    this.getTypeData();
+    this.getMessageData();
     vm = this;
   },
-  mounted(){
-    if(Cookies.get('userKey')){
-      this.getUserInfo()
+  mounted() {
+    if (Cookies.get("userKey")) {
+      this.getUserInfo();
     }
   }
 };
@@ -392,7 +381,7 @@ export default {
 <style scoped lang="scss">
 // 轮播图高度
 .swiper-bottom {
-    position: relative;
+  position: relative;
 }
 
 @media screen and (max-width: 1640px) {
@@ -418,10 +407,10 @@ export default {
       color: #999 !important;
       font-size: 40px !important;
       background-image: none !important;
-      -webkit-user-select:none !important; 
-      -moz-user-select:none !important;
-      -ms-user-select:none !important; 
-      user-select:none !important; 
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
     }
     .swiper-button-prev:hover,
     .swiper-button-next:hover {
@@ -458,10 +447,10 @@ export default {
       color: #999 !important;
       font-size: 40px !important;
       background-image: none !important;
-      -webkit-user-select:none !important; 
-      -moz-user-select:none !important;
-      -ms-user-select:none !important; 
-      user-select:none !important; 
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
     }
     .swiper-button-prev:hover,
     .swiper-button-next:hover {
@@ -477,7 +466,6 @@ export default {
     }
   }
 }
-
 
 // 项目模块
 .project-title {
@@ -671,9 +659,9 @@ export default {
   margin-right: 30px;
   cursor: pointer;
 }
-.active{
+.active {
   color: #005982;
-  font-weight:700;
+  font-weight: 700;
 }
 .mes-content {
   margin-top: 20px;

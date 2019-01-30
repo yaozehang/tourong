@@ -92,7 +92,7 @@ export default {
   background-color: #413d3c;
 }
 .logo-2 {
-  padding-top: 35px;
+  margin-top: 35px;
 }
 .contact-item {
   font-size: 14px;
@@ -101,23 +101,23 @@ export default {
   text-align: left;
 }
 .about {
-  padding-top: 55px;
+  margin-top: 55px;
   .about-1 {
-    padding-left: 110px;
+    margin-left: 110px;
     cursor: pointer;
   }
   .about-2 {
     cursor: pointer;
-    padding: 0 55px;
+    margin: 0 55px;
   }
   .about-3 {
     cursor: pointer;
   }
 }
 .two-code {
-  padding-top: 30px;
+  margin-top: 30px;
   .twoCode-2 {
-    padding-right: 45px;
+    margin-right: 45px;
     width: 140px;
   }
   .twoCode-1 {
@@ -141,11 +141,11 @@ export default {
   }
   .clause-1 {
     color: #fff;
-    padding-left: 25px;
-    padding-right: 5px;
+    margin-left: 25px;
+    margin-right: 5px;
   }
   .clause-2 {
-    padding: 0 5px;
+    margin: 0 5px;
     color: #fff;
   }
   .cl-137 {
