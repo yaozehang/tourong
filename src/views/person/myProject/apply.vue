@@ -133,40 +133,7 @@
             >
             </el-upload>-->
           </el-form-item>
-        </div>
-        <div v-else-if="formData.financeBody == 65" class="bg-f2">
-          <el-form-item label="真实姓名" style="width:600px" class="is-required" prop="companyName">
-            <el-input v-model="formData.companyName"></el-input>
-          </el-form-item>
-          <el-form-item label="所在地区" required>
-            <v-distpicker
-              :province="provinceStr"
-              :city="cityStr"
-              :area="countyStr"
-              @selected="selected"
-            ></v-distpicker>
-          </el-form-item>
-          <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
-            <el-input v-model="formData.address"></el-input>
-          </el-form-item>
-        </div>
-        <div v-else-if="formData.financeBody == 66" class="bg-f2">
-          <el-form-item label="单位全称" style="width:600px" class="is-required" prop="companyName">
-            <el-input v-model="formData.companyName"></el-input>
-          </el-form-item>
-          <el-form-item label="所在地区" required>
-            <v-distpicker
-              :province="provinceStr"
-              :city="cityStr"
-              :area="countyStr"
-              @selected="selected"
-            ></v-distpicker>
-          </el-form-item>
-          <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
-            <el-input v-model="formData.address"></el-input>
-          </el-form-item>
-        </div>
-        <el-form-item label="实际控制人" class="w180">
+          <el-form-item label="实际控制人" class="w180">
           <el-input v-model="formData.owner"></el-input>
         </el-form-item>
         <el-form-item label="主营业务" style="width:600px" class="is-required" prop="business">
@@ -275,6 +242,39 @@
             placeholder="选择日期"
           ></el-date-picker>
         </el-form-item>
+        </div>
+        <div v-else-if="formData.financeBody == 65" class="bg-f2">
+          <el-form-item label="真实姓名" style="width:600px" class="is-required" prop="companyName">
+            <el-input v-model="formData.companyName"></el-input>
+          </el-form-item>
+          <el-form-item label="所在地区" required>
+            <v-distpicker
+              :province="provinceStr"
+              :city="cityStr"
+              :area="countyStr"
+              @selected="selected"
+            ></v-distpicker>
+          </el-form-item>
+          <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
+            <el-input v-model="formData.address"></el-input>
+          </el-form-item>
+        </div>
+        <div v-else-if="formData.financeBody == 66" class="bg-f2">
+          <el-form-item label="单位全称" style="width:600px" class="is-required" prop="companyName">
+            <el-input v-model="formData.companyName"></el-input>
+          </el-form-item>
+          <el-form-item label="所在地区" required>
+            <v-distpicker
+              :province="provinceStr"
+              :city="cityStr"
+              :area="countyStr"
+              @selected="selected"
+            ></v-distpicker>
+          </el-form-item>
+          <el-form-item label="详细地址" style="width:600px" class="is-required" prop="address">
+            <el-input v-model="formData.address"></el-input>
+          </el-form-item>
+        </div>
         <p>
           <span class="item_title">项目融资信息</span>
         </p>
@@ -289,6 +289,16 @@
         </el-form-item>
         <div class="way">
           <div v-if="fin_way == 0">
+            <el-form-item label="融资金额" class="w320 is-required">
+              <el-select v-model="formData.financingMoney " placeholder="请选择">
+                <el-option
+                  v-for="item in financingMoneyList"
+                  :key="item.dataValue"
+                  :label="item.dataName"
+                  :value="item.dataValue">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="公司估值" class="w350 is-required" prop="companyAssessed">
               <el-input v-model="formData.companyAssessed">
                 <span slot="append">万元</span>
@@ -346,8 +356,15 @@
             </el-form-item>
           </div>
           <div v-if="fin_way == 1">
-            <el-form-item label="融资金额" class="w350 is-required">
-              <el-input v-model="formData.financingMoney"></el-input>
+            <el-form-item label="融资金额" class="w320 is-required">
+              <el-select v-model="formData.financingMoney " placeholder="请选择">
+                <el-option
+                  v-for="item in financingMoneyList"
+                  :key="item.dataValue"
+                  :label="item.dataName"
+                  :value="item.dataValue">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="品种" class="is-required">
               <el-checkbox-group v-model="varietys">
@@ -418,6 +435,16 @@
             </el-form-item>
           </div>
           <div v-if="fin_way == 2">
+            <el-form-item label="融资金额" class="w320 is-required">
+              <el-select v-model="formData.financingMoney " placeholder="请选择">
+                <el-option
+                  v-for="item in financingMoneyList"
+                  :key="item.dataValue"
+                  :label="item.dataName"
+                  :value="item.dataValue">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="其他融资" style="width:600px">
               <el-input
                 type="textarea"
@@ -738,6 +765,7 @@ export default {
       industryList: [],
       financingWayList: [],
       paymentTypeList: [],
+      financingMoneyList: [],
       bodySecrecyList: [
         { dataValue: "0", dataName: "全部可见" },
         { dataValue: "1", dataName: "登录用户可见" },
@@ -809,6 +837,7 @@ export default {
           this.paymentTypeList = res.data.paymentTypeList;
           this.creditWayList = res.data.creditWayList;
           this.intentCapitalList = res.data.intentCapitalList;
+          this.financingMoneyList = res.data.financingMoneyList;
           var stageList = res.data.stageList;
           if (this.formData.stage == "") {
             stageList.forEach(item => {

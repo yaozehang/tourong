@@ -4,7 +4,8 @@
     <div v-for="(item , index) in projectData" :key="index" class="project-item clearfix">
       <div @click="toProjectDetailPage(item.id)" class="fll">
         <p class="project-item-title">{{item.title}}</p>
-        <p class="project-item-content">{{item.brief}}</p>
+        <p class="project-item-content" v-if="item.brief">{{item.brief}}</p>
+        <p class="project-item-content" v-else>暂无简介</p>
       </div>
       <button class="flr cancel" @click="cancelBtn(item.id,index)">取消关注</button>
     </div>
@@ -51,7 +52,6 @@ export default {
     },
     getData(pn){
       this.$axios.get('/jsp/wap/center/ctrl/jsonFollowList.jsp?type=1',{params:{pageNumber:pn}}).then(res => {
-        console.log(res);
         if(res.success == 'true'){
             this.projectData = res.data.pageList
             this.count = Number(res.data.pagination.totalCount)

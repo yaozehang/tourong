@@ -38,6 +38,7 @@ const components = {
   uploadApplyMoney: () => import('@/views/person/myMoney/uploadApply'),//上传资金
   manageMoney: () => import('@/views/person/myMoney/manage'), //动态管理
   addDynamicMoney: () => import('@/views/person/myMoney/addDynamic'), //添加动态
+  deliverMoney: () => import('@/views/person/myMoney/deliver'),//我的投递
   myProject: () => import('@/views/person/myProject'), //我的项目
   myProjectDraft: () => import('@/views/person/myProject/draft'),//资金草稿
   applyProject: () => import('@/views/person/myProject/apply'), //发布项目
@@ -451,6 +452,15 @@ const router = new Router({
               component:components.uploadApplyMoney,
               meta:{
                 title:'我的资金 > 上传资金',
+                authority:true
+              }
+            },
+            {
+              path:'deliverMoney',
+              name:'deliverMoney',
+              component:components.deliverMoney,
+              meta:{
+                title:'我的资金 > 我的投递',
                 authority:true
               }
             },

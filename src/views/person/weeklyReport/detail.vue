@@ -37,7 +37,7 @@
         </div>
       </div>
       <p class="project_title" style="margin-top:0;">
-        <span class="project_">资讯</span>
+        <span class="project_">资讯了解</span>
         <span class="project_more flr" @click="toMessage">更多></span>
       </p>
       <div
@@ -69,7 +69,7 @@
         </div>
       </div>
       <p class="project_title" style="margin-top:20px;">
-        <span class="project_">活动</span>
+        <span class="project_">活动推荐</span>
         <span class="project_more flr" @click="activity">更多></span>
       </p>
       <div

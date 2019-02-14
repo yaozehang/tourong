@@ -16,56 +16,68 @@
           <div v-for="(item , index) in type" :key="index" class="fll type_btn" :class="{'active':item.checked}" @click="get_type(index)">{{item.name}}</div>
         </el-form-item>
         <div v-if="attestForm.type == 1">
-        <el-form-item label="个人名片：" prop="cardFilePath" v-model="attestForm.cardFilePath">
-          <el-upload
-            class="upload-demo"
-            :http-request="uploadFlie"
-            action=""
-            :file-list="fileList"
-          >
-            <div class="likeBtn">
-              <i></i>点击上传名片
-            </div>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="个人简历：">
-          <el-upload
-            class="upload-demo"
-            :http-request="uploadFlie1"
-            action=""
-            :file-list="fileList1"
-          >
-            <div class="likeBtn">
-              <i></i>点击上传简历
-            </div>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="个人荣誉：">
-          <el-upload
-            class="upload-demo"
-            :http-request="uploadFlie2"
-            action=""
-            :file-list="fileList2"
-          >
-            <div class="likeBtn">
-              <i></i>点击上传荣誉
-            </div>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="企业营业执照：" prop="licenseFilePath" v-model="attestForm.licenseFilePath">
-          <el-upload
-            class="upload-demo"
-            :http-request="uploadFlie3"
-            action=""
-            :file-list="fileList3"
-          >
-            <div class="likeBtn">
-              <i></i>点击上传企业营业执照
-            </div>
-          </el-upload>
-        </el-form-item>
+          <div v-if="!project">
+            <el-form-item label="个人名片：" prop="cardFilePath" v-model="attestForm.cardFilePath">
+              <el-upload
+                class="upload-demo"
+                :http-request="uploadFlie"
+                action=""
+                :file-list="fileList"
+              >
+                <div class="likeBtn">
+                  <i></i>点击上传名片
+                </div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="个人简历：">
+              <el-upload
+                class="upload-demo"
+                :http-request="uploadFlie1"
+                action=""
+                :file-list="fileList1"
+              >
+                <div class="likeBtn">
+                  <i></i>点击上传简历
+                </div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="个人荣誉：">
+              <el-upload
+                class="upload-demo"
+                :http-request="uploadFlie2"
+                action=""
+                :file-list="fileList2"
+              >
+                <div class="likeBtn">
+                  <i></i>点击上传荣誉
+                </div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="企业营业执照：" prop="licenseFilePath" v-model="attestForm.licenseFilePath">
+              <el-upload
+                class="upload-demo"
+                :http-request="uploadFlie3"
+                action=""
+                :file-list="fileList3"
+              >
+                <div class="likeBtn">
+                  <i></i>点击上传企业营业执照
+                </div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item>
+              <div class="sub_btn" @click="submitForm('ruleForm')">提交认证</div>
+            </el-form-item>
+          </div>
+          <div v-else>
+            <el-form-item>
+            <p>您已通过认证成为项目方</p>
+            </el-form-item>
+          </div>
         </div>
         <div v-else-if="attestForm.type == 2">
+          <div v-if="!money">
+
           <el-form-item label="个人名片：" prop="cardFilePath" v-model="attestForm.cardFilePath">
           <el-upload
             class="upload-demo"
@@ -122,8 +134,18 @@
             placeholder="请输入内容"
           ></el-input>
         </el-form-item>
+        <el-form-item>
+          <div class="sub_btn" @click="submitForm('ruleForm')">提交认证</div>
+        </el-form-item>
+          </div>
+          <div v-else>
+            <el-form-item>
+              <p>您已通过认证成为资金方</p>
+            </el-form-item>
+          </div>
         </div>
         <div v-else-if="attestForm.type == 3">
+          <div v-if="!member">
         <el-form-item label="个人名片：" prop="cardFilePath" v-model="attestForm.cardFilePath">
           <el-upload
             class="upload-demo"
@@ -160,10 +182,16 @@
             </div>
           </el-upload>
         </el-form-item>
-        </div>
         <el-form-item>
           <div class="sub_btn" @click="submitForm('ruleForm')">提交认证</div>
         </el-form-item>
+        </div>
+        <div v-else>
+        <el-form-item>
+          <p>您已通过认证成为专家</p>
+        </el-form-item>
+        </div>
+        </div>
       </el-form>
     </div>
     <el-dialog
@@ -190,6 +218,9 @@ export default {
         cvFilePath:[],
         honorFilePath:[],
         licenseFilePath:[],
+        project:false,
+        money:false,
+        member:false,
       },
       type: [ {name:"项目方",checked:true},{name:"资金方",checked:false},{name:"专家",checked:false}],
       rules: {
@@ -340,6 +371,23 @@ export default {
     'attestForm.type'(){
       this.$refs.ruleForm.clearValidate()
     }
+  },
+  created(){
+    let authenticationType = this.$store.state.userinfo.authenticationType
+    console.log(authenticationType);
+    let Type = authenticationType.split(',')
+    Type.forEach(item => {
+      if(item == 1){
+        this.project = true
+      } 
+      if(item == 2){
+        this.money = true
+      }
+      if(item == 3){
+        this.member = true
+      }
+    })
+    
   }
 };
 </script>

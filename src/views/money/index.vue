@@ -1030,6 +1030,7 @@ export default {
   width: 810px;
   height: 180px;
   padding-bottom: 30px;
+  margin-bottom: 20px;
   border-bottom: 1px dashed #d9d9d9;
   position: relative;
 }

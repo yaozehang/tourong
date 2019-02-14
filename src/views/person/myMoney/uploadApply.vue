@@ -123,7 +123,7 @@ import qs from 'qs'
               };
               this.$axios
                 .post(
-                  "/jsp/wap/center/do/doProjectDatumApply.jsp",
+                  "/jsp/wap/center/do/doCapitalDatumApply.jsp",
                   qs.stringify(params)
                 )
                 .then(res => {
@@ -166,7 +166,7 @@ import qs from 'qs'
               };
               this.$axios
                 .post(
-                  "/jsp/wap/center/do/doProjectDatumApply.jsp",
+                  "/jsp/wap/center/do/doCapitalDatumApply.jsp",
                   qs.stringify(params)
                 )
                 .then(res => {
@@ -182,9 +182,9 @@ import qs from 'qs'
                       this.success = true 
                       this.hint = '上传资金成功'
                       this.toast_show = true
-                      // setTimeout(()=> {
-                      //   window.history.go(0)
-                      // },1000)
+                      setTimeout(()=> {
+                        window.history.go(0)
+                      },1000)
                     }
                   } else {
                     this.success = false 

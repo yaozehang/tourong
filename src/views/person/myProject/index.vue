@@ -13,6 +13,9 @@
           <button class="draftBtn" @click="todraft">
             <i></i>草稿箱
           </button>
+          <button class="deliveryBtn" @click="todelivery">
+            <i></i>我的约谈
+          </button>
         </span>
       </p>
       <p class="project_title">
@@ -24,6 +27,7 @@
             <p class="project-item-title">{{item.title}}</p>
             <p class="project-item-content">{{item.brief}}</p>
           </div>
+          <span class="deliver" v-if="item.status == '10'">约谈：<a >0</a></span>
           <!-- <span class="flr" :class="item.check == 0 ? ' already':'' + item.check == 1 ? ' being':'' + item.check == 2 ? ' not':'' + item.check == 3 ? ' fail':''">{{item.check == 0 ? '已发布':'' + item.check == 1 ? '审核中':'' + item.check == 2 ? '未发布':''}}</span> -->
           <span
             class="flr"
@@ -190,6 +194,9 @@ export default {
               name: "myProjectDraft",
           });
       window.open(href, '_blank');
+    },
+    todelivery(){
+
     }
   },
   created(){
@@ -375,42 +382,6 @@ export default {
       }
   }
 
-.draftBtn {
-    width: 110px;
-      height: 35px;
-      color: #005982;
-      line-height: 0.425;
-      display: inline-block;
-      white-space: nowrap;
-      cursor: pointer;
-      background: #fff;
-      border: 1.5px solid #005982;
-      border-color: #005982;
-      -webkit-appearance: none;
-      text-align: center;
-      box-sizing: border-box;
-      outline: none;
-      margin: 0;
-      margin-left: 12px;
-      transition: 0.1s;
-      font-weight: 500;
-      -moz-user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
-      padding: 12px 20px 12px 35px;
-      border-radius: 4px;
-      position: relative;
-      i {
-        display: inline-block;
-        width: 15px;
-        height: 15px;
-        background: url(/static/img/caogaoxiang.png) no-repeat center;
-        background-size: contain;
-        position: absolute;
-        top: 9px;
-        left: 15px;
-      }
-  }
   //提醒样式
   .already {
     margin-top: 20px;

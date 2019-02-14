@@ -110,13 +110,13 @@
             >{{upfrontCost.dataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="最低回报要求" style="width:600px" prop="minRepay">
+        <el-form-item label="最低回报要求" style="width:600px">
           <el-input v-model="formData.minRepay"></el-input>
         </el-form-item>
         <el-form-item label="有效期限" class="is-required" prop="validStartTimeStr">
           <div style="width:28.16667%" class="fll">
             <el-date-picker
-              type="year"
+              type="date"
               placeholder="选择日期"
               v-model="formData.validStartTimeStr"
               value-format="yyyy-MM-dd"
@@ -124,7 +124,7 @@
           </div>
           <el-col class="line" :span="1" style="text-align:center;">~</el-col>
           <el-col :span="7">
-            <el-date-picker value-format="yyyy-MM-dd" type="year" placeholder="选择日期" v-model="formData.validEndTimeStr"></el-date-picker>
+            <el-date-picker value-format="yyyy-MM-dd" type="date" placeholder="选择日期" v-model="formData.validEndTimeStr"></el-date-picker>
           </el-col>
           <el-col :span="1" style="text-align:center;">年</el-col>
         </el-form-item>
